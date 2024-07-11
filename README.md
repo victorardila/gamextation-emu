@@ -1,1 +1,1 @@
-# GameXtation-EMU
+# GameXtation EMU
