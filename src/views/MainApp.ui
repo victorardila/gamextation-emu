@@ -32,7 +32,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../assets/resources.qrc"/>
  </resources>
  <connections/>
 </ui>
