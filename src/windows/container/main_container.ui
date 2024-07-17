@@ -13,14 +13,8 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-  </widget>
+  <widget class="QWidget" name="centralwidget"/>
  </widget>
- <resources>
-  <include location="../assets/resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

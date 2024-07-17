@@ -7,7 +7,8 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-docker = "^1.10.6"
+docker-py = "^1.10.6"
+PyQt5 = "^5.15.10"
 
 [build-system]
 requires = ["poetry-core"]

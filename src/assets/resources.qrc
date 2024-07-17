@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="sources">
+    <file>img/bg_claro.png</file>
+    <file>img/bg_oscuro.png</file>
     <file>ico/icon.png</file>
   </qresource>
 </RCC>
