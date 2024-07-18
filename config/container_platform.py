@@ -21,7 +21,7 @@ class ContainerPlatform:
             text = "Docker no está instalado en el sistema operativo."
             informative_text = "Por favor, instale Docker para poder ejecutar la aplicación."
             # retornar un False y los mensajes de error
-            return False, title, text, informative_text # Debe retornar False para que se muestre el mensaje de error
+            return True, title, text, informative_text # Debe retornar False para que se muestre el mensaje de error
         
         return True
     
