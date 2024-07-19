@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout
 from PyQt5.QtCore import Qt, QUrl, pyqtSignal
+from PyQt5.QtGui import QIcon
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.uic import loadUi
@@ -17,6 +18,8 @@ class Animation(QMainWindow):
         self.showMaximized()
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
+        # Cambiar icono de la ventana
+        self.setWindowIcon(QIcon("src/assets/ico/icon.png"))
         self.verticalLayout = QVBoxLayout(self.centralwidget)
 
         # Configuración del reproductor de video

@@ -2,34 +2,72 @@ from PyQt5.QtWidgets import QPushButton, QWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, QSize
 
+
 class ButtonIcon(QPushButton):
-    def __init__(self, parent=None):
+    def __init__(self, parent=QWidget | None):
         super().__init__(parent)
+        self.installEventFilter(self)
+
+    def style(self, icon, size, tooltip):
+        self.setIcon(QIcon(icon))
+        self.setIconSize(size)
+        self.setToolTip(tooltip)
         self.setCursor(Qt.PointingHandCursor)
-        self.setFlat(True)
-        self.setStyleSheet("background-color: transparent;")
         self.setText("")
-        self._hoverIcon = None
-        self._defaultIcon = None
-    
-    def setMaximumWidth(self, width):
-        self.setMaximumWidth(width)
-    
-    def setMaximumHeight(self, height):
-        self.setMaximumHeight(height)
-    
-    def setIcon(self, icon):
-        self._defaultIcon = QIcon(icon)
-        super().setIcon(self._defaultIcon)
-        self.setIconSize(QSize(32, 32))
+        self.setStyleSheet(
+            """
+            QPushButton {
+                border: none;
+                border-radius: 10px;
+                background-color: rgba(255, 255, 255, 0);
+            }
+            QToolTip {
+                background-color: #333;
+                color: #fff;
+                border: 0.5px solid white;
+                padding: 5px;
+                border-radius: 5px;
+            }
+            """
+        )
 
-    def setIconHover(self, icon):
-        self._hoverIcon = QIcon(icon)
+    # Métodos para darle hover al botón
+    def eventFilter(self, obj, event):
+        if event.type() == event.HoverEnter:
+            self.setStyleSheet(
+                """
+                QPushButton {
+                    border: none;
+                    border-radius: 10px;
+                    background-color: rgba(255, 255, 255, 0.2);
+                }
+                QToolTip {
+                    background-color: #333;
+                    color: #fff;
+                    border: 1px solid white;
+                    padding: 5px;
+                    border-radius: 5px;
+                }
+                """)
+        elif event.type() == event.HoverLeave:
+            self.setStyleSheet(
+                """
+                QPushButton {
+                    border: none;
+                    border-radius: 10px;
+                    background-color: rgba(255, 255, 255, 0);
+                }
+                QToolTip {
+                    background-color: #333;
+                    color: #fff;
+                    border: 0.5px solid white;
+                    padding: 5px;
+                    border-radius: 5px;
+                }
+                """
+            )
+        elif event.type() == event.MouseButtonPress:
+            if event.button() == Qt.LeftButton:
+                pass
+        return super().eventFilter(obj, event)
 
-    def enterEvent(self, event):
-        if self._hoverIcon:
-            super().setIcon(self._hoverIcon)
-
-    def leaveEvent(self, event):
-        if self._defaultIcon:
-            super().setIcon(self._defaultIcon)

@@ -34,7 +34,7 @@ class MainContainer(QMainWindow):
         self.initNavigationButtons()
 
     def initNavigationButtons(self):
-        pass 
+        pass
         
     # Método para mostrar los widgets dentro del contenedor principal
     def ShowWidget(self, widget):

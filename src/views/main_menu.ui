@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>main_menu</class>
+ <widget class="QWidget" name="main_menu">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -33,7 +33,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QWidget" name="widget" native="true">
+    <widget class="QWidget" name="animation_bg" native="true">
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
      </property>
@@ -97,7 +97,7 @@
           <number>0</number>
          </property>
          <item>
-          <layout class="QGridLayout" name="gridLayoutTopbar">
+          <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,1">
            <property name="leftMargin">
             <number>5</number>
            </property>
@@ -110,7 +110,7 @@
            <property name="bottomMargin">
             <number>5</number>
            </property>
-           <item row="0" column="0">
+           <item>
             <widget class="QFrame" name="farmeSearchMenu">
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
@@ -118,9 +118,76 @@
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <property name="spacing">
+               <number>10</number>
+              </property>
+              <property name="leftMargin">
+               <number>10</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>10</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="ButtonIcon" name="button_icon_search">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>38</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>40</width>
+                  <height>40</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="text">
+                 <string>PushButton</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="textBoxSearch">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="cursor">
+                 <cursorShape>ArrowCursor</cursorShape>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgba(255, 255, 255, 0);
+border: none;
+border-bottom: 1px solid rgba(255,255,255, 100);
+color: rgba(230, 230, 230, 150)</string>
+                </property>
+                <property name="text">
+                 <string>Buscar</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
-           <item row="0" column="1">
+           <item>
             <widget class="QFrame" name="frameStateMenu">
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
@@ -147,14 +214,99 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_buttons_topbar">
                 <property name="spacing">
-                 <number>0</number>
+                 <number>10</number>
                 </property>
                 <property name="leftMargin">
-                 <number>300</number>
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
                 </property>
                 <property name="rightMargin">
                  <number>10</number>
                 </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <spacer name="horizontalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="LabelHour" name="label_hour">
+                  <property name="text">
+                   <string>TextLabel</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="ButtonIcon" name="button_icon_mode">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>38</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>40</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string>PushButton</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="ButtonIcon" name="button_icon_user">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>40</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>40</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string>PushButton</string>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
              </layout>
@@ -215,7 +367,7 @@
            <item row="0" column="0">
             <widget class="QFrame" name="frameMenuRowOne">
              <property name="styleSheet">
-              <string notr="true">background-color: rgb(33, 0, 19);</string>
+              <string notr="true"/>
              </property>
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
@@ -228,7 +380,7 @@
            <item row="1" column="0">
             <widget class="QFrame" name="frameMenuRowTwo">
              <property name="styleSheet">
-              <string notr="true">background-color: rgb(33, 0, 19);</string>
+              <string notr="true"/>
              </property>
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
@@ -248,6 +400,18 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LabelHour</class>
+   <extends>QLabel</extends>
+   <header location="global">src.components.labels.label_hour</header>
+  </customwidget>
+  <customwidget>
+   <class>ButtonIcon</class>
+   <extends>QPushButton</extends>
+   <header location="global">src.components.buttons.button_icon</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../assets/resources.qrc"/>
  </resources>
