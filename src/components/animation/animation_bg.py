@@ -1,5 +1,4 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+from PyQt5.QtWidgets import QWidget, QLabel
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QPixmap, QPainter, QTransform, QColor
 import qtawesome as qta
