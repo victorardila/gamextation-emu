@@ -9,7 +9,7 @@ class IconAnimationWidget(QLabel):
     def __init__(self, icon, parent=None):
         super(IconAnimationWidget, self).__init__(parent)
         self.original_pixmap = icon.pixmap(64, 64)
-        self.color = QColor(255, 255, 255, 100)  # Define el color blanco con opacidad del 50%
+        self.color = QColor(255, 255, 255, 90)  # Define el color blanco con opacidad del 50%
         self.setPixmap(self.original_pixmap)
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setAttribute(Qt.WA_NoSystemBackground)
