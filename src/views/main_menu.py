@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtCore import QSize, Qt, QTimer
 from PyQt5.uic import loadUi
-from components.animation.animation_ppsspp import AnimationPPSSPP
+from src.components.animation.animation_ppsspp import AnimationPPSSPP
 from qtawesome import icon
 from PyQt5.QtGui import QFont, QFontDatabase, QMovie
 from datetime import datetime
