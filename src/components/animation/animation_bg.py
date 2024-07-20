@@ -8,11 +8,9 @@ class IconAnimationWidget(QLabel):
     def __init__(self, icon, parent=None):
         super(IconAnimationWidget, self).__init__(parent)
         self.original_pixmap = icon.pixmap(64, 64)
-        self.color = QColor(255, 255, 255, 90)  # Define el color blanco con opacidad del 50%
+        self.color = QColor(255, 255, 255, 90)  # Define el color blanco con opacidad del 90%
         self.setPixmap(self.original_pixmap)
         self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setAttribute(Qt.WA_NoSystemBackground)
-        self.setWindowFlags(Qt.FramelessWindowHint)
         self.resize(64, 64)
         
         # Inicializa la dirección de movimiento con velocidades variables
@@ -54,18 +52,39 @@ class IconAnimationWidget(QLabel):
         transform = QTransform().rotate(self.rotation_angle)
         rotated_pixmap = self.original_pixmap.transformed(transform, mode=Qt.SmoothTransformation)
         
-        # Aplica el color blanco con transparencia al pixmap
-        colored_pixmap = QPixmap(rotated_pixmap.size())
-        colored_pixmap.fill(Qt.transparent)
+        # Crear un pixmap del mismo tamaño que el widget para centrar el ícono rotado
+        final_pixmap = QPixmap(self.size())
+        final_pixmap.fill(Qt.transparent)  # Fondo transparente
+
+        # Pintar el pixmap rotado en el centro del pixmap final
+        painter = QPainter(final_pixmap)
+        x_offset = (self.width() - rotated_pixmap.width()) // 2
+        y_offset = (self.height() - rotated_pixmap.height()) // 2
+        painter.drawPixmap(x_offset, y_offset, rotated_pixmap)
+        painter.end()
+
+        # Aplica un fondo de color al pixmap final
+        colored_pixmap = QPixmap(final_pixmap.size())
+        colored_pixmap.fill(Qt.yellow)  # Cambia el fondo a amarillo para mayor visibilidad
         painter = QPainter(colored_pixmap)
         painter.setCompositionMode(QPainter.CompositionMode_Source)
-        painter.drawPixmap(0, 0, rotated_pixmap)
+        painter.drawPixmap(0, 0, final_pixmap)
         painter.setCompositionMode(QPainter.CompositionMode_DestinationIn)
         painter.fillRect(colored_pixmap.rect(), self.color)
         painter.end()
-        
+
+        # Agrega un borde al pixmap final
+        bordered_pixmap = QPixmap(colored_pixmap.size())
+        bordered_pixmap.fill(Qt.transparent)
+        painter = QPainter(bordered_pixmap)
+        painter.setCompositionMode(QPainter.CompositionMode_Source)
+        painter.drawPixmap(0, 0, colored_pixmap)
+        painter.setPen(QColor(255, 0, 0, 0))  # Agrega un borde rojo
+        painter.drawRect(bordered_pixmap.rect().adjusted(0, 0, -1, -1))
+        painter.end()
+
         # Actualiza el pixmap del widget
-        self.setPixmap(colored_pixmap)
+        self.setPixmap(bordered_pixmap)
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -77,8 +96,7 @@ class AnimationBg(QWidget):
     def __init__(self):
         super(AnimationBg, self).__init__()
         self.setGeometry(100, 100, 800, 600)
-        self.setAttribute(Qt.WA_TranslucentBackground)
-
+        self.setStyleSheet("background-color: black;")  # Establecer el fondo negro
         # Crear íconos y añadirlos al widget principal
         self.create_multiple_icons(qta.icon('mdi.circle-outline', color='white', style='outline'), count=30)
         self.create_multiple_icons(qta.icon('mdi.square-outline', color='white', style='outline'), count=30)
