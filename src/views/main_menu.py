@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtCore import QSize, Qt, QTimer
 from PyQt5.uic import loadUi
-from src.components.animation.animation_bg import AnimationBg
+from components.animation.animation_ppsspp import AnimationPPSSPP
 from qtawesome import icon
 from PyQt5.QtGui import QFont, QFontDatabase, QMovie
 from datetime import datetime
@@ -20,7 +20,7 @@ class MainMenu(QMainWindow):
         self.showMaximized()
         self.setStyleSheet("background-color: " + self.bg_color_dak)
         # Aqui cargare la animacion bg al componente animation_bg que es widget 
-        self.animation = AnimationBg()
+        self.animation = AnimationPPSSPP()
         self.setCentralWidget(self.animation)
         
     #     # Cargar la fuente personalizada

@@ -92,9 +92,9 @@ class IconAnimationWidget(QLabel):
         painter.setRenderHint(QPainter.SmoothPixmapTransform)
         super(IconAnimationWidget, self).paintEvent(event)
 
-class AnimationBg(QWidget):
+class AnimationPPSSPP(QWidget):
     def __init__(self):
-        super(AnimationBg, self).__init__()
+        super(AnimationPPSSPP, self).__init__()
         self.setGeometry(100, 100, 800, 600)
         self.setStyleSheet("background-color: black;")  # Establecer el fondo negro
         # Crear íconos y añadirlos al widget principal
