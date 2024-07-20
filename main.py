@@ -1,7 +1,7 @@
 import os
 import sys
 import shutil
-from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtWidgets import QApplication
 from src.app import Aplicacion
 
 def remove_pycache_dirs():
