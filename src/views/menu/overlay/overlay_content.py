@@ -9,15 +9,15 @@ class OverlayContent(QWidget):
     def __init__(self):
         super().__init__()
         self.InitMainMenu()
-        
+    
     def InitMainMenu(self):
         loadUi("src/views/menu/overlay/overlay_content.ui", self)
-        self.showMaximized()
         self.setStyleSheet("background-color: transparent;")
         self.setAttribute(Qt.WA_TranslucentBackground)
-        self.content_menu()
+        self.top_bar_styles()
+        self.content_styles()
         
-    def content_menu(self):
+    def top_bar_styles(self):
         # Cargar la fuente personalizada
         font_id = QFontDatabase.addApplicationFont("src/assets/font/ratchet-clank-psp.ttf")
         if font_id != -1:
@@ -45,4 +45,10 @@ class OverlayContent(QWidget):
     def update_time(self):
         current_time = datetime.now().strftime("%I:%M:%S %p")
         self.label_hour.setText(current_time)
+        
+    def content_styles(self):
+        self.frameMenuRowOne.setStyleSheet("background-color: transparent;")
+        self.frameMenuRowTwo.setStyleSheet("background-color: transparent;")
+        self.button_load_roms
+        
     

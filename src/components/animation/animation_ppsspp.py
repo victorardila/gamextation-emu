@@ -98,10 +98,11 @@ class AnimationPPSSPP(QWidget):
         self.setGeometry(100, 100, 800, 600)
         self.setStyleSheet("background-color: black;")  # Establecer el fondo negro
         # Crear íconos y añadirlos al widget principal
-        self.create_multiple_icons(qta.icon('mdi.circle-outline', color='white', style='outline'), count=30)
-        self.create_multiple_icons(qta.icon('mdi.square-outline', color='white', style='outline'), count=30)
-        self.create_multiple_icons(qta.icon('mdi.triangle-outline', color='white', style='outline'), count=30)
-
+        self.create_multiple_icons(qta.icon('mdi.circle-outline', color='white', style='outline'), count=60)
+        self.create_multiple_icons(qta.icon('mdi.square-outline', color='white', style='outline'), count=60)
+        self.create_multiple_icons(qta.icon('mdi.triangle-outline', color='white', style='outline'), count=60)
+        self.create_multiple_icons(qta.icon('mdi.close', color='white', style='outline'), count=60)
+        
     def create_multiple_icons(self, icon, count):
         for _ in range(count):
             icon_widget = IconAnimationWidget(icon, self)
