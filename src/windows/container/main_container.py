@@ -1,8 +1,8 @@
-from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QPushButton, QWidget, QVBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QStackedWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.uic import loadUi
-from src.views.main_menu import MainMenu
-from src.views.consoles import Consoles
+from src.views.menu.main_menu import MainMenu
+from src.views.consoles.consoles import Consoles
 
 class MainContainer(QMainWindow):
     def __init__(self):

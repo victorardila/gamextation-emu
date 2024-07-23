@@ -7,7 +7,7 @@ class Consoles(QMainWindow):
         self.InitViewsContainer()
         
     def InitViewsContainer(self):
-        loadUi("src/views/consoles.ui", self)
+        loadUi("src/views/consoles/consoles.ui", self)
         self.showMaximized()
         self.raise_()
         

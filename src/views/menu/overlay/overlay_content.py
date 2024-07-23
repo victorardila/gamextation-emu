@@ -1,28 +1,21 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import QSize, Qt, QTimer
 from PyQt5.uic import loadUi
-from src.components.animation.animation_ppsspp import AnimationPPSSPP
 from qtawesome import icon
-from PyQt5.QtGui import QFont, QFontDatabase, QMovie
+from PyQt5.QtGui import QFont, QFontDatabase
 from datetime import datetime
 
-class MainMenu(QWidget):
+class OverlayContent(QWidget):
     def __init__(self):
         super().__init__()
         self.InitMainMenu()
         
-    # Variables globales para los colores de fondo
-    bg_color_dak = "qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0.026178 rgba(255, 95, 1, 255), stop:0.219895 rgba(255, 96, 0, 255), stop:0.424084 rgba(219, 67, 2, 255), stop:0.715789 rgba(99, 0, 34, 255), stop:0.826316 rgba(93, 0, 33, 255), stop:1 rgba(33, 0, 19, 255));"
-    bg_color_light = "qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0.026178 rgba(249, 135, 11, 255), stop:0.219895 rgba(247, 134, 12, 255), stop:0.424084 rgba(241, 139, 11, 255), stop:0.715789 rgba(233, 150, 10, 255), stop:0.826316 rgba(232, 155, 13, 255), stop:1 rgba(235, 154, 11, 255));"
-    
     def InitMainMenu(self):
-        loadUi("src/views/main_menu.ui", self)
+        loadUi("src/views/menu/overlay/overlay_content.ui", self)
         self.showMaximized()
-        self.setStyleSheet("background-color: " + self.bg_color_dak)
-        self.layout = QVBoxLayout(self)
-        # animation es un QWidget y necesito cargarlo es este QWidget llamado MainMenu
-        animation = AnimationPPSSPP()
-        # animation va en una primera capa y el contenido en una segunda capa encima de animation
+        self.setStyleSheet("background-color: transparent;")
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.content_menu()
         
     def content_menu(self):
         # Cargar la fuente personalizada
@@ -52,3 +45,4 @@ class MainMenu(QWidget):
     def update_time(self):
         current_time = datetime.now().strftime("%I:%M:%S %p")
         self.label_hour.setText(current_time)
+    
