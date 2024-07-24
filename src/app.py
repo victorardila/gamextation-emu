@@ -36,7 +36,7 @@ class Aplicacion(QMainWindow):
 
         # Animación de aparición de la ventana principal
         self.views_container_animation = QPropertyAnimation(self.views_container, b"windowOpacity")
-        self.views_container_animation.setDuration(50)  # Duración de la animación en milisegundos
+        self.views_container_animation.setDuration(10)  # Duración de la animación en milisegundos
         self.views_container_animation.setStartValue(0.0)
         self.views_container_animation.setEndValue(1.0)
         self.views_container_animation.start()

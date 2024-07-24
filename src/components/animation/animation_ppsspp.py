@@ -1,25 +1,26 @@
-from PyQt5.QtWidgets import QWidget, QLabel
+from PyQt5.QtWidgets import QWidget, QLabel, QSizePolicy
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QPixmap, QPainter, QTransform, QColor
 import qtawesome as qta
 import random
 
 class IconAnimationWidget(QLabel):
-    def __init__(self, icon, parent=None):
+    def __init__(self, icon, size=64, parent=None):
         super(IconAnimationWidget, self).__init__(parent)
-        self.original_pixmap = icon.pixmap(64, 64)
-        self.color = QColor(255, 255, 255, 90)  # Define el color blanco con opacidad del 90%
+        self.size = size  # Tamaño personalizado del ícono
+        self.original_pixmap = icon.pixmap(self.size, self.size)
+        self.color = QColor(255, 255, 255, 10)  # Define el color blanco con transparencia
         self.setPixmap(self.original_pixmap)
         self.setAttribute(Qt.WA_TranslucentBackground)
-        self.resize(64, 64)
+        self.resize(self.size, self.size)
         
         # Inicializa la dirección de movimiento con velocidades variables
         self.dx = random.uniform(-4, 4)
         self.dy = random.uniform(-4, 4)
 
         # Posiciona el ícono aleatoriamente dentro de la ventana
-        self.x = random.randint(0, parent.width() - self.width())
-        self.y = random.randint(0, parent.height() - self.height())
+        self.x = random.randint(0, parent.width() - self.size)
+        self.y = random.randint(0, parent.height() - self.size)
         self.move(int(self.x), int(self.y))
 
         # Timer para la actualización de la posición y animación
@@ -36,9 +37,9 @@ class IconAnimationWidget(QLabel):
         self.y += self.dy
 
         # Rebotar en los bordes de la ventana
-        if self.x <= 0 or self.x >= self.parent().width() - self.width():
+        if self.x <= 0 or self.x >= self.parent().width() - self.size:
             self.dx = -self.dx
-        if self.y <= 0 or self.y >= self.parent().height() - self.height():
+        if self.y <= 0 or self.y >= self.parent().height() - self.size:
             self.dy = -self.dy
 
         self.move(int(self.x), int(self.y))
@@ -53,13 +54,13 @@ class IconAnimationWidget(QLabel):
         rotated_pixmap = self.original_pixmap.transformed(transform, mode=Qt.SmoothTransformation)
         
         # Crear un pixmap del mismo tamaño que el widget para centrar el ícono rotado
-        final_pixmap = QPixmap(self.size())
+        final_pixmap = QPixmap(self.size, self.size)
         final_pixmap.fill(Qt.transparent)  # Fondo transparente
 
         # Pintar el pixmap rotado en el centro del pixmap final
         painter = QPainter(final_pixmap)
-        x_offset = (self.width() - rotated_pixmap.width()) // 2
-        y_offset = (self.height() - rotated_pixmap.height()) // 2
+        x_offset = (self.size - rotated_pixmap.width()) // 2
+        y_offset = (self.size - rotated_pixmap.height()) // 2
         painter.drawPixmap(x_offset, y_offset, rotated_pixmap)
         painter.end()
 
@@ -95,15 +96,32 @@ class IconAnimationWidget(QLabel):
 class AnimationPPSSPP(QWidget):
     def __init__(self):
         super(AnimationPPSSPP, self).__init__()
-        self.setGeometry(100, 100, 800, 600)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setStyleSheet("background-color: black;")  # Establecer el fondo negro
-        # Crear íconos y añadirlos al widget principal
-        self.create_multiple_icons(qta.icon('mdi.circle-outline', color='white', style='outline'), count=60)
-        self.create_multiple_icons(qta.icon('mdi.square-outline', color='white', style='outline'), count=60)
-        self.create_multiple_icons(qta.icon('mdi.triangle-outline', color='white', style='outline'), count=60)
-        self.create_multiple_icons(qta.icon('mdi.close', color='white', style='outline'), count=60)
-        
-    def create_multiple_icons(self, icon, count):
+        self.icon_size = 48  # Puedes cambiar este valor al tamaño deseado
+        self.icons = []
+        self.create_multiple_icons(qta.icon('mdi.circle-outline', color='white', style='outline'), count=60, size=self.icon_size)
+        self.create_multiple_icons(qta.icon('mdi.square-outline', color='white', style='outline'), count=60, size=self.icon_size)
+        self.create_multiple_icons(qta.icon('mdi.triangle-outline', color='white', style='outline'), count=60, size=self.icon_size)
+        self.create_multiple_icons(qta.icon('mdi.close', color='white', style='outline'), count=60, size=self.icon_size)
+
+    def resizeEvent(self, event):
+        super(AnimationPPSSPP, self).resizeEvent(event)
+        self.update_icons_position()  # Actualiza la posición de los íconos si es necesario
+        self.setGeometry(self.parent().rect())  # Asegura que el widget ocupe todo el espacio disponible
+
+    def update_icons_position(self):
+        # Aquí puedes actualizar la posición de los íconos si es necesario
+        pass
+    
+    def create_multiple_icons(self, icon, count, size):
         for _ in range(count):
-            icon_widget = IconAnimationWidget(icon, self)
+            icon_widget = IconAnimationWidget(icon, size=size, parent=self)
             icon_widget.show()
+            self.icons.append(icon_widget)
+
+    def update_icon_color(self, is_dark_mode):
+        alpha = 50 if is_dark_mode else 10
+        for icon_widget in self.icons:
+            icon_widget.color.setAlpha(alpha)
+            icon_widget.update_pixmap()

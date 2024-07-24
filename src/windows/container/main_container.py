@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QMainWindow, QStackedWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.uic import loadUi
 from src.views.menu.main_menu import MainMenu
-from src.views.consoles.consoles import Consoles
+from src.views.submenu.submenu import SubMenu
 
 class MainContainer(QMainWindow):
     def __init__(self):
@@ -17,15 +17,15 @@ class MainContainer(QMainWindow):
         self.setWindowIcon(QIcon("src/assets/ico/icon.png"))
 
         # Acceder al QStackedWidget dentro de centralWidget
-        self.stackedWidget = self.centralWidget().findChild(QStackedWidget, "stackedWidget")
+        self.layout_views = self.centralWidget().findChild(QStackedWidget, "layout_views")
 
         # Configuración de los widgets
         self.mainMenu = MainMenu()
-        self.consoles = Consoles()
+        self.submenu = SubMenu()
         
         # Añadir los widgets al QStackedWidget
-        self.stackedWidget.addWidget(self.mainMenu)
-        self.stackedWidget.addWidget(self.consoles)
+        self.layout_views.addWidget(self.mainMenu)
+        self.layout_views.addWidget(self.submenu)
         
         # Mostrar el widget inicial
         self.ShowWidget(self.mainMenu)
@@ -38,5 +38,5 @@ class MainContainer(QMainWindow):
         
     # Método para mostrar los widgets dentro del contenedor principal
     def ShowWidget(self, widget):
-        self.stackedWidget.setCurrentWidget(widget)
-        self.stackedWidget.raise_()
+        self.layout_views.setCurrentWidget(widget)
+        self.layout_views.raise_()

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
-    <height>800</height>
+    <width>1732</width>
+    <height>951</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -367,7 +367,7 @@ color: rgba(230, 230, 230, 150)</string>
             <number>100</number>
            </property>
            <property name="bottomMargin">
-            <number>45</number>
+            <number>50</number>
            </property>
            <property name="spacing">
             <number>10</number>
@@ -385,7 +385,7 @@ color: rgba(230, 230, 230, 150)</string>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_10">
               <property name="spacing">
-               <number>0</number>
+               <number>10</number>
               </property>
               <property name="leftMargin">
                <number>0</number>
@@ -402,7 +402,7 @@ color: rgba(230, 230, 230, 150)</string>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_9">
                 <property name="spacing">
-                 <number>0</number>
+                 <number>6</number>
                 </property>
                 <property name="leftMargin">
                  <number>0</number>
@@ -411,7 +411,7 @@ color: rgba(230, 230, 230, 150)</string>
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QPushButton" name="button_update">
+                 <widget class="ButtonMainMenu" name="button_update">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -420,14 +420,14 @@ color: rgba(230, 230, 230, 150)</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="text">
@@ -436,7 +436,7 @@ color: rgba(230, 230, 230, 150)</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="button_creator">
+                 <widget class="ButtonMainMenu" name="button_creator">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -445,14 +445,14 @@ color: rgba(230, 230, 230, 150)</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="text">
@@ -461,7 +461,7 @@ color: rgba(230, 230, 230, 150)</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="button_about">
+                 <widget class="ButtonMainMenu" name="button_about">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -470,14 +470,14 @@ color: rgba(230, 230, 230, 150)</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="text">
@@ -486,7 +486,7 @@ color: rgba(230, 230, 230, 150)</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="button_logout">
+                 <widget class="ButtonMainMenu" name="button_logout">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -495,14 +495,14 @@ color: rgba(230, 230, 230, 150)</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="text">
@@ -545,7 +545,7 @@ color: rgba(230, 230, 230, 150)</string>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <item>
-                 <widget class="QPushButton" name="button_load_roms">
+                 <widget class="ButtonMainMenu" name="button_load_roms">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -554,14 +554,14 @@ color: rgba(230, 230, 230, 150)</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="text">
@@ -570,7 +570,7 @@ color: rgba(230, 230, 230, 150)</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="button_select_console">
+                 <widget class="ButtonMainMenu" name="button_select_console">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -579,14 +579,14 @@ color: rgba(230, 230, 230, 150)</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="text">
@@ -595,7 +595,7 @@ color: rgba(230, 230, 230, 150)</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="butto_store">
+                 <widget class="ButtonMainMenu" name="button_store">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -604,14 +604,14 @@ color: rgba(230, 230, 230, 150)</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="text">
@@ -620,7 +620,7 @@ color: rgba(230, 230, 230, 150)</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="button_media">
+                 <widget class="ButtonMainMenu" name="button_media">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -629,14 +629,14 @@ color: rgba(230, 230, 230, 150)</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="text">
@@ -645,7 +645,7 @@ color: rgba(230, 230, 230, 150)</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="button_user">
+                 <widget class="ButtonMainMenu" name="button_user">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -654,14 +654,14 @@ color: rgba(230, 230, 230, 150)</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="text">
@@ -670,7 +670,7 @@ color: rgba(230, 230, 230, 150)</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="button_settings">
+                 <widget class="ButtonMainMenu" name="button_settings">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -679,14 +679,14 @@ color: rgba(230, 230, 230, 150)</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>150</width>
-                    <height>268</height>
+                    <width>250</width>
+                    <height>350</height>
                    </size>
                   </property>
                   <property name="text">
@@ -706,6 +706,12 @@ color: rgba(230, 230, 230, 150)</string>
       </item>
       <item>
        <widget class="QFrame" name="credits">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="styleSheet">
          <string notr="true">border: none</string>
         </property>
@@ -715,7 +721,7 @@ color: rgba(230, 230, 230, 150)</string>
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <layout class="QHBoxLayout" name="horizontalLayout">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -732,12 +738,15 @@ color: rgba(230, 230, 230, 150)</string>
           <number>0</number>
          </property>
          <item>
-          <widget class="QLabel" name="label">
+          <widget class="LabelHour" name="labelCredits">
+           <property name="styleSheet">
+            <string notr="true">color: white</string>
+           </property>
            <property name="frameShadow">
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;GameXtation&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;GameXtation By Victor Ardila&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="textFormat">
             <enum>Qt::MarkdownText</enum>
@@ -765,6 +774,11 @@ color: rgba(230, 230, 230, 150)</string>
    <class>ButtonIcon</class>
    <extends>QPushButton</extends>
    <header location="global">src.components.buttons.button_icon</header>
+  </customwidget>
+  <customwidget>
+   <class>ButtonMainMenu</class>
+   <extends>QPushButton</extends>
+   <header location="global">src.components.buttons.button_main_menu</header>
   </customwidget>
  </customwidgets>
  <resources>

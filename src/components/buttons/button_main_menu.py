@@ -1,26 +1,45 @@
-from PyQt5.QtWidgets import QPushButton, QWidget
-from PyQt5.QtGui import QImage
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QPushButton, QWidget, QVBoxLayout, QLabel
+from PyQt5.QtGui import QPixmap, QFont, QFontDatabase
+from PyQt5.QtCore import Qt, QPropertyAnimation, QRect
 
 class ButtonMainMenu(QPushButton):
-    def __init__(self, parent=QWidget | None):
+    gradient_color_selection = "qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(173, 216, 230, 100), stop:1 rgba(0, 255, 127, 255));"
+
+    def __init__(self, parent=None):
         super().__init__(parent)
+        self.setup_ui()
         self.installEventFilter(self)
         
-    gradient_color = "qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(173, 216, 230, 255), stop:1 rgba(0, 255, 127, 255));"
-    def style(self, image, size, tooltip):
-        self.setImage(QImage(image))
-        self.setImageSize(size)
-        self.setToolTip(tooltip)
+    def setup_ui(self):
         self.setCursor(Qt.PointingHandCursor)
-        self.setText("")
-        self.setStyleSheet(
-            """
+        self.setStyleSheet(self.default_stylesheet())
+        
+        self.layout = QVBoxLayout(self)
+        self.layout.setContentsMargins(0, 0, 0, 0)  # Remove margins
+        self.layout.setSpacing(0)  # Remove spacing
+        
+        self.image_label = QLabel(self)
+        self.image_label.setAlignment(Qt.AlignCenter)  # Center the image
+        self.layout.addWidget(self.image_label)
+        
+        self.text_label = QLabel(self)
+        self.text_label.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(self.text_label)
+        
+        self.layout.addStretch()  # Add stretchable space to push content to the center
+        
+        
+    def default_stylesheet(self):
+        return """
             QPushButton {
                 border: none;
                 border-radius: 10px;
-                background-color: rgba(255, 255, 255, 0);
+                background: rgba(255, 255, 255, 0.2); 
             }
+        """
+    
+    def tooltip_stylesheet(self):
+        return """
             QToolTip {
                 background-color: #333;
                 color: #fff;
@@ -28,46 +47,51 @@ class ButtonMainMenu(QPushButton):
                 padding: 5px;
                 border-radius: 5px;
             }
+        """
+
+    def style(self, image, size, tooltip):
+        self.setText("")  # Remove button text for design purposes
+        
+        pixmap = QPixmap(image)
+        self.image_label.setPixmap(pixmap.scaled(size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        
+        self.setToolTip(tooltip)
+        self.text_label.setText(tooltip)  # Use tooltip as text for QLabel
+        
+        custom_font = self.load_custom_font()
+        self.text_label.setFont(custom_font)
+        self.text_label.setStyleSheet("color: white;")
+        
+        self.setStyleSheet(self.default_stylesheet() + self.tooltip_stylesheet())
+
+    def load_custom_font(self):
+        font_id = QFontDatabase.addApplicationFont("src/assets/font/ratchet-clank-psp.ttf")
+        if font_id != -1:
+            font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
+            return QFont(font_family, 20)
+        else:
+            return QFont("Arial", 18)
+
+    def eventFilter(self, obj, event):
+        if event.type() == event.HoverEnter:
+            self.set_hover_stylesheet()
+        elif event.type() == event.HoverLeave:
+            self.set_default_stylesheet()
+        elif event.type() == event.MouseButtonPress and event.button() == Qt.LeftButton:
+            pass
+        return super().eventFilter(obj, event)
+
+    def set_hover_stylesheet(self):
+        self.setStyleSheet(
+            f"""
+            QPushButton {{
+                border: none;
+                border-radius: 10px;
+                background: {self.gradient_color_selection};
+            }}
+            {self.tooltip_stylesheet()}
             """
         )
 
-    # Métodos para darle hover al botón
-    def eventFilter(self, obj, event):
-        if event.type() == event.HoverEnter:
-            self.setStyleSheet(
-                f"""
-                QPushButton {{
-                    border: none;
-                    border-radius: 10px;
-                    background: {self.gradient_color}; /* Usamos background en lugar de background-color */
-                }}
-                QToolTip {{
-                    background-color: #333;
-                    color: #fff;
-                    border: 1px solid white;
-                    padding: 5px;
-                    border-radius: 5px;
-                }}
-                """)
-        elif event.type() == event.HoverLeave:
-            self.setStyleSheet(
-                """
-                QPushButton {
-                    border: none;
-                    border-radius: 10px;
-                    background-color: rgba(255, 255, 255, 0);
-                }
-                QToolTip {
-                    background-color: #333;
-                    color: #fff;
-                    border: 0.5px solid white;
-                    padding: 5px;
-                    border-radius: 5px;
-                }
-                """
-            )
-        elif event.type() == event.MouseButtonPress:
-            if event.button() == Qt.LeftButton:
-                pass
-        return super().eventFilter(obj, event)
-
+    def set_default_stylesheet(self):
+        self.setStyleSheet(self.default_stylesheet() + self.tooltip_stylesheet())
