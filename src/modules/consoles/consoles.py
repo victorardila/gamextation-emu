@@ -1,12 +1,12 @@
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QWidget
 from PyQt5.uic import loadUi
 
-class Consoles(QMainWindow):
+class Consoles(QWidget):
     def __init__(self):
         super().__init__()
-        self.InitViewsContainer()
+        self.setupUi()
         
-    def InitViewsContainer(self):
+    def setupUi(self):
         loadUi("src/views/consoles/consoles.ui", self)
         self.showMaximized()
         self.raise_()

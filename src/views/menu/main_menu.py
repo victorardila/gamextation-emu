@@ -1,11 +1,12 @@
 from PyQt5.QtWidgets import QWidget, QSizePolicy, QStackedWidget
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, pyqtSignal
 from PyQt5.uic import loadUi
 from src.components.animation.animation_ppsspp import AnimationPPSSPP
 from src.views.menu.overlay.overlay_content import OverlayContent
-from qtawesome import icon
 
 class MainMenu(QWidget):
+    menu_button_clicked = pyqtSignal(str)  # Señal para indicar que un botón del menú ha sido presionado
+
     def __init__(self):
         super().__init__()
         self.init_main_menu()
@@ -45,6 +46,8 @@ class MainMenu(QWidget):
         self.overlay.show()
         # Conectar la señal theme_changed al método change_bg_color
         self.overlay.theme_changed.connect(self.change_bg_color)
+        # Conectar la señal menu_button_clicked al método handle_menu_button_clicked
+        self.overlay.menu_button_clicked.connect(self.handle_menu_button_clicked)
         
     def change_bg_color(self):
         if self.styleSheet() == f"background-color: {self.BG_COLOR_DARK}":
@@ -57,3 +60,6 @@ class MainMenu(QWidget):
             self.setStyleSheet(f"background-color: {self.BG_COLOR_DARK}")
             self.overlay.button_icon_mode.style('fa5s.sun', QSize(32, 32), "Modo claro", 'white')
             self.animation.update_icon_color(is_dark_mode)
+
+    def handle_menu_button_clicked(self, tooltip):
+        self.menu_button_clicked.emit(tooltip)

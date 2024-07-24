@@ -8,6 +8,7 @@ from datetime import datetime
 
 class OverlayContent(QWidget):
     theme_changed = pyqtSignal()  # Señal para indicar el cambio de tema
+    menu_button_clicked = pyqtSignal(str)  # Señal para indicar que un botón del menú ha sido presionado
 
     def __init__(self):
         super().__init__()
@@ -26,7 +27,6 @@ class OverlayContent(QWidget):
         "src/assets/img/about.png",
         "src/assets/img/exit.png",
     ]
-    SVG_CREDITS = "src/assets/svg/icon.svg"
     
     def init_main_menu(self):
         loadUi("src/views/menu/overlay/overlay_content.ui", self)
@@ -81,6 +81,12 @@ class OverlayContent(QWidget):
 
         for btn, image, tooltip in zip(buttons, self.IMAGES, tooltips):
             btn.style(image, QSize(250, 350), tooltip)
+            btn.clicked.connect(lambda _, t=tooltip: self.emit_menu_button_clicked(t))  # Conectar clic a la señal
 
     def emit_theme_change(self):
         self.theme_changed.emit()
+
+    def emit_menu_button_clicked(self, tooltip):
+        # Emitir la señal menu_button_clicked con el mensaje del tooltip
+        message = f"Submenu {tooltip}"
+        self.menu_button_clicked.emit(message)

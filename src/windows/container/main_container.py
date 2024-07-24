@@ -23,20 +23,19 @@ class MainContainer(QMainWindow):
         self.mainMenu = MainMenu()
         self.submenu = SubMenu()
         
-        # Añadir los widgets al QStackedWidget
         self.layout_views.addWidget(self.mainMenu)
         self.layout_views.addWidget(self.submenu)
         
-        # Mostrar el widget inicial
-        self.ShowWidget(self.mainMenu)
+        self.layout_views.setCurrentWidget(self.mainMenu)
         
-        # Configurar botones para cambiar entre widgets
-        self.initNavigationButtons()
+        # Conectar la señal menu_button_clicked al método switch_to_submenu
+        self.mainMenu.menu_button_clicked.connect(self.switch_to_submenu)
 
-    def initNavigationButtons(self):
-        pass
-        
-    # Método para mostrar los widgets dentro del contenedor principal
-    def ShowWidget(self, widget):
-        self.layout_views.setCurrentWidget(widget)
-        self.layout_views.raise_()
+    def switch_to_submenu(self, message):
+        # si message contiene la palabra Submenu cambiar a la vista submenu
+        if "Submenu" in message:
+            # Cambiar a la vista submenu y le pasamos el mensaje
+            self.layout_views.setCurrentWidget(self.submenu)
+            self.submenu.load_module(message)
+        else:
+            self.layout_views.setCurrentWidget(self.mainMenu)
