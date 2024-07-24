@@ -50,7 +50,7 @@ class MainMenu(QWidget):
         if self.styleSheet() == f"background-color: {self.BG_COLOR_DARK}":
             is_dark_mode = True  # Cambiar esto según el tema actual
             self.setStyleSheet(f"background-color: {self.BG_COLOR_LIGHT}")
-            self.overlay.button_icon_mode.style('fa5s.moon', QSize(32, 32), "Modo oscuro", '#00FF7F')
+            self.overlay.button_icon_mode.style('fa5s.moon', QSize(32, 32), "Modo oscuro", 'gray')
             self.animation.update_icon_color(is_dark_mode)
         else:
             is_dark_mode = False  # Cambiar esto según el tema actual
