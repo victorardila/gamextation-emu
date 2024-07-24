@@ -20,6 +20,7 @@ class OverlayContent(QWidget):
         "src/assets/img/media.png",
         "src/assets/img/user.png",
         "src/assets/img/settings.png",
+        "src/assets/img/optimize.png",
         "src/assets/img/update.png",
         "src/assets/img/creator.png",
         "src/assets/img/about.png",
@@ -69,13 +70,13 @@ class OverlayContent(QWidget):
 
         buttons = [
             self.button_load_roms, self.button_select_console, self.button_store, 
-            self.button_media, self.button_user, self.button_settings,
+            self.button_media, self.button_user, self.button_settings, self.button_optimize,
             self.button_update, self.button_creator, self.button_about, self.button_logout
         ]
 
         tooltips = [
             "Juegos cargados", "Seleccionar consola", "Tienda", "Media", "Usuario",
-            "Configuraciones", "Actualizaciones", "Creador", "Acerca de", "Salir"
+            "Configuraciones", "Optimizar", "Actualizaciones", "Creador", "Acerca de", "Salir"
         ]
 
         for btn, image, tooltip in zip(buttons, self.IMAGES, tooltips):
