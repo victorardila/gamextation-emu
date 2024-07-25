@@ -7,7 +7,7 @@ class Consoles(QWidget):
         self.setupUi()
         
     def setupUi(self):
-        loadUi("src/views/consoles/consoles.ui", self)
+        loadUi("src/modules/consoles/consoles.ui", self)
         self.showMaximized()
         self.raise_()
         

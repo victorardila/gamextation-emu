@@ -16,6 +16,8 @@ from src.modules.about.about import About
 
 class OverlayContent(QWidget):
     theme_changed = pyqtSignal()  # Señal para indicar el cambio de tema
+    menu_return_clicked = pyqtSignal()
+    menu_exit_clicked = pyqtSignal()
     SVG_CREDITS = "src/assets/svg/icon.svg"
     
     # Arreglo de modulos
@@ -39,6 +41,9 @@ class OverlayContent(QWidget):
         self.timer = QTimer()
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.close_sidebar_if_needed)
+        # Conectar los botones a la señal
+        self.button_return.clicked.connect(self.emit_menu_return)
+        self.button_exit.clicked.connect(self.emit_menu_exit)
 
     def init_main_menu(self):
         """Load the UI and initialize main menu."""
@@ -53,7 +58,7 @@ class OverlayContent(QWidget):
         self.button_menu_bar.installEventFilter(self)
         self.sidebar_menu.installEventFilter(self)
     
-    def clear_layout(layout):
+    def clear_layout(self, layout):
         """Helper function to clear a layout."""
         while layout.count():
             child = layout.takeAt(0)
@@ -73,6 +78,9 @@ class OverlayContent(QWidget):
 
         # Crear una instancia del módulo
         self.module = self.MODULES[key]()
+        
+        # Conectar la señal back_clicked del módulo cargado a la señal menu_return_clicked
+        self.module.back_clicked.connect(self.emit_menu_return)
 
         # Si ya hay un layout, limpiarlo
         if self.content_menu.layout() is not None:
@@ -198,10 +206,18 @@ class OverlayContent(QWidget):
         self.button_menu_bar.setStyleSheet(style)
     
     def start_auto_close_timer(self):
-        """Start the timer to close the sidebar automatically after 3 seconds."""
-        self.timer.start(2000)  # 3000 ms = 3 seconds
+        """Start the timer to close the sidebar automatically after a period of inactivity."""
+        self.timer.start(5000)  # 5000 milliseconds (5 seconds)
 
     def close_sidebar_if_needed(self):
-        """Close the sidebar if not hovering over it."""
+        """Close the sidebar if it's open and the timer elapses."""
         if self.sidebar_open:
             self.toggle_sidebar()
+
+    def emit_menu_return(self):
+        """Emit the menu return signal."""
+        self.menu_return_clicked.emit()
+    
+    def emit_menu_exit(self):
+        """Emit the menu exit signal."""
+        self.menu_exit_clicked.emit()

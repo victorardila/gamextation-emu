@@ -1,8 +1,11 @@
 from PyQt5.QtWidgets import QWidget, QGridLayout
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, pyqtSignal
 from PyQt5.uic import loadUi
 from src.components.cover.cover_game import CoverGame
+
 class Roms(QWidget):
+    back_clicked = pyqtSignal()  # Definir la señal
+
     def __init__(self, parent=None):
         super(Roms, self).__init__(parent)
         self.setupUi()
@@ -18,7 +21,11 @@ class Roms(QWidget):
         self.label_module.setText("Roms")
         self.label_name_game.setStyleSheet("color: white; font-size: 20px; font-weight: bold;")
         self.label_name_game.setText("Nombre del juego")
-        # activo el Grid layout de QWidget content
+        
+        # Conectar el botón a la señal
+        self.button_back.clicked.connect(self.back_clicked.emit)
+
+        # Activo el Grid layout de QWidget content
         grid_layout = QGridLayout(self.content)
         grid_layout.setSpacing(10)
         grid_layout.setContentsMargins(10, 10, 10, 10)

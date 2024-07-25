@@ -30,6 +30,8 @@ class MainContainer(QMainWindow):
         
         # Conectar la señal menu_button_clicked al método switch_to_submenu
         self.mainMenu.menu_button_clicked.connect(self.switch_to_submenu)
+        self.submenu.menu_return_clicked.connect(self.switch_to_mainmenu)
+        self.submenu.menu_exit_clicked.connect(self.close_aplication)
 
     def switch_to_submenu(self, message):
         # si message contiene la palabra Submenu cambiar a la vista submenu
@@ -39,3 +41,9 @@ class MainContainer(QMainWindow):
             self.submenu.load_module(message)
         else:
             self.layout_views.setCurrentWidget(self.mainMenu)
+    
+    def switch_to_mainmenu(self):
+        self.layout_views.setCurrentWidget(self.mainMenu)
+    
+    def close_aplication(self):
+        self.close()

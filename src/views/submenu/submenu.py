@@ -1,12 +1,17 @@
 from PyQt5.QtWidgets import QWidget, QSizePolicy, QStackedWidget
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, pyqtSignal
 from PyQt5.uic import loadUi
 from src.components.animation.animation_ppsspp import AnimationPPSSPP
 from src.views.submenu.overlay.overlay_content import OverlayContent
 class SubMenu(QWidget):
+    menu_return_clicked = pyqtSignal()
+    menu_exit_clicked = pyqtSignal()
+    
     def __init__(self):
         super().__init__()
         self.init_submenu()
+        self.overlay.menu_return_clicked.connect(self.emit_menu_return)
+        self.overlay.menu_exit_clicked.connect(self.emit_menu_exit)
         
     BG_COLOR_DARK = (
         "qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, "
@@ -59,3 +64,9 @@ class SubMenu(QWidget):
             self.setStyleSheet(f"background-color: {self.BG_COLOR_DARK}")
             self.overlay.button_icon_mode.style('fa5s.sun', QSize(32, 32), "Modo claro", 'white')
             self.animation.update_icon_color(is_dark_mode)
+    
+    def emit_menu_return(self):
+        self.menu_return_clicked.emit()
+    
+    def emit_menu_exit(self):
+        self.menu_exit_clicked.emit()
