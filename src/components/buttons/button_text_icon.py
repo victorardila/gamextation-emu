@@ -2,12 +2,22 @@ from PyQt5.QtWidgets import QPushButton, QWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from qtawesome import icon
+import pygame
 
 class ButtonTextIcon(QPushButton):
+    hover_sfx = 'src/assets/sfx/hover.wav'
+    
     def __init__(self, parent=QWidget | None):
         super().__init__(parent)
         self.installEventFilter(self)
         self.setCursor(Qt.PointingHandCursor)
+        self.init_sfx()
+
+    def init_sfx(self):
+        # Inicializar pygame mixer
+        pygame.mixer.init()
+        self.hover_sound = pygame.mixer.Sound(self.hover_sfx)
+        self.hover_sound.set_volume(0.6)  # Ajusta el volumen (0.0 a 1.0)
         
     def style(self, icon_name, size, tooltip, color='white'):
         self.setIcon(QIcon(icon(icon_name, color=color)))
@@ -38,7 +48,7 @@ class ButtonTextIcon(QPushButton):
                 border: none;
                 border-radius: 10px;
                 color: white;
-                background-color: rgba(232, 155, 13, 0.5);
+                background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(173, 216, 230, 100), stop:1 rgba(0, 255, 127, 255));
             }
             QToolTip {
                 background-color: #333;
@@ -69,8 +79,13 @@ class ButtonTextIcon(QPushButton):
     def eventFilter(self, obj, event):
         if event.type() == event.HoverEnter:
             self.setStyleSheet(self.hover_enter_stylesheet())
+            self.play_hover_sound()
         elif event.type() == event.HoverLeave:
             self.setStyleSheet(self.hover_leave_stylesheet())
         elif event.type() == event.MouseButtonPress and event.button() == Qt.LeftButton:
             pass
         return super().eventFilter(obj, event)
+
+    def play_hover_sound(self):
+        if self.hover_sound:
+            self.hover_sound.play()

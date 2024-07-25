@@ -99,7 +99,7 @@ class OverlayContent(QWidget):
         )
         
         # Apply sidebar styles
-        self.sidebar_menu.setStyleSheet("background-color: rgba(255, 255, 255, 0.2);")
+        self.sidebar_menu.setStyleSheet("background-color: rgba(0, 0, 0, 0.2);")
         self.logo_menu_content.setStyleSheet("background-color: transparent;")
         
         # Set logo with customized color and size
@@ -199,7 +199,7 @@ class OverlayContent(QWidget):
     
     def start_auto_close_timer(self):
         """Start the timer to close the sidebar automatically after 3 seconds."""
-        self.timer.start(3000)  # 3000 ms = 3 seconds
+        self.timer.start(2000)  # 3000 ms = 3 seconds
 
     def close_sidebar_if_needed(self):
         """Close the sidebar if not hovering over it."""

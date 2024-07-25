@@ -1,14 +1,23 @@
 from PyQt5.QtWidgets import QPushButton, QWidget, QVBoxLayout, QLabel
 from PyQt5.QtGui import QPixmap, QFont, QFontDatabase
-from PyQt5.QtCore import Qt, QPropertyAnimation, QRect
+from PyQt5.QtCore import Qt
+import pygame
 
 class ButtonMainMenu(QPushButton):
     gradient_color_selection = "qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(173, 216, 230, 100), stop:1 rgba(0, 255, 127, 255));"
-
+    hover_sfx = 'src/assets/sfx/hover.wav'
+    
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
         self.installEventFilter(self)
+        self.init_sfx()
+
+    def init_sfx(self):
+        # Inicializar pygame mixer
+        pygame.mixer.init()
+        self.hover_sound = pygame.mixer.Sound(self.hover_sfx)
+        self.hover_sound.set_volume(0.3)  # Ajusta el volumen (0.0 a 1.0)
         
     def setup_ui(self):
         self.setCursor(Qt.PointingHandCursor)
@@ -27,7 +36,6 @@ class ButtonMainMenu(QPushButton):
         self.layout.addWidget(self.text_label)
         
         self.layout.addStretch()  # Add stretchable space to push content to the center
-        
         
     def default_stylesheet(self):
         return """
@@ -75,6 +83,7 @@ class ButtonMainMenu(QPushButton):
     def eventFilter(self, obj, event):
         if event.type() == event.HoverEnter:
             self.set_hover_stylesheet()
+            self.play_hover_sound()
         elif event.type() == event.HoverLeave:
             self.set_default_stylesheet()
         elif event.type() == event.MouseButtonPress and event.button() == Qt.LeftButton:
@@ -95,3 +104,7 @@ class ButtonMainMenu(QPushButton):
 
     def set_default_stylesheet(self):
         self.setStyleSheet(self.default_stylesheet() + self.tooltip_stylesheet())
+
+    def play_hover_sound(self):
+        if self.hover_sound:
+            self.hover_sound.play()
