@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QStackedLayout
+from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from PyQt5.QtCore import QSize, Qt, pyqtSignal, QTimer
 from PyQt5.uic import loadUi
 from PyQt5.QtGui import QFont, QFontDatabase, QPixmap, QPainter, QColor
@@ -249,3 +249,5 @@ class OverlayContent(QWidget):
     def hide_graphics_optimizer(self):
         """Ocultar el GraphicsOptimizer."""
         self.graphics_optimizer.setVisible(False)
+        # enviar una señal al modulo Roms que se ha ocultado el GraphicsOptimizer
+        self.module.optimizer_hidden.emit()

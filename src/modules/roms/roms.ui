@@ -115,6 +115,16 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QLabel" name="label_optimize">
+           <property name="text">
+            <string>Estado de optimizacion</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>

@@ -5,10 +5,12 @@ from src.components.cover.cover_game import CoverGame
 
 class Roms(QWidget):
     back_clicked = pyqtSignal()  # Definir la señal
-
+    optimizer_hidden = pyqtSignal()  # Define la señal
+    
     def __init__(self, parent=None):
         super(Roms, self).__init__(parent)
         self.setupUi()
+        self.optimizer_hidden.connect(self.handle_optimizer_hidden)
     
     def setupUi(self):
         loadUi("src/modules/roms/roms.ui", self)
@@ -21,6 +23,8 @@ class Roms(QWidget):
         self.label_module.setText("Roms")
         self.label_name_game.setStyleSheet("color: white; font-size: 20px; font-weight: bold;")
         self.label_name_game.setText("Nombre del juego")
+        # label_optimize no va a estar visible en un principio
+        self.label_optimize.setVisible(False)
         
         # Conectar el botón a la señal
         self.button_back.clicked.connect(self.back_clicked.emit)
@@ -38,3 +42,11 @@ class Roms(QWidget):
             row = i // num_columns
             column = i % num_columns
             grid_layout.addWidget(cover_game, row, column)
+            
+    def handle_optimizer_hidden(self):
+        """Método que maneja la señal optimizer_hidden."""
+        # Estilizo el label_optimize con un verde claro
+        self.label_optimize.setStyleSheet("background-color: transparent; color: #00ff00; font-size: 20px; font-weight: bold;")
+        self.label_optimize.setVisible(True)
+        # cambio el texto del label_optimize
+        self.label_optimize.setText("Recursos optimizados")

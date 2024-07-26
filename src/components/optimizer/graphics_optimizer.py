@@ -1,40 +1,51 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QGraphicsDropShadowEffect
+from PyQt5.QtWidgets import (
+    QWidget,
+    QFrame,
+    QHBoxLayout,
+    QVBoxLayout,
+    QLabel,
+    QGraphicsDropShadowEffect,
+)
 from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF
 from PyQt5.QtGui import QPainter, QColor, QLinearGradient, QPen, QPainterPath
 from time import time
 import pygame
 import psutil
-import math
 import os
 
+
 class GraphicsOptimizer(QWidget):
-    load_sfx = 'src/assets/sfx/optimize.wav'
     
+    load_sfx = "src/assets/sfx/optimize.wav"
+
     def __init__(self):
         super().__init__()
         self.setupUi()
         self.initAnimation()
         self.init_sfx()  # Inicializar el sonido antes de la animación
-        optimize_system_resources(os.getpid())
+        self.optimize_system_resources(os.getpid())
         
+    # DISEÑO DEL TACÓMETRO
     def init_sfx(self):
         # Inicializar pygame mixer
         pygame.mixer.init()
         # Cargar el sonido
         self.sound = pygame.mixer.Sound(self.load_sfx)
         # Reproducir el sonido
-        self.sound.set_volume(0.3)  # Ajusta el volumen (0.0 a 1.0)
+        self.sound.set_volume(0.2)  # Ajusta el volumen (0.0 a 1.0)
 
     def setupUi(self):
         # Configurar el tamaño fijo del widget
-        self.setFixedSize(500, 80)
+        self.setFixedSize(
+            500, 100
+        )  # Ajusta el tamaño para acomodar ambos labels y la línea
 
         # Configurar el estilo del widget
         self.setStyleSheet(
-            f"""
+            """
             background: transparent;
             border-radius: 50px;
-        """
+            """
         )
 
         # Aplicar un efecto de sombra para mejorar la visibilidad de los bordes
@@ -45,12 +56,43 @@ class GraphicsOptimizer(QWidget):
         self.setGraphicsEffect(shadow_effect)
 
         # Configurar el layout
-        layout = QVBoxLayout()
-        label = QLabel("CoverGame")
-        label.setAlignment(Qt.AlignCenter)  # Centrar el texto del label
-        label.setStyleSheet("color: white; font-size: 16px; font-weight: bold;")
-        layout.addWidget(label)
-        self.setLayout(layout)
+        self.layout = QVBoxLayout()
+
+        # Primer label
+        self.label1 = QLabel("Procesos detenidos: ")
+        self.label1.setAlignment(Qt.AlignCenter)  # Centrar el texto del label
+        self.label1.setStyleSheet("color: white; font-size: 16px; font-weight: bold;")
+        self.layout.addWidget(self.label1)
+
+        # Reducir el espacio entre el primer label y la línea
+        self.layout.setSpacing(0)
+
+        # Línea horizontal
+        line_layout = QHBoxLayout()
+        line = QFrame()
+        line.setFrameShape(QFrame.HLine)
+        line.setFrameShadow(QFrame.Sunken)
+        line.setStyleSheet("color: white; background-color: white;")
+        line.setFixedHeight(1)
+        line.setFixedWidth(180)
+        line.setContentsMargins(0, 0, 0, 0)
+        line_layout.addWidget(line)
+        # estilizo el QHBoxLayout le doy un color de fondo
+        line_layout.setContentsMargins(0, 0, 0, 0)
+        line_layout.setSpacing(0)
+        line_layout.setAlignment(Qt.AlignCenter)  # Alineo la línea al centro
+        self.layout.addLayout(line_layout)
+
+        # Reducir el espacio entre la línea y el segundo label
+        self.layout.setSpacing(0)
+
+        # Segundo label
+        self.label2 = QLabel("Memoria Liberada: ")
+        self.label2.setAlignment(Qt.AlignCenter)  # Centrar el texto del label
+        self.label2.setStyleSheet("color: white; font-size: 14px; font-weight: 600;")
+        self.layout.addWidget(self.label2)
+
+        self.setLayout(self.layout)
 
     def initAnimation(self):
         """Initializes the animation for the tachometer needle."""
@@ -80,8 +122,8 @@ class GraphicsOptimizer(QWidget):
 
         # Crear un gradiente lineal
         gradient = QLinearGradient(0, 0, self.width(), self.height())
-        gradient.setColorAt(0, QColor(169, 169, 169, 51))  # 51 ≈ 20% transparencia
-        gradient.setColorAt(1, QColor(105, 105, 105, 102))  # 102 ≈ 40% transparencia
+        gradient.setColorAt(0, QColor(169, 169, 169, 150))  # 51 ≈ 20% transparencia
+        gradient.setColorAt(1, QColor(105, 105, 105, 170))  # 102 ≈ 40% transparencia
 
         # Configurar el pincel del pintor con el gradiente
         painter.setBrush(gradient)
@@ -152,33 +194,32 @@ class GraphicsOptimizer(QWidget):
             inner_most_arc_rect, 0 * 16, 180 * 16
         )  # Dibuja solo la mitad superior
 
-        # Dibujar la aguja del tacómetro
-        needle_length = radius * 0.8
-        needle_width = 5  # Ancho de la aguja en la parte superior
+        # Dibujar la aguja del tacómetro (diseño extraído de la primera implementación)
+        needle_length = radius * 0.9
+        needle_width = radius * 0.05
+        painter.setPen(QPen(Qt.white, 2))
+        painter.setBrush(Qt.white)
 
-        # Ajustar la aguja para que tenga un ancho mayor en la base
-        base_width = 15  # Ancho de la base de la aguja
-
-        # Crear un QPainterPath para la aguja con base más ancha
-        path = QPainterPath()
-        angle_rad = math.radians(180 - self.angle)
-        base_start = QPointF(center_x - base_width / 2, center_y)
-        base_end = QPointF(center_x + base_width / 2, center_y)
-        tip = QPointF(
-            center_x + needle_length * math.cos(angle_rad),
-            center_y - needle_length * math.sin(angle_rad),
+        painter.save()
+        painter.translate(center_x, center_y)
+        painter.rotate(
+            -90 + self.angle
+        )  # Cambia el ángulo de rotación para iniciar desde 0 grados
+        painter.drawPolygon(
+            [
+                QPointF(0, 0),
+                QPointF(-needle_width, -needle_length),
+                QPointF(needle_width, -needle_length),
+            ]
         )
+        painter.restore()
 
-        path.moveTo(base_start)
-        path.lineTo(base_end)
-        path.lineTo(tip)
-        path.lineTo(base_start)
-
-        # Configurar el pincel del pintor para la aguja
-        painter.setPen(Qt.NoPen)
-        painter.setBrush(QColor(255, 0, 0))
-        painter.drawPath(path)
-    
+        # Dibujar el punto de origen de la aguja
+        painter.setBrush(Qt.white)
+        painter.drawEllipse(
+            QPointF(center_x, center_y), needle_width * 1.5, needle_width * 1.5
+        )
+        
     def showEvent(self, event):
         """Overrides the showEvent to play the sound when the widget is shown."""
         super().showEvent(event)
@@ -187,29 +228,42 @@ class GraphicsOptimizer(QWidget):
     def play_load_sound(self):
         if self.sound:
             self.sound.play()
+    
+    def hideEvent(self, event):
+        """Evento cuando el widget se oculta"""
+        # debe enviar una señal al componente padre que lo llama
 
+        super().hideEvent(event)
 
-# Funcionalidad para optimizar los recursos del sistema
-def optimize_system_resources(exclude_pid=None):
-    """
-    Optimize system resources by terminating processes consuming too much memory.
+    # FUNCIÓN PARA OPTIMIZAR EL SISTEMA
+    def optimize_system_resources(self, exclude_pid=None):
+        """
+        Optimize system resources by terminating processes consuming too much memory.
 
-    :param exclude_pid: PID of the process to exclude from termination.
-    """
-    memory_threshold = 500  # Memory threshold in MB
+        :param exclude_pid: PID of the process to exclude from termination.
+        """
+        memory_threshold = 500  # Memory threshold in MB
+        processes_intervenidos = 0
+        memoria_liberada = 0
 
-    for proc in psutil.process_iter(["pid", "name", "memory_info"]):
-        try:
-            # Exclude the process with the given PID
-            if exclude_pid and proc.info["pid"] == exclude_pid:
-                continue
+        for proc in psutil.process_iter(["pid", "name", "memory_info"]):
+            try:
+                # Exclude the process with the given PID
+                if exclude_pid and proc.info["pid"] == exclude_pid:
+                    continue
 
-            # Check if process memory usage exceeds the threshold
-            if proc.info["memory_info"].rss > memory_threshold * 1024 * 1024:
-                print(
-                    f"Terminating process {proc.info['name']} (PID: {proc.info['pid']}) using {proc.info['memory_info'].rss / (1024 * 1024):.2f} MB"
-                )
-                proc.terminate()
+                # Check if process memory usage exceeds the threshold
+                if proc.info["memory_info"].rss > memory_threshold * 1024 * 1024:
+                    memoria_liberada += proc.info["memory_info"].rss
+                    processes_intervenidos += 1
+                    # print(
+                    #     f"Terminating process {proc.info['name']} (PID: {proc.info['pid']}) using {proc.info['memory_info'].rss / (1024 * 1024):.2f} MB"
+                    # )
+                    proc.terminate()
 
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            pass
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass
+
+        memoria_liberada_mb = memoria_liberada / (1024 * 1024)
+        self.label1.setText(f"Procesos detenidos: {processes_intervenidos}")
+        self.label2.setText(f"Memoria Liberada: {memoria_liberada_mb:.2f} MB")
