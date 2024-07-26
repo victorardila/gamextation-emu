@@ -3,7 +3,7 @@ from src.windows.container.main_container import MainContainer
 from PyQt5.QtCore import QPropertyAnimation
 from src.windows.anim.animation import Animation
 from src.windows.dialogs.dialog_message import DialogMessage
-from config.container_platform import ContainerPlatform
+from config.dependencies.container_platform import ContainerPlatform
 
 class Aplicacion(QMainWindow):
     def __init__(self):
