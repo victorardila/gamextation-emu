@@ -1,8 +1,9 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QStackedLayout
 from PyQt5.QtCore import QSize, Qt, pyqtSignal, QTimer
 from PyQt5.uic import loadUi
 from PyQt5.QtGui import QFont, QFontDatabase, QPixmap, QPainter, QColor
 from PyQt5.QtGui import QEnterEvent, QMouseEvent
+from src.components.optimizer.graphics_optimizer import GraphicsOptimizer
 from src.modules.roms.roms import Roms
 from src.modules.consoles.consoles import Consoles
 from src.modules.store.store import Store
@@ -41,9 +42,18 @@ class OverlayContent(QWidget):
         self.timer = QTimer()
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.close_sidebar_if_needed)
+        
         # Conectar los botones a la señal
         self.button_return.clicked.connect(self.emit_menu_return)
         self.button_exit.clicked.connect(self.emit_menu_exit)
+        
+        # Instancia de GraphicsOptimizer
+        self.graphics_optimizer = GraphicsOptimizer()
+        self.graphics_optimizer.setParent(self)
+        self.graphics_optimizer.setVisible(False)  # Inicialmente oculto
+        self.graphics_optimizer_timer = QTimer()
+        self.graphics_optimizer_timer.setSingleShot(True)
+        self.graphics_optimizer_timer.timeout.connect(self.hide_graphics_optimizer)
 
     def init_main_menu(self):
         """Load the UI and initialize main menu."""
@@ -53,6 +63,7 @@ class OverlayContent(QWidget):
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.apply_sidebar_styles()
         self.button_menu_bar.clicked.connect(self.toggle_sidebar)  # Conectar el botón al método
+        self.button_optimize.clicked.connect(self.show_graphics_optimizer)  # Conectar el botón al método
 
         # Conectar eventos de entrada del mouse
         self.button_menu_bar.installEventFilter(self)
@@ -199,25 +210,42 @@ class OverlayContent(QWidget):
                 # Start the timer when mouse leaves the sidebar
                 self.start_auto_close_timer()
         return super().eventFilter(obj, event)
-
-    def set_button_menu_bar_opacity(self, opacity):
-        """Set the opacity of the button_menu_bar icon."""
-        style = f"background-color: rgba(255, 255, 255, {opacity});"
-        self.button_menu_bar.setStyleSheet(style)
     
     def start_auto_close_timer(self):
-        """Start the timer to close the sidebar automatically after a period of inactivity."""
-        self.timer.start(5000)  # 5000 milliseconds (5 seconds)
-
+        """Start the auto-close timer for the sidebar."""
+        self.timer.start(2000)  # 5000 ms = 5 seconds
+    
     def close_sidebar_if_needed(self):
-        """Close the sidebar if it's open and the timer elapses."""
+        """Close the sidebar if it's open and the timer expires."""
         if self.sidebar_open:
             self.toggle_sidebar()
-
+    
+    def set_button_menu_bar_opacity(self, opacity):
+        """Set the opacity of the button_menu_bar."""
+        self.button_menu_bar.setWindowOpacity(opacity)
+    
     def emit_menu_return(self):
-        """Emit the menu return signal."""
         self.menu_return_clicked.emit()
     
     def emit_menu_exit(self):
-        """Emit the menu exit signal."""
         self.menu_exit_clicked.emit()
+
+    def show_graphics_optimizer(self):
+        """Mostrar el GraphicsOptimizer en la esquina superior derecha sobre el content_menu."""
+        content_menu_rect = self.content_menu.rect()
+        widget_rect = self.graphics_optimizer.rect()
+        
+        # Configurar la geometría del GraphicsOptimizer
+        self.graphics_optimizer.setGeometry(
+            self.content_menu.width() - widget_rect.width() - 0,  # 20 píxeles desde el borde derecho
+            50,  # 30 píxeles desde el borde superior
+            widget_rect.width(),
+            widget_rect.height()
+        )
+        
+        self.graphics_optimizer.setVisible(True)
+        self.graphics_optimizer_timer.start(10000)  # Ocultar después de 10 segundos
+
+    def hide_graphics_optimizer(self):
+        """Ocultar el GraphicsOptimizer."""
+        self.graphics_optimizer.setVisible(False)
