@@ -83,26 +83,35 @@ class GraphicsOptimizer(QWidget):
         arc_rect = QRectF(center_x - radius, center_y - radius, 2 * radius, radius * 2)
         painter.drawArc(arc_rect, 0 * 16, 180 * 16)  # Dibuja solo la mitad superior
 
-        # Dibujar la franja blanca interna
-        inner_radius = radius * 0.9  # Ajusta este valor para la franja blanca interna
-        painter.setPen(QPen(QColor(255, 255, 255), 2))
-        inner_arc_rect = QRectF(center_x - inner_radius, center_y - inner_radius, 2 * inner_radius, inner_radius * 2)
-        painter.drawArc(inner_arc_rect, 0 * 16, 180 * 16)  # Dibuja solo la mitad superior
-
         # Crear un gradiente lineal para la franja más interna
-        gradient = QLinearGradient(center_x - inner_radius, center_y - radius, center_x + inner_radius, center_y - radius)
+        gradient = QLinearGradient(center_x - radius, center_y - radius, center_x + radius, center_y - radius)
         gradient.setColorAt(0.0, QColor(255, 0, 0))  # Rojo fuerte en el inicio
         gradient.setColorAt(0.5, QColor(255, 255, 0))  # Amarillo en el medio
         gradient.setColorAt(1.0, QColor(0, 255, 0))  # Verde fuerte al final
         
-        # Dibujar la franja más interna con el gradiente
+        # Crear un QPainterPath para dibujar el arco con el gradiente
+        path = QPainterPath()
+        path.arcMoveTo(arc_rect, 0)  # Mueve el camino al inicio del arco
+        path.arcTo(arc_rect, 0, 180)  # Dibuja el arco
+        
+        # Crear una máscara para la franja más interna
+        mask = QPainterPath()
+        inner_radius = radius * 0.6
+        inner_arc_rect = QRectF(center_x - inner_radius, center_y - inner_radius, 2 * inner_radius, inner_radius * 2)
+        mask.arcMoveTo(inner_arc_rect, 0)
+        mask.arcTo(inner_arc_rect, 0, 180)
+        
+        # Resta el camino de la máscara del arco principal
+        path -= mask
+        
+        # Configurar el pincel del pintor con el gradiente y dibujar la franja con gradiente
         painter.setPen(Qt.NoPen)
         painter.setBrush(gradient)
-        painter.drawArc(QRectF(center_x - inner_radius, center_y - inner_radius, 2 * inner_radius, inner_radius * 2), 0 * 16, 180 * 16)  # Dibuja solo la mitad superior
-
+        painter.drawPath(path)
+        
         # Dibujar la franja blanca más interna y más gruesa
-        inner_most_radius = radius * 0.7  # Ajusta este valor para la franja más interna
-        painter.setPen(QPen(QColor(255, 255, 255), 8))  # Grosor de línea mayor para la franja más gruesa
+        inner_most_radius = radius * 0.6  # Ajusta este valor para la franja más interna hacerla gruesa o delgada
+        painter.setPen(QPen(QColor(255, 255, 255), 6))  # Grosor de línea mayor para la franja más gruesa
         inner_most_arc_rect = QRectF(center_x - inner_most_radius, center_y - inner_most_radius, 2 * inner_most_radius, inner_most_radius * 2)
         painter.drawArc(inner_most_arc_rect, 0 * 16, 180 * 16)  # Dibuja solo la mitad superior
 
