@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QGraphicsDropShadowEffect
 from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF
-from PyQt5.QtGui import QPainter, QColor, QLinearGradient, QPen
+from PyQt5.QtGui import QPainter, QColor, QLinearGradient, QPen, QPainterPath
 from time import time
 import math
 
@@ -88,6 +88,17 @@ class GraphicsOptimizer(QWidget):
         painter.setPen(QPen(QColor(255, 255, 255), 2))
         inner_arc_rect = QRectF(center_x - inner_radius, center_y - inner_radius, 2 * inner_radius, inner_radius * 2)
         painter.drawArc(inner_arc_rect, 0 * 16, 180 * 16)  # Dibuja solo la mitad superior
+
+        # Crear un gradiente lineal para la franja más interna
+        gradient = QLinearGradient(center_x - inner_radius, center_y - radius, center_x + inner_radius, center_y - radius)
+        gradient.setColorAt(0.0, QColor(255, 0, 0))  # Rojo fuerte en el inicio
+        gradient.setColorAt(0.5, QColor(255, 255, 0))  # Amarillo en el medio
+        gradient.setColorAt(1.0, QColor(0, 255, 0))  # Verde fuerte al final
+        
+        # Dibujar la franja más interna con el gradiente
+        painter.setPen(Qt.NoPen)
+        painter.setBrush(gradient)
+        painter.drawArc(QRectF(center_x - inner_radius, center_y - inner_radius, 2 * inner_radius, inner_radius * 2), 0 * 16, 180 * 16)  # Dibuja solo la mitad superior
 
         # Dibujar la franja blanca más interna y más gruesa
         inner_most_radius = radius * 0.7  # Ajusta este valor para la franja más interna
