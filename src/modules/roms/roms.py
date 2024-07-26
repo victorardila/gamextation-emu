@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QGridLayout
-from PyQt5.QtCore import QSize, pyqtSignal
+from PyQt5.QtCore import QSize, pyqtSignal, QTimer
 from PyQt5.uic import loadUi
 from src.components.cover.cover_game import CoverGame
 
@@ -45,8 +45,14 @@ class Roms(QWidget):
             
     def handle_optimizer_hidden(self):
         """Método que maneja la señal optimizer_hidden."""
-        # Estilizo el label_optimize con un verde claro
+        print("handle_optimizer_hidden called")  # Verifica si esta línea se imprime
         self.label_optimize.setStyleSheet("background-color: transparent; color: #00ff00; font-size: 20px; font-weight: bold;")
         self.label_optimize.setVisible(True)
-        # cambio el texto del label_optimize
         self.label_optimize.setText("Recursos optimizados")
+        QTimer.singleShot(3000, self.hide_optimizer)
+
+    def hide_optimizer(self):
+        """Método que oculta el label_optimize."""
+        print("hide_optimizer called")  # Verifica si esta línea se imprime
+        self.label_optimize.setVisible(False) 
+        self.label_optimize.setText("") 
