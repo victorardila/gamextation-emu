@@ -1,20 +1,15 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QGraphicsDropShadowEffect
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPainter, QColor, QLinearGradient
-import qtawesome as qta
+from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF
+from PyQt5.QtGui import QPainter, QColor, QLinearGradient, QPen
+from time import time
+import math
 
 class GraphicsOptimizer(QWidget):
     def __init__(self):
         super().__init__()
         self.setupUi()
+        self.initAnimation()
     
-    # Arreglo de iconos para el tachometer
-    icons = [
-        "mdi.speedometer-slow",
-        "mdi.speedometer-medium",
-        "mdi.speedometer",
-    ]
-
     def setupUi(self):
         # Configurar el tamaño fijo del widget
         self.setFixedSize(500, 80)
@@ -40,6 +35,27 @@ class GraphicsOptimizer(QWidget):
         layout.addWidget(label)
         self.setLayout(layout)
 
+    def initAnimation(self):
+        """Initializes the animation for the tachometer needle."""
+        self.animation_time = 8000  # 8 seconds in milliseconds
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.updateNeedle)
+        self.timer.start(50)  # Update every 50ms
+        self.start_time = self.currentTime()
+
+    def currentTime(self):
+        """Returns the current time in milliseconds."""
+        return int(time() * 1000)
+
+    def updateNeedle(self):
+        """Updates the angle of the tachometer needle."""
+        current_time = self.currentTime()
+        elapsed_time = current_time - self.start_time
+        progress = (elapsed_time % self.animation_time) / self.animation_time
+        self.angle = 180 * progress
+
+        self.update()  # Trigger a repaint
+    
     def paintEvent(self, event):
         """Custom paint event to draw rounded corners with gradient background."""
         painter = QPainter(self)
@@ -55,3 +71,35 @@ class GraphicsOptimizer(QWidget):
         
         # Dibujar el rectángulo redondeado con el gradiente
         painter.drawRoundedRect(self.rect(), 50, 50)
+
+        # Configurar el estilo del tacómetro la mitad de la circunferencia hacia arriba para el tacómetro
+        center_x = 100  # Ajusta este valor para mover el tacómetro a la izquierda
+        value_center_y = self.height() / 2
+        center_y = value_center_y * 1.3  # Ajusta este valor para mover el tacómetro hacia arriba
+        radius = min(self.width(), self.height()) / 2 * 0.8
+        
+        # Dibujar el arco del tacómetro
+        painter.setPen(QPen(QColor(255, 255, 255), 2))
+        arc_rect = QRectF(center_x - radius, center_y - radius, 2 * radius, radius * 2)
+        painter.drawArc(arc_rect, 0 * 16, 180 * 16)  # Dibuja solo la mitad superior
+
+        # Dibujar la franja blanca interna
+        inner_radius = radius * 0.9  # Ajusta este valor para la franja blanca interna
+        painter.setPen(QPen(QColor(255, 255, 255), 2))
+        inner_arc_rect = QRectF(center_x - inner_radius, center_y - inner_radius, 2 * inner_radius, inner_radius * 2)
+        painter.drawArc(inner_arc_rect, 0 * 16, 180 * 16)  # Dibuja solo la mitad superior
+
+        # Dibujar la franja blanca más interna y más gruesa
+        inner_most_radius = radius * 0.7  # Ajusta este valor para la franja más interna
+        painter.setPen(QPen(QColor(255, 255, 255), 8))  # Grosor de línea mayor para la franja más gruesa
+        inner_most_arc_rect = QRectF(center_x - inner_most_radius, center_y - inner_most_radius, 2 * inner_most_radius, inner_most_radius * 2)
+        painter.drawArc(inner_most_arc_rect, 0 * 16, 180 * 16)  # Dibuja solo la mitad superior
+
+        # Dibujar la aguja del tacómetro
+        needle_length = radius * 0.8
+        # Cambiar el ángulo para que la aguja empiece desde la izquierda y vaya hacia la derecha
+        angle_rad = math.radians(180 - self.angle)  # Ajuste para que la aguja comience desde la izquierda
+        needle_end = QPointF(center_x + needle_length * math.cos(angle_rad),
+                            center_y - needle_length * math.sin(angle_rad))
+        painter.setPen(QPen(QColor(255, 0, 0), 5))
+        painter.drawLine(QPointF(center_x, center_y), needle_end)
