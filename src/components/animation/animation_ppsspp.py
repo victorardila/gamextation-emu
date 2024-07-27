@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QSizePolicy
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QPixmap, QPainter, QTransform, QColor
+from config.storagesys.storage_system import StorageSystem
 import qtawesome as qta
 import random
 
@@ -104,7 +105,18 @@ class AnimationPPSSPP(QWidget):
         self.create_multiple_icons(qta.icon('mdi.square-outline', color='white', style='outline'), count=60, size=self.icon_size)
         self.create_multiple_icons(qta.icon('mdi.triangle-outline', color='white', style='outline'), count=60, size=self.icon_size)
         self.create_multiple_icons(qta.icon('mdi.close', color='white', style='outline'), count=60, size=self.icon_size)
+        self.icons_style()
 
+    def icons_style(self):
+        storage = StorageSystem('config.ini')
+        settings = storage.read_config()
+        current_theme = settings['General']['theme']
+        # Si current_theme es light self.alpha = 50 sino self.alpha = 10
+        self.alpha = 50 if current_theme == 'light' else 10
+        for icon_widget in self.icons:
+            icon_widget.color.setAlpha(self.alpha)
+            icon_widget.update_pixmap()
+            
     def resizeEvent(self, event):
         super(AnimationPPSSPP, self).resizeEvent(event)
         self.update_icons_position()  # Actualiza la posición de los íconos si es necesario
@@ -120,8 +132,8 @@ class AnimationPPSSPP(QWidget):
             icon_widget.show()
             self.icons.append(icon_widget)
 
-    def update_icon_color(self, is_dark_mode):
-        alpha = 50 if is_dark_mode else 10
+    def update_icon_color(self, theme):
+        self.alpha = 50 if theme == 'light' else 10
         for icon_widget in self.icons:
-            icon_widget.color.setAlpha(alpha)
+            icon_widget.color.setAlpha(self.alpha)
             icon_widget.update_pixmap()

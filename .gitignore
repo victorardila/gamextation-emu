@@ -2,3 +2,4 @@
 __pycache__/
 project_structure.text
 poetry.lock
+config.ini

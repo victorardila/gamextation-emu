@@ -3,12 +3,12 @@ from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal
 from PyQt5.uic import loadUi
 from qtawesome import icon
 from PyQt5.QtGui import QFont, QFontDatabase, QPixmap, QPainter, QColor
-from PyQt5.QtSvg import QSvgWidget
 from datetime import datetime
 
 class OverlayContent(QWidget):
     theme_changed = pyqtSignal()  # Señal para indicar el cambio de tema
     menu_button_clicked = pyqtSignal(str)  # Señal para indicar que un botón del menú ha sido presionado
+    menu_exit_clicked = pyqtSignal()
     SVG_CREDITS = "src/assets/svg/icon.svg"
     
     def __init__(self):
@@ -79,10 +79,13 @@ class OverlayContent(QWidget):
             "Juegos cargados", "Seleccionar consola", "Tienda", "Media", "Usuario",
             "Configuraciones", "Optimizar", "Actualizaciones", "Creador", "Acerca de", "Salir"
         ]
-
+        
         for btn, image, tooltip in zip(buttons, self.IMAGES, tooltips):
             btn.style(image, QSize(250, 350), tooltip)
             btn.clicked.connect(lambda _, t=tooltip: self.emit_menu_button_clicked(t))  # Conectar clic a la señal
+            
+        # Conectar el botón de salida para emitir la señal específica
+        self.button_logout.clicked.connect(self.emit_menu_exit_clicked)
 
     def apply_credits_styles(self):
         self.logo.setPixmap(
@@ -109,3 +112,6 @@ class OverlayContent(QWidget):
         # Emitir la señal menu_button_clicked con el mensaje del tooltip
         message = f"Submenu {tooltip}"
         self.menu_button_clicked.emit(message)
+        
+    def emit_menu_exit_clicked(self):
+        self.menu_exit_clicked.emit()

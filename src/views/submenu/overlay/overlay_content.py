@@ -84,7 +84,6 @@ class OverlayContent(QWidget):
         # Encontrar la clave del módulo basado en el mensaje
         key = next((k for k in self.MODULES if k.lower() in message.lower()), None)
         if key is None:
-            print(f"No se encontró ningún módulo correspondiente al mensaje: {message}")
             return  # No se encontró el módulo correspondiente
 
         # Crear una instancia del módulo

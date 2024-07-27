@@ -30,6 +30,7 @@ class MainContainer(QMainWindow):
         
         # Conectar la señal menu_button_clicked al método switch_to_submenu
         self.mainMenu.menu_button_clicked.connect(self.switch_to_submenu)
+        self.mainMenu.menu_exit_clicked.connect(self.close_aplication)
         self.submenu.menu_return_clicked.connect(self.switch_to_mainmenu)
         self.submenu.menu_exit_clicked.connect(self.close_aplication)
 
