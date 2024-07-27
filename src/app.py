@@ -10,14 +10,31 @@ class Aplicacion(QMainWindow):
         super().__init__()
         self.InitViewsContainer()
         
+    # Arrray de validacioens
+    validations = {
+        "docker": ContainerPlatform.checkDocker(),
+    }
+    
     def InitViewsContainer(self):
-        response = ContainerPlatform.checkDocker()
-        dialog_message = DialogMessage()
-        check = dialog_message.showMessageBox(response)
-        if check:
+        # recorro el array de validaciones
+        validateds = []
+        for key, value in self.validations.items():
+            if value[0] == False:
+                validateds.append(False)
+            else:
+                validateds.append(True)
+        
+        # Si todas las validaciones son correctas, se muestra la ventana de introducción
+        if all(validateds):
             self.intro = Animation()
             self.intro.video_finished.connect(self.fade_out_intro)
             self.intro.show()
+        else:
+            # mostrar cada valor falso en un dialogo
+            dialog_message = DialogMessage()
+            for key, value in self.validations.items():
+                if value[0] == False:
+                    dialog_message.showMessageBox(value)
     
     def fade_out_intro(self):
         # Animación de desvanecimiento de la ventana de introducción

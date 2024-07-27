@@ -1,7 +1,6 @@
 import subprocess
 import platform
 
-# Gestionar las configuraciones de los entornos como docker, desarrollo, producción, etc.
 class ContainerPlatform:
     def __init__(self):
         super().__init__()
@@ -20,8 +19,9 @@ class ContainerPlatform:
             title = "Error falta una dependencia"
             text = "Docker no está instalado en el sistema operativo."
             informative_text = "Por favor, instale Docker para poder ejecutar la aplicación."
+            solve = "https://www.docker.com/products/docker-desktop"
             # retornar un False y los mensajes de error
-            return True, title, text, informative_text # Debe retornar False para que se muestre el mensaje de error
+            return True, title, text, informative_text, solve # Debe retornar False para que se muestre el mensaje de error
         
         return True
     
