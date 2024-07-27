@@ -1,0 +1,72 @@
+{
+    "browser": [
+        {
+            "name": "Super Mario Bros",
+            "series": "Crossover",
+            "description": "Super Mario Bros. Crossover es un videojuego de plataformas en línea creado por Jay Pavlina. El juego incluye personajes de videojuegos clásicos de Nintendo, como Mario, Luigi, Link, Samus, Simon Belmont y Bill Rizer.",
+            "creator": "Jay Pavlina",
+            "docker_pull_command": "docker pull krystism/super_mario_crossover",
+            "repo_url": "https://hub.docker.com/r/krystism/super_mario_crossover",
+            "cover_image": "https://raw.githubusercontent.com/krystism/super_mario_crossover/master/super_mario_crossover.jpg",
+            "tags": ["platformer", "mario", "nintendo"],
+            "author": "krystism"
+        },
+        {
+            "name": "Pacman",
+            "series": "Pacman",
+            "description": "Pacman es un videojuego arcade creado por el diseñador de videojuegos Toru Iwatani de Namco, y distribuido por Midway Games al mercado estadounidense a principios de los años 1980.",
+            "creator": "Toru Iwatani",
+            "docker_pull_command": "docker pull golucky5/pacman",
+            "repo_url": "https://hub.docker.com/r/golucky5/pacman",
+            "cover_image": "https://raw.githubusercontent.com/golucky5/pacman/master/pacman.jpg",
+            "tags": ["arcade", "pacman", "namco"],
+            "author": "golucky5"
+        },
+        {
+            "name": "Minecraft",
+            "series": "Minecraft",
+            "description": "Minecraft es un videojuego de construcción, de tipo «mundo abierto» o sandbox creado originalmente por el sueco Markus Persson,​ y posteriormente desarrollado por su empresa, Mojang Studios, y ahora adquirido por Microsoft.",
+            "creator": "Markus Persson",
+            "docker_pull_command": "docker pull itzg/minecraft-server",
+            "repo_url": "https://hub.docker.com/r/itzg/minecraft-server",
+            "cover_image": "https://djeqr6to3dedg.cloudfront.net/repo-logos/itzg/minecraft-server/live/logo-1704684813344.png",
+            "tags": ["sandbox", "minecraft", "building"],
+            "author": "itzg"
+        },
+        {
+            "name": "Sonic",
+            "series": "Sonic",
+            "description": "Sonic the Hedgehog es una serie de videojuegos publicada por Sega y por Sonic Team. La serie se centra en las aventuras de Sonic, un erizo antropomórfico azul que lucha contra el malvado Doctor Eggman, un científico loco.",
+            "creator": "Sega",
+            "docker_pull_command": "docker pull dazdaz/sonic",
+            "repo_url": "https://hub.docker.com/r/dazdaz/sonic",
+            "cover_image": "https://camo.githubusercontent.com/57cf1fbd63b055f22cd96ee99f4b74206e2600495aa51c48d36857900d337e25/68747470733a2f2f636c61726b656164672e6769746875622e696f2f6f70656e736f6e69632d6a732f73637265656e73686f74732f4f70656e536f6e69634a535f30312e6a7067",
+            "tags": ["platformer", "sonic", "sega"],
+            "author": "dazdaz"
+        }
+    ],
+    "desktop": [
+        {
+            "name": "Call of Duty 4",
+            "series": "Modern Warfare",
+            "description": "Call of Duty 4: Modern Warfare es un videojuego de disparos en primera persona de estilo bélico desarrollado por Infinity Ward. Es el cuarto título de la serie Call of Duty.",
+            "creator": "Infinity Ward",
+            "docker_pull_command": "docker pull henkallsn/docker-cod4",
+            "repo_url": "https://hub.docker.com/r/henkallsn/docker-cod4",
+            "cover_image": "https://raw.githubusercontent.com/henkall/docker-cod4/master/cod4.ico",
+            "tags": ["shooter", "fps", "war"],
+            "author": "henkallsn"
+        },
+        {
+            "name": "Fifa 19",
+            "series": "Fifa",
+            "description": "FIFA 19 es un videojuego de simulación de fútbol desarrollado por EA Vancouver como parte de la serie FIFA de Electronic Arts. Anunciado el 6 de junio de 2018 en la conferencia de prensa de EA Play en el E3 2018, se lanzó el 28 de septiembre de 2018 para PlayStation 3, PlayStation 4, Xbox 360, Xbox One, Nintendo Switch y Microsoft Windows.",
+            "creator": "EA Vancouver",
+            "docker_pull_command": "docker pull jazz23/fifa",
+            "repo_url": "https://hub.docker.com/r/jazz23/fifa",
+            "cover_image": "https://raw.githubusercontent.com/jazz23/fifa/master/fifa19.jpg",
+            "tags": ["sports", "soccer", "fifa"],
+            "author": "jazz23"
+        }
+    ]
+}
