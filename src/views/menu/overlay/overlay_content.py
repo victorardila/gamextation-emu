@@ -35,6 +35,7 @@ class OverlayContent(QWidget):
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.apply_top_bar_styles()
         self.apply_content_styles()
+        self.apply_credits_styles()
         
     def apply_top_bar_styles(self):
         custom_font = self.load_custom_font("src/assets/font/ratchet-clank-psp.ttf", 24, "Arial", 18)
@@ -89,7 +90,7 @@ class OverlayContent(QWidget):
 
     def apply_credits_styles(self):
         self.logo.setPixmap(
-            self.colorize_svg(self.SVG_CREDITS, QColor('white'), QSize(80, 80))
+            self.colorize_svg(self.SVG_CREDITS, QColor('white'), QSize(40, 40))
         )
         
     def colorize_svg(self, svg_path, color, size):

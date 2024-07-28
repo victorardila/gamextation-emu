@@ -771,13 +771,38 @@ color: rgba(230, 230, 230, 150)</string>
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;GameXtation By Victor Ardila&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;GameXtation&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="textFormat">
             <enum>Qt::MarkdownText</enum>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="logo">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
            </property>
           </widget>
          </item>
@@ -791,14 +816,14 @@ color: rgba(230, 230, 230, 150)</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>LabelHour</class>
-   <extends>QLabel</extends>
-   <header location="global">src.components.labels.label_hour</header>
-  </customwidget>
-  <customwidget>
    <class>ButtonIcon</class>
    <extends>QPushButton</extends>
    <header location="global">src.components.buttons.button_icon</header>
+  </customwidget>
+  <customwidget>
+   <class>LabelHour</class>
+   <extends>QLabel</extends>
+   <header location="global">src.components.labels.label_hour</header>
   </customwidget>
   <customwidget>
    <class>ButtonMainMenu</class>

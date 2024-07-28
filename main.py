@@ -25,9 +25,6 @@ def create_config_file():
         storage.create_config(settings)
 
 def main():
-    # saber si estoy en modo debug o no
-    sys.argv = ['main.py', '--debug']
-    print(sys.argv)
     create_config_file()
     app = QApplication(sys.argv)
     # Eliminar directorios __pycache__ generados por Python

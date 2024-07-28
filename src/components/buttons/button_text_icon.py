@@ -1,3 +1,4 @@
+from config.storagesys.storage_system import StorageSystem
 from PyQt5.QtWidgets import QPushButton, QWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
@@ -5,13 +6,32 @@ from qtawesome import icon
 import pygame
 
 class ButtonTextIcon(QPushButton):
+    gradient_color_selection_dark = "qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(173, 216, 230, 100), stop:1 rgba(0, 255, 127, 255));"
+    gradient_color_selection_light = "qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 255, 255, 135), stop:0.5 rgba(200, 200, 255, 155), stop:1 rgba(150, 150, 255, 255));"
     hover_sfx = 'src/assets/sfx/hover.wav'
+    
+    GRADIENT_SELECTED = None
     
     def __init__(self, parent=QWidget | None):
         super().__init__(parent)
+        self.read_config_file()
         self.installEventFilter(self)
         self.setCursor(Qt.PointingHandCursor)
         self.init_sfx()
+        
+    def read_config_file(self):
+        config_file = 'config.ini'
+        storage = StorageSystem(config_file)
+        settings = storage.read_config()
+        if 'General' in settings:
+            if 'theme' in settings['General']:
+                theme = settings['General']['theme']
+                self.gradient_color_selection = self.gradient_color_selection_dark if theme == 'dark' else self.gradient_color_selection_light
+                self.GRADIENT_SELECTED = self.gradient_color_selection
+                
+    def showEvent(self, event):
+        self.read_config_file()
+        super().showEvent(event)
 
     def init_sfx(self):
         # Inicializar pygame mixer
@@ -43,20 +63,20 @@ class ButtonTextIcon(QPushButton):
         """
     
     def hover_enter_stylesheet(self):
-        return """
-            QPushButton {
+        return f"""
+            QPushButton {{
                 border: none;
                 border-radius: 10px;
                 color: white;
-                background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(173, 216, 230, 100), stop:1 rgba(0, 255, 127, 255));
-            }
-            QToolTip {
+                background-color: {self.GRADIENT_SELECTED};
+            }}
+            QToolTip {{
                 background-color: #333;
                 color: #fff;
                 border: 1px solid white;
                 padding: 5px;
                 border-radius: 5px;
-            }
+            }}
         """
 
     def hover_leave_stylesheet(self):

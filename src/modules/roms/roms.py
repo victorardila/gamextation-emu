@@ -45,7 +45,6 @@ class Roms(QWidget):
             
     def handle_optimizer_hidden(self):
         """Método que maneja la señal optimizer_hidden."""
-        print("handle_optimizer_hidden called")  # Verifica si esta línea se imprime
         self.label_optimize.setStyleSheet("background-color: transparent; color: #00ff00; font-size: 20px; font-weight: bold;")
         self.label_optimize.setVisible(True)
         self.label_optimize.setText("Recursos optimizados")
@@ -53,6 +52,5 @@ class Roms(QWidget):
 
     def hide_optimizer(self):
         """Método que oculta el label_optimize."""
-        print("hide_optimizer called")  # Verifica si esta línea se imprime
         self.label_optimize.setVisible(False) 
         self.label_optimize.setText("") 
