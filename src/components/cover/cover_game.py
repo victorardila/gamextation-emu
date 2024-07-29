@@ -1,7 +1,10 @@
 from config.storagesys.storage_system import StorageSystem
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
-from PyQt5.QtGui import QPainter, QLinearGradient, QColor
+from PyQt5.QtGui import QPainter, QLinearGradient, QColor, QPixmap, QImage, QBrush, QPen
 from PyQt5.QtCore import Qt
+import requests
+from io import BytesIO
+from PIL import Image
 import pygame
 
 class CoverGame(QWidget):
@@ -10,6 +13,7 @@ class CoverGame(QWidget):
     def __init__(self):
         super().__init__()
         self.is_hovered = False  # Variable para rastrear el estado de hover
+        self.label = None  # Atributo para almacenar el QLabel
         self.read_config_file()
         self.setupUi()
         self.init_sfx()
@@ -35,14 +39,60 @@ class CoverGame(QWidget):
         self.resize(200, 200)
         self.setStyleSheet("background-color: rgba(0, 0, 0, 0.5);")
 
-        layout = QVBoxLayout()
-        label = QLabel("CoverGame")
-        label.setAlignment(Qt.AlignCenter)  # Centrar el texto del label
-        label.setStyleSheet("color: white; font-size: 16px; font-weight: bold;")
-        layout.addWidget(label)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)  # Elimina los márgenes del layout
+        layout.setSpacing(0)  # Elimina el espacio entre widgets
+
+        self.label = QLabel(self)  # Crear el QLabel y asignarlo al atributo
+        self.label.setAlignment(Qt.AlignCenter)  # Centrar el texto del label
+        self.label.setStyleSheet("background: transparent;")  # Hacer el fondo del QLabel transparente
+        layout.addWidget(self.label)  # Añadir el QLabel al layout
+
         self.setLayout(layout)
 
         self.show()
+    
+    def load_game(self, game):
+        img_url = game['cover_image']
+        
+        # Descargar la imagen usando requests
+        response = requests.get(img_url)
+        
+        # Verificar si la respuesta es una imagen
+        if 'image' not in response.headers.get('Content-Type', ''):
+            print("La URL no devuelve una imagen válida.")
+            return
+
+        # Crear un BytesIO con los datos de la imagen descargada
+        image_data = BytesIO(response.content)
+
+        try:
+            # Cargar la imagen usando Pillow
+            with Image.open(image_data) as img:
+                # Convertir a PNG en memoria
+                with BytesIO() as png_image_data:
+                    img.save(png_image_data, format='PNG')
+                    png_image_data.seek(0)
+                    
+                    # Crear un QImage y cargar los datos PNG
+                    image = QImage()
+                    image.loadFromData(png_image_data.read())
+                    
+                    # Crear un QPixmap con el QImage
+                    pixmap = QPixmap.fromImage(image)
+                    
+                    # Redimensionar el QPixmap para llenar completamente el widget
+                    pixmap = pixmap.scaled(self.size(), Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+                    
+                    # Actualizar el QLabel con la imagen redimensionada
+                    self.label.setPixmap(pixmap)
+                    self.label.setScaledContents(True)  # Asegura que el QLabel redimensione la imagen
+                    
+                    # Actualizar el widget para asegurarse de que el paintEvent se llame
+                    self.update()
+
+        except Exception as e:
+            print(f"Error al procesar la imagen: {e}")
 
     def enterEvent(self, event):
         self.is_hovered = True
@@ -56,13 +106,14 @@ class CoverGame(QWidget):
         super().leaveEvent(event)
 
     def paintEvent(self, event):
+        # Llamar al paintEvent del padre
         super().paintEvent(event)
 
         # Crear el QPainter para dibujar el borde
         painter = QPainter(self)
-
+        
+        # Establecer el pincel para el gradiente
         if self.is_hovered:
-            # Crear un gradiente lineal si el widget está en hover
             gradient_color_selection_dark = QLinearGradient(0, 0, self.width(), self.height())
             gradient_color_selection_dark.setColorAt(0, QColor(0, 255, 127, 128))  # Color verde con 50% opacidad
             gradient_color_selection_dark.setColorAt(1, QColor(173, 216, 230, 128))  # Color azul claro con 50% opacidad
@@ -74,14 +125,12 @@ class CoverGame(QWidget):
 
             gradient = gradient_color_selection_dark if self.ThemeSelected == 'dark' else gradient_color_selection_light
             
-            # Configurar el pincel con el gradiente
-            pen = painter.pen()
-            pen.setWidth(4)  # Ajustar el ancho del borde según sea necesario
-            pen.setBrush(gradient_color_selection_dark)
-            painter.setPen(pen)
+            brush = QBrush(gradient)
+            painter.setBrush(brush)
+            painter.setPen(QPen(brush, 4))  # Ajustar el ancho del borde según sea necesario
 
             # Dibujar el borde con gradiente
-            painter.drawRect(1, 1, self.width() - 3, self.height() - 3)  # Ajustar el dibujo del borde para no superponer con el contenido del widget
+            painter.drawRect(0, 0, self.width() - 1, self.height() - 1)  # Ajustar el dibujo del borde para no superponer con el contenido del widget
 
     def play_hover_sound(self):
         if self.hover_sound:

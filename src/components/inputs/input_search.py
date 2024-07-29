@@ -13,6 +13,4 @@ class InputSearch(QLineEdit):
         font.setPointSize(20)
         # Aplicar el objeto QFont al QLineEdit
         self.setFont(font)
-        # saber si el tamaño de la fuente es el correcto
-        print(self.fontInfo().pointSize())
         
