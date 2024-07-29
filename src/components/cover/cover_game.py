@@ -77,7 +77,7 @@ class CoverGame(QWidget):
             # Configurar el pincel con el gradiente
             pen = painter.pen()
             pen.setWidth(4)  # Ajustar el ancho del borde según sea necesario
-            pen.setBrush(gradient)
+            pen.setBrush(gradient_color_selection_dark)
             painter.setPen(pen)
 
             # Dibujar el borde con gradiente

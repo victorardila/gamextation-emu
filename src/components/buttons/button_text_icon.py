@@ -68,7 +68,7 @@ class ButtonTextIcon(QPushButton):
                 border: none;
                 border-radius: 10px;
                 color: white;
-                background-color: {self.GRADIENT_SELECTED};
+                background-color: {self.gradient_color_selection_dark};
             }}
             QToolTip {{
                 background-color: #333;

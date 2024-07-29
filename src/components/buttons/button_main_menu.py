@@ -115,7 +115,7 @@ class ButtonMainMenu(QPushButton):
             QPushButton {{
                 border: none;
                 border-radius: 10px;
-                background: {self.GRADIENT_SELECTED};
+                background: {self.gradient_color_selection_dark};
             }}
             {self.tooltip_stylesheet()}
             """
