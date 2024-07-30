@@ -2,25 +2,14 @@
     "browser": [
         {
             "name": "Super Mario Bros",
-            "series": "Crossover",
-            "description": "Super Mario Bros. Crossover es un videojuego de plataformas en línea creado por Jay Pavlina. El juego incluye personajes de videojuegos clásicos de Nintendo, como Mario, Luigi, Link, Samus, Simon Belmont y Bill Rizer.",
-            "creator": "Jay Pavlina",
+            "series": "Odyssey",
+            "description": "Super Mario Odyssey es un videojuego de plataformas de mundo abierto para Nintendo Switch que se lanzó el 27 de octubre de 2017. Es el decimonoveno título de la serie Super Mario y el séptimo título de plataformas en 3D.",
+            "creator": "Nintendo",
             "docker_pull_command": "docker pull krystism/super_mario_crossover",
             "repo_url": "https://hub.docker.com/r/krystism/super_mario_crossover",
-            "cover_image": "https://raw.githubusercontent.com/krystism/super_mario_crossover/master/super_mario_crossover.jpg",
+            "cover_image": "https://i.ytimg.com/vi/l_fMHEBjPV0/maxresdefault.jpg",
             "tags": ["platformer", "mario", "nintendo"],
             "author": "krystism"
-        },
-        {
-            "name": "Pacman",
-            "series": "Pacman",
-            "description": "Pacman es un videojuego arcade creado por el diseñador de videojuegos Toru Iwatani de Namco, y distribuido por Midway Games al mercado estadounidense a principios de los años 1980.",
-            "creator": "Toru Iwatani",
-            "docker_pull_command": "docker pull golucky5/pacman",
-            "repo_url": "https://hub.docker.com/r/golucky5/pacman",
-            "cover_image": "https://raw.githubusercontent.com/golucky5/pacman/master/pacman.jpg",
-            "tags": ["arcade", "pacman", "namco"],
-            "author": "golucky5"
         },
         {
             "name": "Minecraft",
@@ -29,7 +18,7 @@
             "creator": "Markus Persson",
             "docker_pull_command": "docker pull itzg/minecraft-server",
             "repo_url": "https://hub.docker.com/r/itzg/minecraft-server",
-            "cover_image": "https://djeqr6to3dedg.cloudfront.net/repo-logos/itzg/minecraft-server/live/logo-1704684813344.png",
+            "cover_image": "https://logo.com/image-cdn/images/kts928pd/production/e1d61cc6d5f05c33c1cd0fbf96c51554671750ba-1140x620.png?w=1920&q=72&fm=webp",
             "tags": ["sandbox", "minecraft", "building"],
             "author": "itzg"
         },
@@ -40,9 +29,31 @@
             "creator": "Sega",
             "docker_pull_command": "docker pull dazdaz/sonic",
             "repo_url": "https://hub.docker.com/r/dazdaz/sonic",
-            "cover_image": "https://camo.githubusercontent.com/57cf1fbd63b055f22cd96ee99f4b74206e2600495aa51c48d36857900d337e25/68747470733a2f2f636c61726b656164672e6769746875622e696f2f6f70656e736f6e69632d6a732f73637265656e73686f74732f4f70656e536f6e69634a535f30312e6a7067",
+            "cover_image": "https://asia.sega.com/SonicXShadowGenerations/assets/images/common/news/en/thumb/general.jpg",
             "tags": ["platformer", "sonic", "sega"],
             "author": "dazdaz"
+        },
+        {
+            "name": "Zelda",
+            "series": "Breath of the Wild",
+            "description": "The Legend of Zelda: Breath of the Wild es un videojuego de acción-aventura de mundo abierto desarrollado y publicado por Nintendo para las consolas Nintendo Switch y Wii U. Es la decimonovena entrega de la serie The Legend of Zelda.",
+            "creator": "Nintendo",
+            "docker_pull_command": "docker pull jlesage/zelda-breath-of-the-wild",
+            "repo_url": "https://hub.docker.com/r/jlesage/zelda-breath-of-the-wild",
+            "cover_image": "https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70010000000025/7137262b5a64d921e193653f8aa0b722925abc5680380ca0e18a5cfd91697f58",
+            "tags": ["action", "adventure", "zelda"],
+            "author": "jlesage"  
+        },
+        {
+            "name": "Super mario Kart 8",
+            "series": "Deluxe",
+            "description": "Mario Kart 8 Deluxe es un videojuego de carreras desarrollado y publicado por Nintendo para la consola Nintendo Switch. Es la undécima entrega de la serie Mario Kart, novena en consolas de Nintendo, lanzado mundialmente el 28 de abril de 2017.",
+            "creator": "Nintendo",
+            "docker_pull_command": "docker pull jlesage/mario-kart-8-deluxe",
+            "repo_url": "https://hub.docker.com/r/jlesage/mario-kart-8-deluxe",
+            "cover_image": "https://i.blogs.es/cf615a/thumb-1920-821837/1366_2000.jpeg",
+            "tags": ["racing", "mario", "nintendo"],
+            "author": "jlesage"
         }
     ],
     "desktop": [
@@ -64,9 +75,53 @@
             "creator": "EA Vancouver",
             "docker_pull_command": "docker pull jazz23/fifa",
             "repo_url": "https://hub.docker.com/r/jazz23/fifa",
-            "cover_image": "https://raw.githubusercontent.com/jazz23/fifa/master/fifa19.jpg",
+            "cover_image": "https://media.contentapi.ea.com/content/dam/ea/easports/fifa/news-media/2018/june/fifa-19-announce-header.jpg.adapt.crop16x9.575p.jpg",
             "tags": ["sports", "soccer", "fifa"],
             "author": "jazz23"
+        },
+        {
+            "name": "God of War",
+            "series": "Ragnarok",
+            "description": "God of War es un videojuego de acción-aventura desarrollado por SCE Santa Monica Studio y publicado por Sony Interactive Entertainment. Fue lanzado el 20 de abril de 2018 para la consola PlayStation 4.",
+            "creator": "SCE Santa Monica Studio",
+            "docker_pull_command": "docker pull jlesage/god-of-war",
+            "repo_url": "https://hub.docker.com/r/jlesage/god-of-war",
+            "cover_image": "https://blog.monsternotebook.com.tr/wp-content/uploads/gecmisten-gunumuze-god-of-war.jpg",
+            "tags": ["action", "adventure", "god"],
+            "author": "jlesage"
+        },
+        {
+            "name": "GTA V",
+            "series": "Grand Theft Auto",
+            "description": "Grand Theft Auto V es un videojuego de acción-aventura de mundo abierto desarrollado por la compañía británica Rockstar North y distribuido por Rockstar Games. Fue lanzado el 17 de septiembre de 2013 para las consolas PlayStation 3 y Xbox 360.",
+            "creator": "Rockstar North",
+            "docker_pull_command": "docker pull jlesage/gta-v",
+            "repo_url": "https://hub.docker.com/r/jlesage/gta-v",
+            "cover_image": "https://image.api.playstation.com/vulcan/ap/rnd/202203/0911/VIB0SeEj9vT6DTv7P4thJLZi.jpg",
+            "tags": ["sandbox", "gta", "rockstar"],
+            "author": "jlesage"
+        },
+        {
+            "name": "The Witcher 3",
+            "series": "Wild Hunt",
+            "description": "The Witcher 3: Wild Hunt es un videojuego de rol desarrollado por CD Projekt RED. Es la tercera entrega de la saga The Witcher, que se basa en las novelas del escritor polaco Andrzej Sapkowski.",
+            "creator": "CD Projekt RED",
+            "docker_pull_command": "docker pull jlesage/witcher-3",
+            "repo_url": "https://hub.docker.com/r/jlesage/witcher-3",
+            "cover_image": "https://i.ytimg.com/vi/xx8kQ4s5hCY/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBxrLxUXsICGUEE-47vV0TKtl0FiA",
+            "tags": ["rpg", "adventure", "witcher"],
+            "author": "jlesage"
+        },
+        {
+            "name": "Super Mario Bros",
+            "series": "Wonder",
+            "description": "Super Mario wonder es un videojuego de plataformas de mundo abierto para Nintendo Switch que se lanzó el 27 de octubre de 2017. Es el decimonoveno título de la serie Super Mario y el séptimo título de plataformas en 3D.",
+            "creator": "Nintendo",
+            "docker_pull_command": "docker pull krystism/super_mario_crossover",
+            "repo_url": "https://hub.docker.com/r/krystism/super_mario_crossover",
+            "cover_image": "https://gagadget.com/media/cache/b0/c8/b0c896316628ab00b05613722ae88990.jpg",
+            "tags": ["platformer", "mario", "nintendo"],
+            "author": "krystism"
         }
     ]
 }

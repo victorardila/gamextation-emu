@@ -12,6 +12,7 @@ class SubMenu(QWidget):
     
     def __init__(self):
         super().__init__()
+        self.read_config_file()
         self.init_submenu()
         self.overlay.menu_return_clicked.connect(self.emit_menu_return)
         self.overlay.menu_exit_clicked.connect(self.emit_menu_exit)
@@ -26,7 +27,6 @@ class SubMenu(QWidget):
                 self.current_theme = settings['General']['theme']
                 
     def init_submenu(self):
-        self.read_config_file()
         loadUi("src/views/submenu/submenu.ui", self)
         self.showMaximized()
         self.setStyleSheet(f"background-color: {self.BG_COLOR}")
