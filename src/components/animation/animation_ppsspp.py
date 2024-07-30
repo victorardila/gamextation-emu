@@ -97,8 +97,6 @@ class IconAnimationWidget(QLabel):
 class AnimationPPSSPP(QWidget):
     def __init__(self):
         super(AnimationPPSSPP, self).__init__()
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.setStyleSheet("background-color: black;")  # Establecer el fondo negro
         self.icon_size = 48  # Puedes cambiar este valor al tamaño deseado
         self.icons = []
         self.create_multiple_icons(qta.icon('mdi.circle-outline', color='white', style='outline'), count=60, size=self.icon_size)
@@ -106,6 +104,9 @@ class AnimationPPSSPP(QWidget):
         self.create_multiple_icons(qta.icon('mdi.triangle-outline', color='white', style='outline'), count=60, size=self.icon_size)
         self.create_multiple_icons(qta.icon('mdi.close', color='white', style='outline'), count=60, size=self.icon_size)
         self.icons_style()
+        # Cambio el color de fondo de la ventana
+        self.setStyleSheet("background-color: #000000")
+        
 
     def icons_style(self):
         storage = StorageSystem('config.ini')
@@ -119,12 +120,14 @@ class AnimationPPSSPP(QWidget):
             
     def resizeEvent(self, event):
         super(AnimationPPSSPP, self).resizeEvent(event)
-        self.update_icons_position()  # Actualiza la posición de los íconos si es necesario
-        self.setGeometry(self.parent().rect())  # Asegura que el widget ocupe todo el espacio disponible
+        self.update_icons_position()
+        self.setGeometry(self.parent().rect())
 
     def update_icons_position(self):
-        # Aquí puedes actualizar la posición de los íconos si es necesario
-        pass
+        for icon_widget in self.icons:
+            icon_widget.x = random.randint(0, self.width() - icon_widget.size)
+            icon_widget.y = random.randint(0, self.height() - icon_widget.size)
+            icon_widget.move(int(icon_widget.x), int(icon_widget.y))
     
     def create_multiple_icons(self, icon, count, size):
         for _ in range(count):

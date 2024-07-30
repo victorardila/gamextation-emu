@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal
 from PyQt5.uic import loadUi
-from qtawesome import icon
 from PyQt5.QtGui import QFont, QFontDatabase, QPixmap, QPainter, QColor
 from datetime import datetime
 

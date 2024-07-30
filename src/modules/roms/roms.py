@@ -30,7 +30,7 @@ class Roms(QWidget):
         self.label_module.setStyleSheet("background-color: transparent; color: white; font-size: 20px; font-weight: bold;")
         self.label_module.setText("Roms")
         self.label_name_game.setStyleSheet("color: white; font-size: 20px; font-weight: bold;")
-        self.label_name_game.setText("Nombre del juego")
+        self.label_name_game.setText("")
         # label_optimize no va a estar visible en un principio
         self.label_optimize.setVisible(False)
         
@@ -62,6 +62,10 @@ class Roms(QWidget):
 
         for i in range(total_slots_default):
             cover_game = CoverGame()
+            
+            # Conectar la señal game_hovered a la función handle_game_hovered
+            cover_game.game_hovered.connect(self.handle_game_hovered)
+            
             if i % 2 == 0 and index_desktop < len(games_desktop):
                 # Cargar un juego de desktop
                 while games_desktop[index_desktop] in used_desktop_games and index_desktop < len(games_desktop):
@@ -113,3 +117,7 @@ class Roms(QWidget):
         """Método que oculta el label_optimize."""
         self.label_optimize.setVisible(False) 
         self.label_optimize.setText("") 
+    
+    def handle_game_hovered(self, game_name):
+        """Método que maneja la señal game_hovered del CoverGame."""
+        self.label_name_game.setText(game_name)

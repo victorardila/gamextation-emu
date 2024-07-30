@@ -37,7 +37,7 @@ class OverlayContent(QWidget):
     
     def __init__(self):
         super().__init__()
-        self.init_main_menu()
+        self.init_submenu()
         self.sidebar_open = False  # Estado inicial del sidebar
         self.timer = QTimer()
         self.timer.setSingleShot(True)
@@ -55,7 +55,7 @@ class OverlayContent(QWidget):
         self.graphics_optimizer_timer.setSingleShot(True)
         self.graphics_optimizer_timer.timeout.connect(self.hide_graphics_optimizer)
 
-    def init_main_menu(self):
+    def init_submenu(self):
         """Load the UI and initialize main menu."""
         loadUi("src/views/submenu/overlay/overlay_submenu.ui", self)
         self.load_module()

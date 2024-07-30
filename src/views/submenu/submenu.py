@@ -56,6 +56,7 @@ class SubMenu(QWidget):
         self.overlay.show()
         
     def load_module(self, message):
+        pass
         self.overlay.load_module(message)    
         
     def change_theme_mode(self):
