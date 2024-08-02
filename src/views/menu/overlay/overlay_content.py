@@ -209,4 +209,3 @@ class OverlayContent(QWidget):
             # Temporizador para ocultar el toast después de 5 segundos
             QTimer.singleShot(5000, self.toast.close)
             self.show_notification_toast()
-    
