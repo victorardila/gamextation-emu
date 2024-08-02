@@ -1,62 +1,64 @@
-from PyQt5.QtWidgets import QMainWindow
-from src.windows.container.main_container import MainContainer
-from PyQt5.QtCore import QPropertyAnimation
-from src.windows.anim.animation import Animation
-from src.windows.dialogs.dialog_message import DialogMessage
 from config.dependencies.container_platform import ContainerPlatform
+from src.windows.container.main_container import MainContainer
+from src.windows.dialogs.dialog_message import DialogMessage
+from src.windows.anim.animation import Animation
+from PyQt5.QtCore import QPropertyAnimation
+from PyQt5.QtWidgets import QMainWindow
 
 class Aplicacion(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.InitViewsContainer()
+        self.init_views_container()
         
-    # Arrray de validacioens
+    # Diccionario de validaciones
     validations = {
         "docker": ContainerPlatform.checkDocker(),
     }
     
-    def InitViewsContainer(self):
-        # recorro el array de validaciones
-        validateds = []
-        for key, value in self.validations.items():
-            if value[0] == False:
-                validateds.append(False)
-            else:
-                validateds.append(True)
-        
-        # Si todas las validaciones son correctas, se muestra la ventana de introducción
-        if all(validateds):
-            self.intro = Animation()
-            self.intro.video_finished.connect(self.fade_out_intro)
-            self.intro.show()
+    def init_views_container(self):
+        """Inicializa el contenedor de vistas y gestiona la lógica de validación."""
+        # Verifica las validaciones
+        all_validations_passed = all(value[0] for value in self.validations.values())
+
+        if all_validations_passed:
+            self.show_intro_animation()
         else:
-            # mostrar cada valor falso en un dialogo
-            dialog_message = DialogMessage()
-            for key, value in self.validations.items():
-                if value[0] == False:
-                    dialog_message.showMessageBox(value)
-    
+            self.show_validation_errors()
+
+    def show_intro_animation(self):
+        """Muestra la ventana de introducción y configura la animación de desvanecimiento."""
+        self.intro = Animation()
+        self.intro.video_finished.connect(self.fade_out_intro)
+        self.intro.show()
+
+    def show_validation_errors(self):
+        """Muestra un diálogo con los errores de validación."""
+        dialog_message = DialogMessage()
+        for key, value in self.validations.items():
+            if not value[0]:
+                dialog_message.showMessageBox(value)
+
     def fade_out_intro(self):
-        # Animación de desvanecimiento de la ventana de introducción
+        """Gestiona la animación de desvanecimiento de la ventana de introducción."""
         self.animation = QPropertyAnimation(self.intro, b"windowOpacity")
-        self.animation.finished.connect(self.showMainContainer)
-        self.animation.setDuration(1000)  # Duración de la animación en milisegundos
+        self.animation.finished.connect(self.show_main_container)
+        self.animation.setDuration(1000)  # Duración en milisegundos
         self.animation.setStartValue(1.0)
         self.animation.setEndValue(0.0)
         self.animation.start()
 
-    def showMainContainer(self):
-        # Mostrar la ventana principal (MainApp) después de que la intro se ha desvanecido
+    def show_main_container(self):
+        """Muestra la ventana principal después de la animación de desvanecimiento."""
         self.views_container = MainContainer()
         self.views_container.setWindowOpacity(0.0)  # Configurar la opacidad inicial en 0
         self.views_container.show()
 
         # Animación de aparición de la ventana principal
         self.views_container_animation = QPropertyAnimation(self.views_container, b"windowOpacity")
-        self.views_container_animation.setDuration(10)  # Duración de la animación en milisegundos
+        self.views_container_animation.setDuration(10)  # Duración en milisegundos
         self.views_container_animation.setStartValue(0.0)
         self.views_container_animation.setEndValue(1.0)
         self.views_container_animation.start()
 
-        # Cierro la ventana Intro
+        # Cierra la ventana de introducción
         self.intro.close()

@@ -1,9 +1,9 @@
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal
-from PyQt5.uic import loadUi
-from PyQt5.QtGui import QFont, QFontDatabase, QPixmap, QPainter, QColor
-from datetime import datetime
 from config.storagesys.storage_system import StorageSystem
+from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal
+from PyQt5.QtGui import QFont, QFontDatabase, QPixmap, QPainter, QColor
+from PyQt5.QtWidgets import QWidget
+from PyQt5.uic import loadUi
+from datetime import datetime
 
 class OverlayContent(QWidget):
     theme_changed = pyqtSignal()
@@ -29,12 +29,14 @@ class OverlayContent(QWidget):
         self.init_main_menu()
 
     def read_config_file(self):
+        """Lee el archivo de configuración y actualiza el estado del sonido."""
         config_file = 'config.ini'
         storage = StorageSystem(config_file)
         settings = storage.read_config()
         self.SOUND = settings.get('General', {}).get('sound', None)
 
     def init_main_menu(self):
+        """Inicializa el menú principal y aplica estilos."""
         loadUi("src/views/menu/overlay/overlay_content.ui", self)
         self.setStyleSheet("background-color: transparent;")
         self.setAttribute(Qt.WA_TranslucentBackground)
@@ -43,6 +45,7 @@ class OverlayContent(QWidget):
         self.apply_credits_styles()
 
     def apply_top_bar_styles(self):
+        """Aplica los estilos a la barra superior del menú."""
         custom_font = self.load_custom_font("src/assets/font/ratchet-clank-psp.ttf", 24, "Arial", 18)
 
         self.button_icon_user.style('fa.user', QSize(32, 32), "Usuario", 'white')
@@ -61,6 +64,7 @@ class OverlayContent(QWidget):
         self.button_sound.clicked.connect(self.emit_sound_switch)
 
     def load_custom_font(self, font_path, font_size, fallback_font, fallback_size):
+        """Carga una fuente personalizada o usa una fuente de reserva."""
         font_id = QFontDatabase.addApplicationFont(font_path)
         if font_id != -1:
             font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
@@ -68,10 +72,12 @@ class OverlayContent(QWidget):
         return QFont(fallback_font, fallback_size)
 
     def update_time(self):
+        """Actualiza la hora actual en el widget de hora."""
         current_time = datetime.now().strftime("%I:%M:%S %p")
         self.label_hour.setText(current_time)
 
     def apply_content_styles(self):
+        """Aplica estilos a los botones y otros elementos de contenido."""
         self.frameMenuRowOne.setStyleSheet("background-color: transparent;")
         self.frameMenuRowTwo.setStyleSheet("background-color: transparent;")
 
@@ -93,9 +99,11 @@ class OverlayContent(QWidget):
         self.button_logout.clicked.connect(self.menu_exit_clicked.emit)
 
     def apply_credits_styles(self):
+        """Aplica el estilo al logo de créditos."""
         self.logo.setPixmap(self.colorize_svg(self.SVG_CREDITS, QColor('white'), QSize(40, 40)))
 
     def colorize_svg(self, svg_path, color, size):
+        """Coloriza el SVG con el color especificado y lo redimensiona."""
         pixmap = QPixmap(svg_path).scaled(size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
         painter = QPainter(pixmap)
@@ -106,6 +114,7 @@ class OverlayContent(QWidget):
         return pixmap
 
     def emit_sound_switch(self):
+        """Emite la señal cuando se cambia el estado del sonido y actualiza el icono."""
         self.SOUND = 'on' if self.SOUND == 'off' else 'off'
         icon = 'fa5s.volume-up' if self.SOUND == 'on' else 'fa5s.volume-mute'
         tooltip = "Sonido" if self.SOUND == 'on' else "Silencio"
@@ -113,5 +122,6 @@ class OverlayContent(QWidget):
         self.sound_switch_state.emit()
 
     def emit_menu_button_clicked(self, tooltip):
+        """Emite la señal cuando se hace clic en un botón del menú."""
         message = f"Submenu {tooltip}"
         self.menu_button_clicked.emit(message)
