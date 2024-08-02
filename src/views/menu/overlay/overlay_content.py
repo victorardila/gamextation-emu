@@ -50,8 +50,7 @@ class OverlayContent(QWidget):
         super().__init__()
         self.read_config_file()
         self.init_main_menu()
-        self.show_notification_toast()
-
+        
         # Configurar el verificador de conexión
         self.connection_checker = ConnectionChecker()
         self.connection_checker.connection_lost.connect(self.show_connection_lost_toast)
@@ -197,6 +196,17 @@ class OverlayContent(QWidget):
 
     def handle_connection_restored(self):
         """Maneja la restauración de la conexión a Internet."""
-        # mostrar el toast de conexión restaurada una vez que se haya restaurado la conexión a Internet
-        # este solo se mostrara una sola vez y no se volverá a mostrar hasta que se pierda la conexión nuevamente
-        
+        # Mostrar el toast de conexión restaurada solo una vez
+        if not hasattr(self, 'restored_toast_shown') or not self.restored_toast_shown:
+            self.restored_toast_shown = True  # Marca que el toast ha sido mostrado
+
+            # Crear y mostrar el toast de conexión restaurada
+            self.toast = NotificationToast("Conexión restaurada. Ahora estás en línea.", "mdi.wifi-check", QSize(32, 32))
+            self.toast.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+            self.toast.setAttribute(Qt.WA_TranslucentBackground)
+            self.toast.show()
+
+            # Temporizador para ocultar el toast después de 5 segundos
+            QTimer.singleShot(5000, self.toast.close)
+            self.show_notification_toast()
+    
