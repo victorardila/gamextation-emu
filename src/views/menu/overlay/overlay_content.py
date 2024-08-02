@@ -1,9 +1,32 @@
-from config.storagesys.storage_system import StorageSystem
-from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal
+from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal, QThread, pyqtSlot
 from PyQt5.QtGui import QFont, QFontDatabase, QPixmap, QPainter, QColor
 from PyQt5.QtWidgets import QWidget
 from PyQt5.uic import loadUi
 from datetime import datetime
+from src.components.toast.notification_toast import NotificationToast
+from config.storagesys.storage_system import StorageSystem
+import requests  # Para verificar la conexión a Internet
+
+class ConnectionChecker(QThread):
+    connection_lost = pyqtSignal()
+    connection_restored = pyqtSignal()
+
+    def __init__(self):
+        super().__init__()
+        self.check_interval = 5000  # Intervalo de verificación en milisegundos
+        self.url_to_check = 'http://www.google.com'  # URL para verificar la conexión
+
+    def run(self):
+        while True:
+            try:
+                response = requests.get(self.url_to_check, timeout=5)
+                if response.status_code == 200:
+                    self.connection_restored.emit()
+                else:
+                    self.connection_lost.emit()
+            except requests.RequestException:
+                self.connection_lost.emit()
+            self.msleep(self.check_interval)
 
 class OverlayContent(QWidget):
     theme_changed = pyqtSignal()
@@ -27,6 +50,29 @@ class OverlayContent(QWidget):
         super().__init__()
         self.read_config_file()
         self.init_main_menu()
+        self.show_notification_toast()
+
+        # Configurar el verificador de conexión
+        self.connection_checker = ConnectionChecker()
+        self.connection_checker.connection_lost.connect(self.show_connection_lost_toast)
+        self.connection_checker.connection_restored.connect(self.handle_connection_restored)
+        self.connection_checker.start()
+
+        # Verificar la conexión al iniciar
+        self.check_initial_connection()
+
+    def check_initial_connection(self):
+        """Verifica la conexión inicial y muestra el toast correspondiente."""
+        try:
+            response = requests.get('http://www.google.com', timeout=5)
+            if response.status_code != 200:
+                self.show_connection_lost_toast()
+        except requests.RequestException:
+            self.show_connection_lost_toast()
+
+    def verify_connection(self):
+        """Verifica la conexión a Internet y actualiza el estado de la conexión."""
+        pass
 
     def read_config_file(self):
         """Lee el archivo de configuración y actualiza el estado del sonido."""
@@ -44,6 +90,17 @@ class OverlayContent(QWidget):
         self.apply_content_styles()
         self.apply_credits_styles()
 
+    def show_notification_toast(self):
+        """Muestra el NotificationToast si SOUND es 'on'."""
+        if self.SOUND == 'on':
+            self.toast = NotificationToast("Por favor, conecte los auriculares para una mejor experiencia.", "fa5s.headphones", QSize(32, 32))
+            self.toast.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+            self.toast.setAttribute(Qt.WA_TranslucentBackground)
+            self.toast.show()
+
+            # Temporizador para ocultar el toast después de 5 segundos
+            QTimer.singleShot(5000, self.toast.close)
+
     def apply_top_bar_styles(self):
         """Aplica los estilos a la barra superior del menú."""
         custom_font = self.load_custom_font("src/assets/font/ratchet-clank-psp.ttf", 24, "Arial", 18)
@@ -51,6 +108,7 @@ class OverlayContent(QWidget):
         self.button_icon_user.style('fa.user', QSize(32, 32), "Usuario", 'white')
         self.button_icon_mode.style('fa5s.sun', QSize(32, 32), "Modo claro", 'white')
         self.button_sound.style('fa5s.volume-up', QSize(32, 32), "Sonido", 'white')
+        self.button_connection.style('fa5s.wifi', QSize(32, 32), "Conexión", 'white')
         self.button_icon_search.style('fa.search', QSize(32, 32), "Buscar", 'white')
         self.label_hour.style("00:00:00 AM", "white", 30, custom_font, Qt.AlignCenter)
 
@@ -125,3 +183,20 @@ class OverlayContent(QWidget):
         """Emite la señal cuando se hace clic en un botón del menú."""
         message = f"Submenu {tooltip}"
         self.menu_button_clicked.emit(message)
+
+    @pyqtSlot()
+    def show_connection_lost_toast(self):
+        """Muestra un toast indicando que se ha perdido la conexión a Internet."""
+        self.toast = NotificationToast("Te has quedado sin conexión a Internet.", "mdi.wifi-remove", QSize(32, 32))
+        self.toast.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+        self.toast.setAttribute(Qt.WA_TranslucentBackground)
+        self.toast.show()
+
+        # Temporizador para ocultar el toast después de 5 segundos
+        QTimer.singleShot(5000, self.toast.close)
+
+    def handle_connection_restored(self):
+        """Maneja la restauración de la conexión a Internet."""
+        # mostrar el toast de conexión restaurada una vez que se haya restaurado la conexión a Internet
+        # este solo se mostrara una sola vez y no se volverá a mostrar hasta que se pierda la conexión nuevamente
+        
