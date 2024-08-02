@@ -36,7 +36,7 @@ class ButtonMainMenu(QPushButton):
         # Inicializar pygame mixer
         pygame.mixer.init()
         self.hover_sound = pygame.mixer.Sound(self.hover_sfx)
-        self.hover_sound.set_volume(0.3)  # Ajusta el volumen (0.0 a 1.0)
+        self.hover_sound.set_volume(0.4)  # Ajusta el volumen (0.0 a 1.0)
         
     def setup_ui(self):
         self.setCursor(Qt.PointingHandCursor)

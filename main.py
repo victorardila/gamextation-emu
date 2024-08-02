@@ -18,6 +18,7 @@ def create_config_file():
     if not os.path.exists(config_file):
         settings = {
             'General': {
+                'sound': 'on',
                 'theme': 'light',
                 'language': 'en'
             }

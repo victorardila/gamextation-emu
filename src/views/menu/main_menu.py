@@ -8,6 +8,7 @@ from config.storagesys.storage_system import StorageSystem
 class MainMenu(QWidget):
     menu_button_clicked = pyqtSignal(str)  # Señal para indicar que un botón del menú ha sido presionado
     menu_exit_clicked = pyqtSignal()
+    sound_switch_state = pyqtSignal() # Señal para indicar el cambio de estado del sonido
     bg_changed = pyqtSignal()  # Señal para indicar que el color de fondo ha cambiado
     BG_COLOR = None
     
@@ -50,6 +51,8 @@ class MainMenu(QWidget):
         # Conectar la señal menu_button_clicked al método handle_menu_button_clicked
         self.overlay.menu_button_clicked.connect(self.handle_menu_button_clicked)
         self.overlay.menu_exit_clicked.connect(self.handle_menu_exit_clicked)
+        # Conectar la señal sound_switch_state al método handle_sound_switch_state
+        self.overlay.sound_switch_state.connect(self.handle_sound_switch_state)
         
     def change_theme_mode(self):
         # Inicializa el sistema de almacenamiento y lee la configuración actual
@@ -79,4 +82,7 @@ class MainMenu(QWidget):
         
     def handle_menu_exit_clicked(self):
         self.menu_exit_clicked.emit()
+        
+    def handle_sound_switch_state(self):
+        self.sound_switch_state.emit()
     

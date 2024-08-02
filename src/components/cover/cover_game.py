@@ -31,7 +31,8 @@ class GradientSelectorWidget(QWidget):
 
             gradient = gradient_color_selection_dark if self.parent().ThemeSelected == 'dark' else gradient_color_selection_light
             
-            brush = QBrush(gradient)
+            # brush = QBrush(gradient)
+            brush = QBrush(gradient_color_selection_dark)
             painter.setBrush(brush)
             painter.setPen(QPen(brush, 4))  # Ajustar el ancho del borde según sea necesario
 

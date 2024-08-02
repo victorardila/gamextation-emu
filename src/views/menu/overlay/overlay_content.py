@@ -1,14 +1,17 @@
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal
 from PyQt5.uic import loadUi
+from config.storagesys.storage_system import StorageSystem
 from PyQt5.QtGui import QFont, QFontDatabase, QPixmap, QPainter, QColor
 from datetime import datetime
 
 class OverlayContent(QWidget):
     theme_changed = pyqtSignal()  # Señal para indicar el cambio de tema
+    sound_switch_state = pyqtSignal()  # Señal para indicar el cambio de estado del sonido
     menu_button_clicked = pyqtSignal(str)  # Señal para indicar que un botón del menú ha sido presionado
     menu_exit_clicked = pyqtSignal()
     SVG_CREDITS = "src/assets/svg/icon.svg"
+    SOUND = None
     
     def __init__(self):
         super().__init__()
@@ -28,6 +31,14 @@ class OverlayContent(QWidget):
         "src/assets/img/exit.png",
     ]
     
+    def read_config_file(self):
+        config_file = 'config.ini'
+        storage = StorageSystem(config_file)
+        settings = storage.read_config()
+        if 'General' in settings:
+            if 'sound' in settings['General']:
+                self.SOUND = settings['General']['sound']
+                
     def init_main_menu(self):
         loadUi("src/views/menu/overlay/overlay_content.ui", self)
         self.setStyleSheet("background-color: transparent;")
@@ -41,8 +52,9 @@ class OverlayContent(QWidget):
 
         self.button_icon_user.style('fa.user', QSize(32, 32), "Usuario", 'white')
         self.button_icon_mode.style('fa5s.sun', QSize(32, 32), "Modo claro", 'white')
+        self.button_sound.style('fa5s.volume-up', QSize(32, 32), "Sonido", 'white')
         self.button_icon_search.style('fa.search', QSize(32, 32), "Buscar", 'white')
-        self.label_hour.style("00:00:00 AM", "white", 24, custom_font, Qt.AlignCenter)
+        self.label_hour.style("00:00:00 AM", "white", 30, custom_font, Qt.AlignCenter)
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_time)
@@ -52,6 +64,8 @@ class OverlayContent(QWidget):
 
         # Conectar la señal de clic del botón de cambio de tema a la señal theme_changed
         self.button_icon_mode.clicked.connect(self.emit_theme_change)
+        # Conectar la señal de clic del botón de cambio de sonido a la señal sound_switch_state
+        self.button_sound.clicked.connect(self.emit_sound_switch)
 
     def load_custom_font(self, font_path, font_size, fallback_font, fallback_size):
         font_id = QFontDatabase.addApplicationFont(font_path)
@@ -107,6 +121,14 @@ class OverlayContent(QWidget):
     
     def emit_theme_change(self):
         self.theme_changed.emit()
+        
+    def emit_sound_switch(self):
+        self.SOUND = 'on' if self.SOUND == 'off' else 'off'
+        if self.SOUND == 'on':
+            self.button_sound.style('fa5s.volume-up', QSize(32, 32), "Sonido", 'white')
+        else:
+            self.button_sound.style('fa5s.volume-mute', QSize(32, 32), "Silencio", 'white')
+        self.sound_switch_state.emit()
 
     def emit_menu_button_clicked(self, tooltip):
         # Emitir la señal menu_button_clicked con el mensaje del tooltip
