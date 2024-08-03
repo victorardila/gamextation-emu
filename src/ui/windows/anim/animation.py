@@ -17,7 +17,7 @@ class Animation(QMainWindow):
         self.init_ui()
 
     def init_ui(self):
-        loadUi("src/windows/anim/animation.ui", self)
+        loadUi("src/ui/windows/anim/animation.ui", self)
         self.setup_window_properties()
         self.setup_video_player()
         self.play_video()

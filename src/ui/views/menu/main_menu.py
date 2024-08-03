@@ -1,6 +1,6 @@
 from config.storagesys.storage_system import StorageSystem
-from src.components.animation.animation_ppsspp import AnimationPPSSPP
-from src.views.menu.overlay.overlay_content import OverlayContent
+from src.ui.components.animation.animation_ppsspp import AnimationPPSSPP
+from src.ui.views.menu.overlay.overlay_content import OverlayContent
 from PyQt5.QtCore import QSize, pyqtSignal
 from PyQt5.QtWidgets import QWidget, QSizePolicy, QStackedWidget
 from PyQt5.uic import loadUi
@@ -27,7 +27,7 @@ class MainMenu(QWidget):
     
     def init_main_menu(self):
         """Inicializa el menú principal y su configuración."""
-        loadUi("src/views/menu/main_menu.ui", self)
+        loadUi("src/ui/views/menu/main_menu.ui", self)
         self.showMaximized()
         self.setStyleSheet(f"background-color: {self.BG_COLOR}")
         self.init_overlay_widget()

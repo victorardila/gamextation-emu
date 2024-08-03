@@ -1,7 +1,7 @@
 from config.storagesys.storage_system import StorageSystem
 from PyQt5.QtWidgets import QMainWindow, QStackedWidget
-from src.views.menu.main_menu import MainMenu
-from src.views.submenu.submenu import SubMenu
+from src.ui.views.menu.main_menu import MainMenu
+from src.ui.views.submenu.submenu import SubMenu
 from PyQt5.QtGui import QIcon
 from PyQt5.uic import loadUi
 import random
@@ -24,7 +24,7 @@ class MainContainer(QMainWindow):
         self.SOUND = settings.get("General", {}).get("sound", None)
 
     def init_gui(self):
-        loadUi("src/windows/container/main_container.ui", self)
+        loadUi("src/ui/windows/container/main_container.ui", self)
         self.setup_window()
         self.setup_widgets()
         self.connect_signals()

@@ -1,7 +1,7 @@
 from config.dependencies.container_platform import ContainerPlatform
-from src.windows.container.main_container import MainContainer
-from src.windows.dialogs.dialog_message import DialogMessage
-from src.windows.anim.animation import Animation
+from src.ui.windows.container.main_container import MainContainer
+from src.ui.windows.dialogs.dialog_message import DialogMessage
+from src.ui.windows.anim.animation import Animation
 from PyQt5.QtCore import QPropertyAnimation
 from PyQt5.QtWidgets import QMainWindow
 

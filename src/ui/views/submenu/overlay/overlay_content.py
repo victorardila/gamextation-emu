@@ -1,19 +1,21 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout
-from PyQt5.QtCore import QSize, Qt, pyqtSignal, QTimer
-from PyQt5.uic import loadUi
+from src.ui.components.optimizer.graphics_optimizer import GraphicsOptimizer
 from PyQt5.QtGui import QFont, QFontDatabase, QPixmap, QPainter, QColor
+from src.ui.components.loader.render_loader import RenderLoader
+from PyQt5.QtCore import QSize, Qt, pyqtSignal, QTimer
+from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from PyQt5.QtGui import QEnterEvent, QMouseEvent
-from src.components.optimizer.graphics_optimizer import GraphicsOptimizer
-from src.modules.roms.roms import Roms
-from src.modules.consoles.consoles import Consoles
-from src.modules.store.store import Store
-from src.modules.media.media import Media
-from src.modules.user.user import User
-from src.modules.settings.settings import Settings
-from src.modules.optimize.optimize import Optimize
-from src.modules.update.update import Update
-from src.modules.creator.creator import Creator
-from src.modules.about.about import About
+from PyQt5.uic import loadUi
+# Modulos de la aplicación
+from src.ui.modules.consoles.consoles import Consoles
+from src.ui.modules.settings.settings import Settings
+from src.ui.modules.optimize.optimize import Optimize
+from src.ui.modules.creator.creator import Creator
+from src.ui.modules.update.update import Update
+from src.ui.modules.about.about import About
+from src.ui.modules.store.store import Store
+from src.ui.modules.media.media import Media
+from src.ui.modules.roms.roms import Roms
+from src.ui.modules.user.user import User
 
 class OverlayContent(QWidget):
     theme_changed = pyqtSignal()  # Señal para indicar el cambio de tema
@@ -37,6 +39,7 @@ class OverlayContent(QWidget):
     
     def __init__(self):
         super().__init__()
+        self.loader = RenderLoader()
         self.init_submenu()
         self.sidebar_open = False  # Estado inicial del sidebar
         self.timer = QTimer()
@@ -57,7 +60,7 @@ class OverlayContent(QWidget):
 
     def init_submenu(self):
         """Load the UI and initialize main menu."""
-        loadUi("src/views/submenu/overlay/overlay_submenu.ui", self)
+        loadUi("src/ui/views/submenu/overlay/overlay_submenu.ui", self)
         self.load_module()
         self.setStyleSheet("background-color: transparent;")
         self.setAttribute(Qt.WA_TranslucentBackground)

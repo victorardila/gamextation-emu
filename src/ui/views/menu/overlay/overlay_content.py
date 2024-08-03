@@ -1,11 +1,11 @@
 from PyQt5.QtCore import QSize, Qt, QTimer, pyqtSignal, QThread, pyqtSlot
 from PyQt5.QtGui import QFont, QFontDatabase, QPixmap, QPainter, QColor
-from PyQt5.QtWidgets import QWidget
-from PyQt5.uic import loadUi
-from datetime import datetime
-from src.components.toast.notification_toast import NotificationToast
+from src.ui.components.toast.notification_toast import NotificationToast
 from config.storagesys.storage_system import StorageSystem
-import requests  # Para verificar la conexión a Internet
+from PyQt5.QtWidgets import QWidget
+from datetime import datetime
+from PyQt5.uic import loadUi
+import requests
 
 class ConnectionChecker(QThread):
     connection_lost = pyqtSignal()
@@ -82,7 +82,7 @@ class OverlayContent(QWidget):
 
     def init_main_menu(self):
         """Inicializa el menú principal y aplica estilos."""
-        loadUi("src/views/menu/overlay/overlay_content.ui", self)
+        loadUi("src/ui/views/menu/overlay/overlay_content.ui", self)
         self.setStyleSheet("background-color: transparent;")
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.apply_top_bar_styles()

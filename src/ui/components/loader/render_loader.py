@@ -1,11 +1,15 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt5.QtCore import QTimer, Qt, QSize
 from PyQt5.QtGui import QPainter, QColor, QPixmap, QFont
-from PyQt5.Qt import Qt
+from src.services import *
+from PyQt5.QtCore import Qt
 
 class RenderLoader(QWidget):
-    def __init__(self):
+    
+    """Widget para mostrar un loader con animación de rotación."""
+    def __init__(self, Time = None, request = None):
         super().__init__()
+        self.request = request
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setFixedSize(200, 200)  # Tamaño fijo del loader
@@ -59,3 +63,8 @@ class RenderLoader(QWidget):
         self.move((parent_rect.width() - self.width()) // 2,
                   (parent_rect.height() - self.height()) // 2)
         self.show()
+    
+    # ejecutar peticion request que se recibe como parametro
+    def execute_request(self):
+        pass
+    

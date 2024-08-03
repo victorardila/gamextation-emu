@@ -1,9 +1,9 @@
-from PyQt5.QtCore import QSize, pyqtSignal
+from src.ui.components.animation.animation_ppsspp import AnimationPPSSPP
+from src.ui.views.submenu.overlay.overlay_content import OverlayContent
 from PyQt5.QtWidgets import QWidget, QSizePolicy, QStackedWidget
-from PyQt5.uic import loadUi
-from src.components.animation.animation_ppsspp import AnimationPPSSPP
-from src.views.submenu.overlay.overlay_content import OverlayContent
 from config.storagesys.storage_system import StorageSystem
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.uic import loadUi
 
 class SubMenu(QWidget):
     menu_return_clicked = pyqtSignal()
@@ -31,7 +31,7 @@ class SubMenu(QWidget):
 
     def init_submenu(self):
         """Inicializa el menú secundario y aplica los estilos."""
-        loadUi("src/views/submenu/submenu.ui", self)
+        loadUi("src/ui/views/submenu/submenu.ui", self)
         self.showMaximized()
         self.setStyleSheet(f"background-color: {self.BG_COLOR}")
         self.init_overlay_widget()

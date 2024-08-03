@@ -1,8 +1,8 @@
-import json
-from PyQt5.uic import loadUi
-from PyQt5.QtWidgets import QWidget, QGridLayout
+from src.ui.components.cover.cover_game import CoverGame
 from PyQt5.QtCore import QSize, pyqtSignal, QTimer
-from src.components.cover.cover_game import CoverGame
+from PyQt5.QtWidgets import QWidget, QGridLayout
+from PyQt5.uic import loadUi
+import json
 
 class Roms(QWidget):
     default_game_path = 'src/data/games_default.json'
