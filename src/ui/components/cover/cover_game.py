@@ -104,6 +104,7 @@ class CoverGame(QWidget):
         self.update()
 
     def load_game(self, game):
+        self.game = game
         try:
             # Cargar la imagen usando Pillow
             with Image.open(game['cover_image']) as img:
@@ -138,9 +139,8 @@ class CoverGame(QWidget):
         self.setCursor(QCursor(Qt.PointingHandCursor))  # Cambiar el cursor a mano cuando está en hover
         self.update()  # Redibuja el widget para aplicar el borde gradiente
         self.play_hover_sound()  # Reproduce el sonido de hover
-        
         # Emitir el nombre del juego a través de la señal
-        if self.parent() and isinstance(self.parent(), QWidget):
+        if self.parent() and isinstance(self.parent(), QWidget):    
             self.game_hovered.emit(self.game['name'])
         
         super().enterEvent(event)

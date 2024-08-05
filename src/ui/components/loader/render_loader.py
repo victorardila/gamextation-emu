@@ -4,9 +4,9 @@ from PyQt5.QtGui import QPainter, QColor, QBrush, QPen
 
 class RenderLoader(QWidget):
     """Widget para mostrar un loader con animación de rotación."""
-    def __init__(self, Time=None, request=None):
-        super().__init__()
-        self.request = request
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setFixedSize(200, 200)  # Tamaño fijo del loader
@@ -36,9 +36,11 @@ class RenderLoader(QWidget):
         """Dibuja el loader con animación de rotación."""
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
-
-        # Color de fondo
-        painter.fillRect(self.rect(), QColor(0, 0, 0, 150))
+        
+        # Color de fondo sólido
+        # painter.fillRect(self.rect(), QColor(0, 0, 0, 150))
+        # Color de fondo transparente
+        painter.setBrush(QBrush(QColor(0, 0, 0, 0)))
 
         # Configurar el color del primer loader (blanco)
         color1 = QColor(255, 255, 255)
@@ -79,7 +81,12 @@ class RenderLoader(QWidget):
         self.update()  # Actualiza el widget para redibujar
 
     def show_centered(self, parent):
-        """Muestra el loader centrado sobre el widget padre."""
-        parent_geometry = parent.geometry()
-        self.move(parent_geometry.center() - self.rect().center())
+        """Centrar el loader en el widget padre después de un breve retraso."""
+        QTimer.singleShot(10, lambda: self._center_loader(parent))
+
+    def _center_loader(self, parent):
+        """Método auxiliar para centrar el loader en el widget padre."""
+        parent_rect = parent.rect()
+        self.move(parent_rect.center() - self.rect().center())
         self.show()
+

@@ -1,7 +1,9 @@
 from src.ui.components.cover.cover_game import CoverGame
 from PyQt5.QtCore import QSize, pyqtSignal, QTimer
 from PyQt5.QtWidgets import QWidget, QGridLayout
+from PyQt5.QtGui import QFont, QFontDatabase
 from PyQt5.uic import loadUi
+from io import BytesIO
 import json
 # Render loader
 from src.ui.components.loader.render_loader import RenderLoader
@@ -15,7 +17,7 @@ class Roms(QWidget):
     
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.loader = RenderLoader()
+        self.loader = RenderLoader(self)
         self.loader.show_centered(self)  # Mostrar el loader centrado sobre el widget Roms
         self.setupUi()
         self.optimizer_hidden.connect(self.handle_optimizer_hidden)
@@ -32,6 +34,14 @@ class Roms(QWidget):
             image_loader.image_loaded.connect(self.on_image_loaded)
             self.image_loader_workers.append(image_loader)  # Mantén la referencia
             image_loader.start()
+            
+    def load_custom_font(self, font_path, font_size, fallback_font, fallback_size):
+        """Carga una fuente personalizada o usa una fuente de reserva."""
+        font_id = QFontDatabase.addApplicationFont(font_path)
+        if font_id != -1:
+            font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
+            return QFont(font_family, font_size)
+        return QFont(fallback_font, fallback_size)
 
     def on_image_loaded(self, image_url, image):
         """Maneja la señal cuando una imagen está cargada."""
@@ -43,7 +53,7 @@ class Roms(QWidget):
                     break
 
         # Verifica si todas las imágenes han sido cargadas
-        if all(isinstance(game["cover_image"], bytes) for category in self.games.values() for game in category):
+        if all(isinstance(game["cover_image"], BytesIO) for category in self.games.values() for game in category):
             self.loader.hide()  # Ocultar el loader una vez que se hayan cargado todas las imágenes
             self.load_cover_games()  # Carga las portadas de los juegos después de obtener las imágenes
 
@@ -89,7 +99,6 @@ class Roms(QWidget):
             # Obtengo la peticion y la envio al render_loader
             cover_game = CoverGame()
             cover_game.game_hovered.connect(self.handle_game_hovered)
-
             if i % 2 == 0 and index_desktop < len(games_desktop):
                 index_desktop = self.find_next_available_index(games_desktop, used_desktop_games, index_desktop)
                 if index_desktop < len(games_desktop):
@@ -149,4 +158,16 @@ class Roms(QWidget):
     
     def handle_game_hovered(self, game_name):
         """Actualiza el nombre del juego en el label cuando se pasa el ratón sobre una portada."""
+        # cambio el tipo de letra
+        custom_font = self.load_custom_font("src/assets/font/ratchet-clank-psp.ttf", 24, "Arial", 18)
         self.label_name_game.setText(game_name)
+        self.label_name_game.setFont(custom_font)
+        self.label_name_game.setStyleSheet("color: white; font-size: 28px;")
+    
+    # Este metodo es para observar el diseño del widget contenedor
+    # def paintEvent(self, event):
+    #     """Rellena el área del widget padre con un color para depuración."""
+    #     super().paintEvent(event)  # Llama al paintEvent base para asegurar que se dibuje lo demás
+    #     painter = QPainter(self)
+    #     painter.setBrush(QColor(255, 0, 0, 50))  # Color rojo con transparencia
+    #     painter.drawRect(self.rect())  # Dibuja un rectángulo que cubre todo el widget padre
