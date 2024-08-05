@@ -29,8 +29,8 @@ class RenderLoader(QWidget):
         self.timer.timeout.connect(self.update_animation)
         self.timer.start(50)  # Intervalo de actualización de la animación
 
-        self.angle1 = 0  # Ángulo para el primer círculo
-        self.angle2 = 0  # Ángulo para el segundo círculo
+        self.angle = 0
+        self.reverse_angle = 0  # Ángulo para el segundo círculo
 
     def paintEvent(self, event):
         """Dibuja el loader con animación de rotación."""
@@ -41,41 +41,38 @@ class RenderLoader(QWidget):
         painter.fillRect(self.rect(), QColor(0, 0, 0, 150))
 
         # Configurar el color del primer loader (blanco)
-        color1 = QColor(255, 255, 255)
-        pen1 = QPen(color1)
-        pen1.setWidth(6)  # Grosor del pen para el primer círculo
-        painter.setPen(pen1)
-        painter.setBrush(QBrush(color1))
+        color = QColor(255, 255, 255)
+        pen = QPen(color)
+        pen.setWidth(6)  # Establece el grosor del pen
+
+        painter.setPen(pen)
+        painter.setBrush(QBrush(color))
 
         # Calcular el centro del widget
         center = self.rect().center()
 
-        # Calcular el tamaño del primer círculo
+        # Calcular el tamaño del círculo
         radius = min(self.rect().width(), self.rect().height()) // 4
-        rect1 = QRect(center.x() - radius, center.y() - radius, 2 * radius, 2 * radius)
+        rect = QRect(center.x() - radius, center.y() - radius, 2 * radius, 2 * radius)
 
-        # Dibujar el primer círculo giratorio
-        painter.drawArc(rect1, self.angle1 * 16, 180 * 16)
+        # Dibujar el primer círculo giratorio (a la derecha)
+        painter.drawArc(rect, self.angle * 16, 180 * 16)
 
-        # Configurar el color del segundo loader (verde llamativo)
-        color2 = QColor(0, 255, 0)  # Verde llamativo
-        pen2 = QPen(color2)
-        pen2.setWidth(6)  # Grosor del pen para el segundo círculo
-        painter.setPen(pen2)
-        painter.setBrush(QBrush(color2))
+        # Configurar el color del segundo loader (verde)
+        color = QColor(0, 255, 0)  # Color verde llamativo
+        pen.setColor(color)
+        painter.setPen(pen)
+        painter.setBrush(QBrush(color))
 
-        # Calcular el tamaño del segundo círculo (mismo tamaño que el primero)
-        rect2 = QRect(center.x() - radius + 10, center.y() - radius + 10, 2 * radius - 20, 2 * radius - 20)
-
-        # Dibujar el segundo círculo giratorio
-        painter.drawArc(rect2, -self.angle2 * 16, -180 * 16)
+        # Dibujar el segundo círculo giratorio (a la izquierda)
+        painter.drawArc(rect, self.reverse_angle * 16, -180 * 16)  # Dirección opuesta
 
         painter.end()
 
     def update_animation(self):
         """Actualiza la animación del loader."""
-        self.angle1 = (self.angle1 + 30) % 360
-        self.angle2 = (self.angle2 - 30) % 360  # Mover en sentido contrario
+        self.angle = (self.angle + 30) % 360
+        self.reverse_angle = (self.reverse_angle - 30) % 360  # Movimiento en dirección opuesta
         self.update()  # Actualiza el widget para redibujar
 
     def show_centered(self, parent):
