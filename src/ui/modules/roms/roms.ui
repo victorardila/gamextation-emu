@@ -206,7 +206,7 @@
   <customwidget>
    <class>ButtonIcon</class>
    <extends>QPushButton</extends>
-   <header location="global">src.components.buttons.button_icon</header>
+   <header location="global">src.ui.components.buttons.button_icon</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -868,26 +868,26 @@ color: rgba(230, 230, 230, 150)</string>
   <customwidget>
    <class>ButtonIcon</class>
    <extends>QPushButton</extends>
-   <header location="global">src.components.buttons.button_icon</header>
+   <header location="global">src.ui.components.buttons.button_icon</header>
   </customwidget>
   <customwidget>
    <class>LabelHour</class>
    <extends>QLabel</extends>
-   <header location="global">src.components.labels.label_hour</header>
+   <header location="global">src.ui.components.labels.label_hour</header>
   </customwidget>
   <customwidget>
    <class>ButtonMainMenu</class>
    <extends>QPushButton</extends>
-   <header location="global">src.components.buttons.button_main_menu</header>
+   <header location="global">src.ui.components.buttons.button_main_menu</header>
   </customwidget>
   <customwidget>
    <class>InputSearch</class>
    <extends>QLineEdit</extends>
-   <header location="global">src.components.inputs.input_search</header>
+   <header location="global">src.ui.components.inputs.input_search</header>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../assets/resources.qrc"/>
+  <include location="../../../../assets/resources.qrc"/>
  </resources>
  <connections/>
 </ui>

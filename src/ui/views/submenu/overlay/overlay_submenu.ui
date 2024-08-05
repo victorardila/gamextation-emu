@@ -369,14 +369,16 @@
   <customwidget>
    <class>ButtonIcon</class>
    <extends>QPushButton</extends>
-   <header location="global">src.components.buttons.button_icon</header>
+   <header location="global">src.ui.components.buttons.button_icon</header>
   </customwidget>
   <customwidget>
    <class>ButtonTextIcon</class>
    <extends>QPushButton</extends>
-   <header location="global">src.components.buttons.button_text_icon</header>
+   <header location="global">src.ui.components.buttons.button_text_icon</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../../../assets/resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

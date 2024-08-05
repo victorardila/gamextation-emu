@@ -5,8 +5,7 @@ from PyQt5.uic import loadUi
 import json
 # Render loader
 from src.ui.components.loader.render_loader import RenderLoader
-# Requests to the services
-from src.services.game_requests_services import GameRequestsServices
+from src.utils.image_loader_worker import ImageLoaderWorker
 
 class Roms(QWidget):
     default_game_path = 'src/data/games_default.json'
@@ -16,28 +15,44 @@ class Roms(QWidget):
     
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.load_games()
+        self.loader = RenderLoader()
+        self.loader.show_centered(self)  # Mostrar el loader centrado sobre el widget Roms
         self.setupUi()
         self.optimizer_hidden.connect(self.handle_optimizer_hidden)
+        self.image_loader_workers = []  # Mantén una referencia a los workers
+        self.load_games()
 
     def load_games(self):
         """Carga los juegos desde el archivo JSON."""
         with open(self.default_game_path, 'r') as file:
             self.games = json.load(file)
-        # obtengo la url de la imagen del juego
         image_urls = [game["cover_image"] for category in self.games.values() for game in category]
-        # obtengo la respuesta de la descarga de las imagenes
-        response = RenderLoader(request=GameRequestsServices().get_images(image_urls))
-        # reemplazo la url de la imagen por la imagen descargada
-        _ = [game.update({"cover_image": next(response)}) for category in self.games.values() for game in category]
+        for url in image_urls:
+            image_loader = ImageLoaderWorker(url)
+            image_loader.image_loaded.connect(self.on_image_loaded)
+            self.image_loader_workers.append(image_loader)  # Mantén la referencia
+            image_loader.start()
+
+    def on_image_loaded(self, image_url, image):
+        """Maneja la señal cuando una imagen está cargada."""
+        # Reemplazo la URL de la imagen por la imagen descargada
+        for category in self.games.values():
+            for game in category:
+                if game["cover_image"] == image_url:
+                    game["cover_image"] = image
+                    break
+
+        # Verifica si todas las imágenes han sido cargadas
+        if all(isinstance(game["cover_image"], bytes) for category in self.games.values() for game in category):
+            self.loader.hide()  # Ocultar el loader una vez que se hayan cargado todas las imágenes
+            self.load_cover_games()  # Carga las portadas de los juegos después de obtener las imágenes
 
     def setupUi(self):
         """Configura la interfaz de usuario."""
-        loadUi("src/modules/roms/roms.ui", self)
+        loadUi("src/ui/modules/roms/roms.ui", self)
         self.showMaximized()
         self.apply_styles()
         self.setup_layout()
-        self.load_cover_games()
     
     def apply_styles(self):
         """Aplica los estilos al topbar y los botones."""
