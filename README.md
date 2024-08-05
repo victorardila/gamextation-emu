@@ -16,6 +16,10 @@
 
 ![dark mode](https://github.com/user-attachments/assets/b6a83080-d2e0-416d-b5bd-70dba72c1cbf)
 
+### `Carga de juegos`
+
+![Roms](https://github.com/user-attachments/assets/ccc1d3b6-4a96-4e23-97fe-04e72bb10f19)
+
 ## Pasos de instalacion de proyecto
 
 ## 1. Crear y Activar el entorno virtual
