@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt5.QtCore import QTimer, Qt, QSize
-from PyQt5.QtGui import QPainter, QColor, QPixmap, QFont
-from src.services import *
+from PyQt5.QtGui import QPainter, QColor
 from PyQt5.QtCore import Qt
 
 class RenderLoader(QWidget):
@@ -63,8 +62,3 @@ class RenderLoader(QWidget):
         self.move((parent_rect.width() - self.width()) // 2,
                   (parent_rect.height() - self.height()) // 2)
         self.show()
-    
-    # ejecutar peticion request que se recibe como parametro
-    def execute_request(self):
-        pass
-    

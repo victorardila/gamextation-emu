@@ -3,6 +3,10 @@ from PyQt5.QtCore import QSize, pyqtSignal, QTimer
 from PyQt5.QtWidgets import QWidget, QGridLayout
 from PyQt5.uic import loadUi
 import json
+# Render loader
+from src.ui.components.loader.render_loader import RenderLoader
+# Requests to the services
+from src.services.game_requests_services import GameRequestsServices
 
 class Roms(QWidget):
     default_game_path = 'src/data/games_default.json'
@@ -20,6 +24,12 @@ class Roms(QWidget):
         """Carga los juegos desde el archivo JSON."""
         with open(self.default_game_path, 'r') as file:
             self.games = json.load(file)
+        # obtengo la url de la imagen del juego
+        image_urls = [game["cover_image"] for category in self.games.values() for game in category]
+        # obtengo la respuesta de la descarga de las imagenes
+        response = RenderLoader(request=GameRequestsServices().get_images(image_urls))
+        # reemplazo la url de la imagen por la imagen descargada
+        _ = [game.update({"cover_image": next(response)}) for category in self.games.values() for game in category]
 
     def setupUi(self):
         """Configura la interfaz de usuario."""
@@ -61,6 +71,7 @@ class Roms(QWidget):
         index_browser = 0
 
         for i in range(total_slots_default):
+            # Obtengo la peticion y la envio al render_loader
             cover_game = CoverGame()
             cover_game.game_hovered.connect(self.handle_game_hovered)
 

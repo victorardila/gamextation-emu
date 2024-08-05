@@ -2,7 +2,6 @@ from config.storagesys.storage_system import StorageSystem
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt5.QtGui import QPainter, QLinearGradient, QColor, QPixmap, QImage, QBrush, QPen, QCursor
 from PyQt5.QtCore import Qt, pyqtSignal
-import requests
 from io import BytesIO
 from PIL import Image
 import pygame
@@ -105,23 +104,9 @@ class CoverGame(QWidget):
         self.update()
 
     def load_game(self, game):
-        self.game = game
-        img_url = game['cover_image']
-        
-        # Descargar la imagen usando requests
-        response = requests.get(img_url)
-        
-        # Verificar si la respuesta es una imagen
-        if 'image' not in response.headers.get('Content-Type', ''):
-            print("La URL no devuelve una imagen válida.")
-            return
-
-        # Crear un BytesIO con los datos de la imagen descargada
-        image_data = BytesIO(response.content)
-
         try:
             # Cargar la imagen usando Pillow
-            with Image.open(image_data) as img:
+            with Image.open(game['cover_image']) as img:
                 # Convertir a PNG en memoria
                 with BytesIO() as png_image_data:
                     img.save(png_image_data, format='PNG')
