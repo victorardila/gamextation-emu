@@ -53,7 +53,7 @@ OriginLogic(trigger)
                                                          | ► Creator
                                                          └ ► About
 ```
-## Descripcion de flujo
+## `Descripcion de flujo`
 - app.py: El punto de inicio del flujo, se encarga de la lógica inicial y las validaciones.
 - QMainWindow (animation.ui): Carga el diseño de animation.ui.
 - QMainWindow (main_container.ui): Carga el diseño de main_container.ui y dentro de este se encuentran las vistas.
