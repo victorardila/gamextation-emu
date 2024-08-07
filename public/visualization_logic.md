@@ -6,7 +6,7 @@ Este proyecto es desarrollado en el diseñador de interfaces mas potente que tie
 
 ## `Flujo de Ejecución`
 
-```diff
+```plaintext
     
 OriginLogic(trigger) 
 +-------------------+
