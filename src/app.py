@@ -36,7 +36,7 @@ class Aplicacion(QMainWindow):
         dialog_message = DialogMessage()
         for key, value in self.validations.items():
             if not value[0]:
-                dialog_message.showMessageBox(value)
+                dialog_message.show_message_box(value)
 
     def fade_out_intro(self):
         """Gestiona la animación de desvanecimiento de la ventana de introducción."""

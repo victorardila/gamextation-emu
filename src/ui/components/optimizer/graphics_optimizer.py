@@ -32,7 +32,7 @@ class GraphicsOptimizer(QWidget):
         # Cargar el sonido
         self.sound = pygame.mixer.Sound(self.load_sfx)
         # Reproducir el sonido
-        self.sound.set_volume(0.4)  # Ajusta el volumen (0.0 a 1.0)
+        self.sound.set_volume(0.5)  # Ajusta el volumen (0.0 a 1.0)
 
     def setupUi(self):
         # Configurar el tamaño fijo del widget
