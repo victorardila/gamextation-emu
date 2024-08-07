@@ -17,6 +17,7 @@ En componentes relacionados con animaciones y notificaciones, se utiliza el patr
 
 El proyecto está organizado de la siguiente manera:
 
+```md
 - .gitignore
 - README.md
 - config/
@@ -84,7 +85,7 @@ El proyecto está organizado de la siguiente manera:
 - test/
   - test_core.py
   - test_emulator.py
-
+```
 
 ### Descripción de Directorios y Archivos Clave
 
