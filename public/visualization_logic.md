@@ -14,19 +14,19 @@ OriginLogic(trigger)
 +-------------------+
          ↓
          ↓
-   Flujo ↓          (Load Windows)
+  »Flujo ↓          (Load Windows)
          ↓         
          ↓
  QMainWindow(Window)              QMainWindow(Window)
-+-------------------+   Flujo   +---------------------+
++-------------------+  »Flujo   +---------------------+
 |   animation.ui    | → → → → → |  main_container.ui  | 
 +-------------------+           +---------------------+
                                     ↓        ▼
                                     ↓  QWidget(Views)                 (Load Views)
                                     ↓        │   ┌──────────────┐
                                     │→ → → → │ ► | game_load.ui |
-                       Flujo triple ↓        |   └──────────────┘                     
-                                    ↓      Ramas ┌──────────────┐                       ┌────────────────────┐
+                      »Flujo triple ↓        |   └──────────────┘                     
+                                    ↓     ¥Ramas ┌──────────────┐                       ┌────────────────────┐
                                     │→ → → → │ ► | main_menu.ui | → → → QWidget(Overlay)|   overlay_menu.ui  |
                                     ↓        │   └──────────────┘                       └────────────────────┘
                                     ↓        │   ┌──────────────┐                        
@@ -41,7 +41,7 @@ OriginLogic(trigger)
                                                └────────────────────┘
                                                          ▼
                                                   QWidget(Modules)    (Load Microservices)
-                                                         |
+                                                      ¥Ramas
                                                          | ► Roms
                                                          | ► Consoles
                                                          | ► Store
