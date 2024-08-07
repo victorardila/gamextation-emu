@@ -6,9 +6,6 @@ Este proyecto es desarrollado en el diseñador de interfaces mas potente que tie
 
 ## Flujo de Ejecución
 
-# Lógica de Visualización
-
-
 ```diff
     
 OriginLogic(trigger) 
