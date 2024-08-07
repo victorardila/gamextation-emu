@@ -25,14 +25,19 @@ OriginLogic(trigger)
 |   animation.ui    | → → → → → |  main_container.ui  | 
 +-------------------+           +---------------------+
                                     ↓        ▼
-                                    ↓  QWidget(Views)                 (Load Views)
+                                    ↓  QWidget(Views)              (Load Views)
                                     ↓        │   ┌──────────────┐
                                     │→ → → → │ ► | game_load.ui |
                        Flujo triple ↓        |   └──────────────┘        
                                     ↓      Ramas ┌──────────────┐                   ┌────────────────────┐
                                     │→ → → → │ ► | main_menu.ui | → QWidget(Overlay)|   overlay_menu.ui  |
                                     ↓        │   └──────────────┘                   └────────────────────┘
-                                    ↓        │   ┌──────────────┐                   ┌────────────────────┐
-                                    └ → → → →└ ► |  submenu.ui  | → QWidget(Overlay)| overlay_submenu.ui |
-                                                 └──────────────┘                   └────────────────────┘
+                                    ↓        │   ┌──────────────┐                   
+                                    └ → → → →└ ► |  submenu.ui  |  
+                                                 └──────────────┘  
+                                                        ↓           (Load Modules)
+                                                 QWidget(Overlay)
+                                               ┌────────────────────┐
+                                               | overlay_submenu.ui |
+                                               └────────────────────┘
 ```
