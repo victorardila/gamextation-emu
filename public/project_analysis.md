@@ -17,7 +17,7 @@ En componentes relacionados con animaciones y notificaciones, se utiliza el patr
 
 El proyecto está organizado de la siguiente manera:
 
-```md
+```diff
 - .gitignore
 - README.md
 - config/
