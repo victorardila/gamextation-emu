@@ -1,7 +1,7 @@
 from src.ui.components.cover.cover_game import CoverGame
 from PyQt5.QtCore import QSize, pyqtSignal, QTimer
 from PyQt5.QtWidgets import QWidget, QGridLayout
-from PyQt5.QtGui import QFont, QFontDatabase
+from PyQt5.QtGui import QFont, QFontDatabase, QPainter, QColor
 from PyQt5.uic import loadUi
 from io import BytesIO
 import json

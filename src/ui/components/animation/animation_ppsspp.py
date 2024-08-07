@@ -1,7 +1,7 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QSizePolicy
-from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QPixmap, QPainter, QTransform, QColor
 from config.storagesys.storage_system import StorageSystem
+from PyQt5.QtWidgets import QWidget, QLabel, QSizePolicy
+from PyQt5.QtCore import QTimer, Qt
 import qtawesome as qta
 import random
 
@@ -13,8 +13,7 @@ class IconAnimationWidget(QLabel):
         self.color = QColor(255, 255, 255, 10)  # Define el color blanco con transparencia
         self.setPixmap(self.original_pixmap)
         self.setAttribute(Qt.WA_TranslucentBackground)
-        self.resize(self.size, self.size)
-        
+                
         # Inicializa la dirección de movimiento con velocidades variables
         self.dx = random.uniform(-4, 4)
         self.dy = random.uniform(-4, 4)
@@ -97,6 +96,10 @@ class IconAnimationWidget(QLabel):
 class AnimationPPSSPP(QWidget):
     def __init__(self):
         super(AnimationPPSSPP, self).__init__()
+        self.storage = StorageSystem('config.ini')
+        # parseo de la configuración a enteros
+        self.widthInit = int(self.storage.read_config()['General']['screenwidth'])
+        self.heightInit = int(self.storage.read_config()['General']['screenheight'])
         self.icon_size = 48  # Puedes cambiar este valor al tamaño deseado
         self.icons = []
         self.create_multiple_icons(qta.icon('mdi.circle-outline', color='white', style='outline'), count=60, size=self.icon_size)
@@ -104,24 +107,18 @@ class AnimationPPSSPP(QWidget):
         self.create_multiple_icons(qta.icon('mdi.triangle-outline', color='white', style='outline'), count=60, size=self.icon_size)
         self.create_multiple_icons(qta.icon('mdi.close', color='white', style='outline'), count=60, size=self.icon_size)
         self.icons_style()
-        # Cambio el color de fondo de la ventana
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setStyleSheet("background-color: #000000")
-        
+        self.resize(self.widthInit, self.heightInit)
 
     def icons_style(self):
-        storage = StorageSystem('config.ini')
-        settings = storage.read_config()
+        settings = self.storage.read_config()
         current_theme = settings['General']['theme']
         # Si current_theme es light self.alpha = 50 sino self.alpha = 10
         self.alpha = 50 if current_theme == 'light' else 10
         for icon_widget in self.icons:
             icon_widget.color.setAlpha(self.alpha)
             icon_widget.update_pixmap()
-            
-    def resizeEvent(self, event):
-        super(AnimationPPSSPP, self).resizeEvent(event)
-        self.update_icons_position()
-        self.setGeometry(self.parent().rect())
 
     def update_icons_position(self):
         for icon_widget in self.icons:
@@ -140,3 +137,15 @@ class AnimationPPSSPP(QWidget):
         for icon_widget in self.icons:
             icon_widget.color.setAlpha(self.alpha)
             icon_widget.update_pixmap()
+            
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.update_icons_position()
+            
+    # Este metodo es para observar el diseño del widget contenedor
+    # def paintEvent(self, event):
+    #     """Rellena el área del widget padre con un color para depuración."""
+    #     super().paintEvent(event)  # Llama al paintEvent base para asegurar que se dibuje lo demás
+    #     painter = QPainter(self)
+    #     painter.setBrush(QColor(0, 0, 0, 10))  # Color negro con transparencia
+    #     painter.drawRect(self.rect())  # Dibuja un rectángulo que cubre todo el widget padre

@@ -38,7 +38,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../assets/resources.qrc"/>
+  <include location="../../../assets/resources.qrc"/>
   <include location="../../../assets/resources.qrc"/>
  </resources>
  <connections/>

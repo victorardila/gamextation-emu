@@ -253,4 +253,3 @@ class OverlayContent(QWidget):
         self.graphics_optimizer.setVisible(False)
         # enviar una señal al modulo Roms que se ha ocultado el GraphicsOptimizer
         self.module.optimizer_hidden.emit()
-        

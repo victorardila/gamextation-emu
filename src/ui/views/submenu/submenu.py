@@ -55,7 +55,6 @@ class SubMenu(QWidget):
     def init_animation_menu(self):
         """Inicializa el widget de animación y lo agrega al layout."""
         self.animation = AnimationPPSSPP()
-        self.animation.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.layout_widgets.addWidget(self.animation)
         self.animation.show()
 

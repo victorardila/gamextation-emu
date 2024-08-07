@@ -4,6 +4,7 @@ from src.ui.views.menu.main_menu import MainMenu
 from src.ui.views.submenu.submenu import SubMenu
 from PyQt5.QtGui import QIcon
 from PyQt5.uic import loadUi
+from PyQt5.QtCore import QTimer
 import random
 import pygame
 import os
@@ -13,6 +14,9 @@ class MainContainer(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        self.resize_timer = QTimer(self)  # Inicializa el temporizador aquí
+        self.resize_timer.setSingleShot(True)
+        self.resize_timer.timeout.connect(self.print_window_size)
         self.read_config_file()
         self.init_song()
         self.init_gui()
@@ -109,3 +113,15 @@ class MainContainer(QMainWindow):
 
     def close_application(self):
         self.close()
+        
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.resize_timer.start(200)  # Reinicia el temporizador a 200 ms
+
+    def print_window_size(self):
+        width = self.width()
+        height = self.height()
+        storage = StorageSystem("config.ini")
+        storage.update_config('General', 'screenwidth', str(width))
+        storage.update_config('General', 'screenheight', str(height))
+        

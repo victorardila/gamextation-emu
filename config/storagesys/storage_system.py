@@ -2,7 +2,6 @@ import configparser
 import os
 
 class StorageSystem:
-    
     BG_COLOR_DARK = (
         "qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, "
         "stop:0 rgba(34, 34, 34, 255), stop:0.5 rgba(40, 40, 40, 255), "
@@ -51,15 +50,24 @@ class StorageSystem:
         :param option: The option to be updated.
         :param value: The new value for the option.
         """
+        # Read the current configuration from the file
+        if os.path.exists(self.config_file):
+            self.config.read(self.config_file)
+        else:
+            self.config.read_dict({section: {option: value}})
+
         if not self.config.has_section(section):
             self.config.add_section(section)
+        
         if option == 'theme':
             bg_color = self.BG_COLOR_DARK if value == 'dark' else self.BG_COLOR_LIGHT
             self.config.set(section, 'bg_color', bg_color)
+        
         self.config.set(section, option, value)
+        
         with open(self.config_file, 'w') as configfile:
             self.config.write(configfile)
-
+    
     def delete_config(self):
         """
         Delete the configuration file.
