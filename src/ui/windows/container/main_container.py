@@ -14,6 +14,7 @@ class MainContainer(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        self.storage = StorageSystem("config.ini")
         self.resize_timer = QTimer(self)  # Inicializa el temporizador aquí
         self.resize_timer.setSingleShot(True)
         self.resize_timer.timeout.connect(self.print_window_size)
@@ -103,10 +104,12 @@ class MainContainer(QMainWindow):
     def switch_sound_state(self):
         if self.SOUND == "on":
             self.SOUND = "off"
+            self.storage.update_config('General', 'sound', 'off')
             pygame.mixer.music.stop()
         else:
             self.SOUND = "on"
-            self.play_song()
+            self.storage.update_config('General', 'sound', 'on')
+            self.init_song()
 
     def switch_to_mainmenu(self):
         self.layout_views.setCurrentWidget(self.mainMenu)
@@ -121,7 +124,6 @@ class MainContainer(QMainWindow):
     def print_window_size(self):
         width = self.width()
         height = self.height()
-        storage = StorageSystem("config.ini")
-        storage.update_config('General', 'screenwidth', str(width))
-        storage.update_config('General', 'screenheight', str(height))
+        self.storage.update_config('General', 'screenwidth', str(width))
+        self.storage.update_config('General', 'screenheight', str(height))
         

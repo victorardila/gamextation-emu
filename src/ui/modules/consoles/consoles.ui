@@ -196,7 +196,7 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <widget class="CoverConsole" name="label_gif">
+          <widget class="QLabel" name="label_gif">
            <property name="text">
             <string>Gif</string>
            </property>
@@ -218,11 +218,6 @@
    <class>ButtonIcon</class>
    <extends>QPushButton</extends>
    <header location="global">src.ui.components.buttons.button_icon</header>
-  </customwidget>
-  <customwidget>
-   <class>CoverConsole</class>
-   <extends>QLabel</extends>
-   <header location="global">src.ui.components.cover.cover_console</header>
   </customwidget>
  </customwidgets>
  <resources/>

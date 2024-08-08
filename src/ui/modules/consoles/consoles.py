@@ -2,13 +2,20 @@ from src.ui.components.cover.cover_game import CoverGame
 from PyQt5.QtCore import QSize, pyqtSignal, QTimer, Qt
 from PyQt5.QtWidgets import QWidget, QGridLayout
 from PyQt5.QtGui import QFont, QFontDatabase, QPainter, QColor, QMovie
-from src.ui.components.cover.cover_console import CoverConsole
+# from src.ui.components.cover.cover_console import CoverConsole
 from PyQt5.uic import loadUi
 
 class Consoles(QWidget):
     optimizer_hidden = pyqtSignal()
     back_clicked = pyqtSignal()
     GIF_CONSOLE = "src/assets/gif/console.gif"
+    
+    # arreglo de imagenes gif de consolas
+    # GIF_CONSOLE = [
+    #     "src/assets/gif/console.gif",
+    #     "src/assets/gif/console2.gif",
+    #     "src/assets/gif/console3.gif",
+    # ]
     
     def __init__(self):
         super().__init__()
@@ -25,7 +32,7 @@ class Consoles(QWidget):
         self.button_back.style('fa.angle-left', QSize(32, 32), "Atras", 'white')
         self.topbar.setStyleSheet("background-color: rgba(0, 0, 0, 0.5); border-radius: 10px;")
         self.label_module.setStyleSheet("background-color: transparent; color: white; font-size: 20px; font-weight: bold;")
-        self.label_module.setText("Consoles")
+        self.label_module.setText("Consolas")
         self.label_optimize.setVisible(False)
         self.button_back.clicked.connect(self.back_clicked.emit)
         
