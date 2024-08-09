@@ -1,7 +1,8 @@
 from src.ui.components.cover.cover_console import CoverConsole
-from PyQt5.QtCore import QSize, pyqtSignal, QTimer, Qt
-from PyQt5.QtWidgets import QWidget, QGridLayout
-from PyQt5.QtGui import QFont, QFontDatabase, QPainter, QColor, QMovie
+from src.ui.components.controls.KeyboardInteractive import KeyboardInteractive
+from PyQt5.QtCore import QSize, pyqtSignal, QTimer
+from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from PyQt5.QtGui import QFont, QFontDatabase
 # from src.ui.components.cover.cover_console import CoverConsole
 from PyQt5.uic import loadUi
 
@@ -25,6 +26,7 @@ class Consoles(QWidget):
         loadUi("src/ui/modules/consoles/consoles.ui", self)
         self.showMaximized()
         self.apply_styles()
+        self.load_widgets()
     
     def load_custom_font(self, font_path, font_size, fallback_font, fallback_size):
         """Carga una fuente personalizada o usa una fuente de reserva."""
@@ -54,6 +56,16 @@ class Consoles(QWidget):
         self.cover_console = CoverConsole(self.GIFS_CONSOLES)
         self.image_module.layout().addWidget(self.cover_console)
         
+    def load_widgets(self):
+        """Carga los widgets necesarios al QFrame interactive_preview_content."""
+        # Verificar si el widget tiene un layout, si no, asignar uno
+        if self.interactive_preview_content.layout() is None:
+            self.interactive_preview_content.setLayout(QVBoxLayout())
+        
+        # Ahora se puede añadir el widget al layout
+        self.keyboard_interactive = KeyboardInteractive()
+        self.interactive_preview_content.layout().addWidget(self.keyboard_interactive)
+
     def handle_optimizer_hidden(self):
         """Muestra el mensaje de optimización y lo oculta después de un tiempo."""
         self.label_optimize.setStyleSheet("background-color: transparent; color: #00ff00; font-size: 20px; font-weight: bold;")
