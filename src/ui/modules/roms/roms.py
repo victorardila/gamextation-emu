@@ -66,10 +66,12 @@ class Roms(QWidget):
     
     def apply_styles(self):
         """Aplica los estilos al topbar y los botones."""
+        custom_font = self.load_custom_font("src/assets/font/ratchet-clank-psp.ttf", 24, "Arial", 18)
         self.button_back.style('fa.angle-left', QSize(32, 32), "Atras", 'white')
         self.topbar.setStyleSheet("background-color: rgba(0, 0, 0, 0.5); border-radius: 10px;")
-        self.label_module.setStyleSheet("background-color: transparent; color: white; font-size: 20px; font-weight: bold;")
         self.label_module.setText("Roms")
+        self.label_module.setStyleSheet("background-color: transparent; color: white; font-size: 26px; font-weight: bold;")
+        self.label_module.setFont(custom_font)
         self.label_name_game.setStyleSheet("color: white; font-size: 20px; font-weight: bold;")
         self.label_name_game.setText("")
         self.label_optimize.setVisible(False)

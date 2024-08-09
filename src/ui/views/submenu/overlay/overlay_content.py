@@ -127,8 +127,8 @@ class OverlayContent(QWidget):
         self.logo.setPixmap(
             self.colorize_svg(self.SVG_CREDITS, QColor('white'), QSize(80, 80))
         )
-        
-        self.label_logo_menu.setStyleSheet("background-color: transparent; color: white;")
+        self.label_logo_menu.setText("Menu")
+        self.label_logo_menu.setStyleSheet("background-color: transparent; color: white; font-size: 26px; font-weight: bold;")
         
         # Apply FontAwesome icons to buttons
         self.apply_button_styles()

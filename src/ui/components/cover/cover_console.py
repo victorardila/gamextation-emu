@@ -68,8 +68,8 @@ class CoverConsole(QWidget):
         self.gradient_border_widget.setGeometry(self.rect())
         self.gradient_border_widget.ThemeSelected = self.ThemeSelected
         self.gradient_border_widget.show()
-
         self.setLayout(layout)
+        
         self.load_gif()
         self.show()
     
