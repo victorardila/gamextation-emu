@@ -3,7 +3,7 @@ from src.ui.components.controls.keyboard_interactive import KeyboardInteractive
 from src.ui.components.controls.keyboard_interactive import OctagonButton
 from PyQt5.QtCore import QSize, pyqtSignal, QTimer, Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
-from PyQt5.QtGui import QFont, QFontDatabase
+from PyQt5.QtGui import QFont, QFontDatabase, QColor
 # from src.ui.components.cover.cover_console import CoverConsole
 from PyQt5.uic import loadUi
 
@@ -16,6 +16,11 @@ class Consoles(QWidget):
         "src/assets/gif/console.gif",
         "src/assets/gif/console2.gif",
         "src/assets/gif/console3.gif",
+    ]
+    # Rutas de los iconos SVG
+    SVGS_PATH = [
+        "src/assets/svg/console.svg",
+        "src/assets/svg/keyboard.svg",
     ]
     
     def __init__(self):
@@ -66,11 +71,17 @@ class Consoles(QWidget):
         self.label_tittle_options.setFont(custom_font)
         self.label_tittle_options.setText("Opciones")
         self.label_tittle_options.setStyleSheet("color: white; font-size: 26px;")
+        self.label_functios_avaliable.setFont(custom_font)
+        self.label_functios_avaliable.setText("Funciones disponibles")
+        self.label_functios_avaliable.setStyleSheet("color: white; font-size: 26px;")
         # caambio el tipo de fuente personalizada a los QRadioButton a custom_font
         self.option_keyboard.setFont(custom_font)
         self.option_controller.setFont(custom_font)
-        self.option_keyboard.setStyleSheet("font-size: 18px; color: white;")
-        self.option_controller.setStyleSheet("font-size: 18px; color: white;")
+        self.option_keyboard.setStyleSheet("font-size: 24px; color: white;")
+        self.option_controller.setStyleSheet("font-size: 24px; color: white;")
+        self.option_controller.style(self.SVGS_PATH[0], QSize(40, 40), "Control", QColor("white"))
+        self.option_keyboard.style(self.SVGS_PATH[1], QSize(40, 40), "Teclado", QColor("white"))
+        self.selected_button.setStyleSheet("background-color: rgba(0, 0, 0, 0.5); border-radius: 10px;")
         # agrego el CoverConsole que es el widget que contiene el gradiente al QFrame image_module
         self.cover_console = CoverConsole(self.GIFS_CONSOLES)
         self.image_module.layout().addWidget(self.cover_console)
@@ -117,12 +128,14 @@ class Consoles(QWidget):
         # Crear un nuevo widget y añadirlo al layout
         widget = QWidget()
         widget.setLayout(QVBoxLayout())
+        # aplico un color de fondo al widget transparente
+        widget.setStyleSheet("background-color: transparent;")
         widget.layout().setContentsMargins(0, 0, 0, 0)
         widget.layout().setSpacing(0)
 
         # Crear y configurar el OctagonButton
         button = OctagonButton(button_name)
-        button.setStyleSheet("font-size: 28px;")  # Ajusta el tamaño de la fuente
+        button.setStyleSheet("font-size: 30px;") # Establecer el tamaño de la fuente
         button.setMinimumSize(QSize(230, 230))  # Establece el tamaño mínimo
         button.setMaximumSize(QSize(380, 380))  # Establece el tamaño máximo
         # Puedes usar setFixedSize(QSize(200, 200)) para establecer un tamaño fijo

@@ -1,4 +1,4 @@
-from src.ui.components.optimizer.graphics_optimizer import GraphicsOptimizer
+from src.ui.components.toast.graphics_optimizer import GraphicsOptimizer
 from PyQt5.QtGui import QFont, QFontDatabase, QPixmap, QPainter, QColor
 from src.ui.components.loader.render_loader import RenderLoader
 from PyQt5.QtCore import QSize, Qt, pyqtSignal, QTimer
