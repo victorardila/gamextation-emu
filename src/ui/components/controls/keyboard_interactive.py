@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QGridLayout
-from PyQt5.QtGui import QPainter, QPainterPath, QBrush, QColor
+from PyQt5.QtGui import QPainter, QPainterPath, QBrush, QColor, QFont, QFontDatabase
 from PyQt5.QtCore import Qt, QRectF, QPointF
 from PyQt5.QtCore import pyqtSignal
 import math
@@ -11,6 +11,15 @@ class OctagonButton(QPushButton):
         super().__init__(label, parent)
         self.setFixedSize(100, 100)
         self.hovered = False
+        self.custom_font = QFont()  # Inicializa la fuente personalizada aquí
+        
+    def load_custom_font(self, font_path, font_size, fallback_font, fallback_size):
+        """Carga una fuente personalizada o usa una fuente de reserva."""
+        font_id = QFontDatabase.addApplicationFont(font_path)
+        if font_id != -1:
+            font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
+            return QFont(font_family, font_size)
+        return QFont(fallback_font, fallback_size)
 
     def enterEvent(self, event):
         """Cambia el estado a hover cuando el mouse entra."""
@@ -64,7 +73,7 @@ class OctagonButton(QPushButton):
         # Configurar el texto en negrita
         font = self.font()
         font.setBold(True)  # Establecer la fuente en negrita (bold)
-        painter.setFont(font)
+        painter.setFont(self.custom_font)
 
         # Dibujar el texto centrado
         painter.setPen(QColor(0, 0, 0))  # Texto en color negro
@@ -77,6 +86,15 @@ class RectangularButton(QPushButton):
         super().__init__(label, parent)
         self.setFixedSize(100, 60)
         self.hovered = False
+        self.custom_font = QFont()  # Inicializa la fuente personalizada aquí
+        
+    def load_custom_font(self, font_path, font_size, fallback_font, fallback_size):
+        """Carga una fuente personalizada o usa una fuente de reserva."""
+        font_id = QFontDatabase.addApplicationFont(font_path)
+        if font_id != -1:
+            font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
+            return QFont(font_family, font_size)
+        return QFont(fallback_font, fallback_size)
 
     def enterEvent(self, event):
         """Cambia el estado a hover cuando el mouse entra."""
@@ -118,7 +136,7 @@ class RectangularButton(QPushButton):
         # Configurar el texto en negrita
         font = self.font()
         font.setBold(True)  # Establecer la fuente en negrita (bold)
-        painter.setFont(font)
+        painter.setFont(self.custom_font)
 
         # Dibujar el texto centrado
         painter.setPen(QColor(0, 0, 0))  # Texto en color negro
@@ -154,6 +172,14 @@ class KeyboardInteractive(QWidget):
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
     
+    def load_custom_font(self, font_path, font_size, fallback_font, fallback_size):
+        """Carga una fuente personalizada o usa una fuente de reserva."""
+        font_id = QFontDatabase.addApplicationFont(font_path)
+        if font_id != -1:
+            font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
+            return QFont(font_family, font_size)
+        return QFont(fallback_font, fallback_size)
+    
     def get_keyboard_layout(self):
         """Define y devuelve la disposición de las teclas del teclado."""
         return [
@@ -188,6 +214,7 @@ class KeyboardInteractive(QWidget):
 
     def create_button(self, key, width=60, height=60, style=None):
         """Crea y devuelve un botón con el estilo configurado."""
-        button = OctagonButton(key) if key != '────────────' else RectangularButton(key)
+        button = OctagonButton(key, self) if key != '────────────' else RectangularButton(key, self)
         button.setFixedSize(width, height)
+        button.load_custom_font("src/assets/font/ratchet-clank-psp.ttf", 20, "Arial", 18)  # Configura la fuente personalizada aquí
         return button

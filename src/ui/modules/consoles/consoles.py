@@ -46,7 +46,7 @@ class Consoles(QWidget):
     def apply_styles(self):
         """Aplica los estilos al topbar y los botones."""
         custom_font = self.load_custom_font("src/assets/font/ratchet-clank-psp.ttf", 24, "Arial", 18)
-        
+        self.topbar.setStyleSheet("background-color: rgba(0, 0, 0, 0.5); border-radius: 10px;")
         self.style_back_button(custom_font)
         self.style_labels(custom_font)
         self.style_options(custom_font)
@@ -69,13 +69,14 @@ class Consoles(QWidget):
             self.label_select_controller: "Selecciona un control",
             self.label_tittle_options: "Opciones",
             self.label_functios_avaliable: "Funciones disponibles",
-            self.label_optimize: ""
+            self.label_optimize: "Recursos optimizados",
         }
         for label, text in labels.items():
             label.setFont(custom_font)
             label.setText(text)
             label.setStyleSheet("color: white; font-size: 26px;")
-
+        self.label_tittle_options.setStyleSheet("background-color: rgba(0, 0, 0, 0.5); border-radius: 10px; color: white; font-size: 26px;")
+        self.label_functios_avaliable.setStyleSheet("background-color: rgba(0, 0, 0, 0.5); border-radius: 10px; color: white; font-size: 26px;")
         self.label_optimize.setVisible(False)
         self.label_optimize.setStyleSheet("background-color: transparent; color: #00ff00; font-size: 20px; font-weight: bold;")
 
