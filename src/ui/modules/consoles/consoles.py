@@ -74,7 +74,7 @@ class Consoles(QWidget):
         for label, text in labels.items():
             label.setFont(custom_font)
             label.setText(text)
-            label.setStyleSheet("color: white; font-size: 26px;")
+            label.setStyleSheet("background-color: transparent; color: white; font-size: 26px;")
         self.label_tittle_options.setStyleSheet("background-color: rgba(0, 0, 0, 0.5); border-radius: 10px; color: white; font-size: 26px;")
         self.label_functios_avaliable.setStyleSheet("background-color: rgba(0, 0, 0, 0.5); border-radius: 10px; color: white; font-size: 26px;")
         self.label_optimize.setVisible(False)
