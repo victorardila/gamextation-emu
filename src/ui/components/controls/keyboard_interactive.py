@@ -12,6 +12,7 @@ class OctagonButton(QPushButton):
         self.setFixedSize(100, 100)
         self.hovered = False
         self.custom_font = QFont()  # Inicializa la fuente personalizada aquí
+        self.setCursor(Qt.PointingHandCursor)
         
     def load_custom_font(self, font_path, font_size, fallback_font, fallback_size):
         """Carga una fuente personalizada o usa una fuente de reserva."""
@@ -87,6 +88,7 @@ class RectangularButton(QPushButton):
         self.setFixedSize(100, 60)
         self.hovered = False
         self.custom_font = QFont()  # Inicializa la fuente personalizada aquí
+        self.setCursor(Qt.PointingHandCursor)
         
     def load_custom_font(self, font_path, font_size, fallback_font, fallback_size):
         """Carga una fuente personalizada o usa una fuente de reserva."""
