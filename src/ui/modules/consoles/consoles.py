@@ -4,7 +4,7 @@ from PyQt5.QtGui import QFont, QFontDatabase, QColor
 from PyQt5.uic import loadUi
 
 from src.ui.components.cover.cover_console import CoverConsole
-from src.ui.components.controls.keyboard_interactive import KeyboardInteractive, OctagonButton
+from src.ui.components.controls.keyboard_interactive import KeyboardInteractive, OctagonButton, RectangularButton
 
 
 class Consoles(QWidget):
@@ -33,6 +33,7 @@ class Consoles(QWidget):
         self.apply_styles()
         self.load_widgets()
         self.connect_octagon_buttons()
+        self.connect_rectangular_buttons()
 
     def load_custom_font(self, font_path, font_size, fallback_font, fallback_size):
         """Carga una fuente personalizada o usa una fuente de reserva."""
@@ -63,7 +64,7 @@ class Consoles(QWidget):
         labels = {
             self.label_module: "Consolas",
             self.label_interactive_preview: "Vista previa interactiva",
-            self.label_button_name: "",
+            self.label_button_name: "Visualizacion del boton",
             self.label_button_functinality: "Funcionalidad del botón",
             self.label_select_controller: "Selecciona un control",
             self.label_tittle_options: "Opciones",
@@ -111,6 +112,12 @@ class Consoles(QWidget):
         buttons = self.findChildren(OctagonButton)
         for button in buttons:
             button.hovered_signal.connect(self.update_selected_button)
+            
+    def connect_rectangular_buttons(self):
+        """Conecta la señal de hover de los RectangularButton a la actualización del label."""
+        buttons = self.findChildren(RectangularButton)
+        for button in buttons:
+            button.hovered_signal.connect(self.update_selected_button)
 
     def update_selected_button(self, button_name):
         """Actualiza la vista previa del botón seleccionado."""
@@ -136,10 +143,16 @@ class Consoles(QWidget):
         widget.layout().setContentsMargins(0, 0, 0, 0)
         widget.layout().setSpacing(0)
 
-        button = OctagonButton(button_name)
-        button.setStyleSheet("font-size: 30px;")
-        button.setFixedSize(QSize(230, 230))
-
+        # verificar si el botón es octagonal o rectangular
+        if button_name == "────────────":
+            button = RectangularButton('Space')
+            button.setStyleSheet("font-size: 30px;")
+            button.setFixedSize(QSize(300, 60))
+        else:
+            button = OctagonButton(button_name)
+            button.setStyleSheet("font-size: 30px;")
+            button.setFixedSize(QSize(230, 230))
+            
         widget.layout().addWidget(button)
         return widget
 

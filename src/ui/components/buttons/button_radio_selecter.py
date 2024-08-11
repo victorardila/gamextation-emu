@@ -15,8 +15,8 @@ class RadioButtonIcon(QRadioButton):
         self.installEventFilter(self)  # Instalar el filtro de eventos
     
     def setup_ui(self):
-        # Configura el estilo para ocultar el indicador predeterminado
-        self.setStyleSheet("QRadioButton::indicator {width: 0px; height: 0px;}")
+        """Configura los aspectos básicos de la UI y estilos."""
+        self.set_basic_styles()
         self.setCursor(Qt.PointingHandCursor)
         self.setCheckable(True)
         self.setChecked(False)  # El valor predeterminado será no seleccionado
@@ -24,56 +24,47 @@ class RadioButtonIcon(QRadioButton):
         self.setFocusPolicy(Qt.NoFocus)
         self.setAttribute(Qt.WA_Hover)  # Asegura que el evento hover esté habilitado
     
+    def set_basic_styles(self):
+        """Aplica estilos básicos para ocultar el indicador predeterminado."""
+        self.setStyleSheet("QRadioButton::indicator {width: 0px; height: 0px;}")
+
     def style(self, svg, size=QSize(24, 24), tooltip="", color=QColor("white"), hover_color=QColor("black")):
         """
-        Aplica el ícono SVG, establece el tamaño del ícono, y configura el tooltip.
-        
-        :param svg: Ruta del archivo SVG.
-        :param size: Tamaño del ícono (QSize).
-        :param tooltip: Texto del tooltip.
-        :param color: Color para el ícono SVG en estado normal.
-        :param hover_color: Color para el ícono SVG al hacer hover.
+        Aplica el ícono SVG, establece el tamaño del ícono y configura el tooltip.
         """
         self.original_color = color
         self.hover_color = hover_color
         
-        # Cargar el contenido del SVG
+        pixmap = self.load_svg(svg, size)
+        self.apply_color_to_svg(pixmap, self.original_color)
+        
+        self.setIcon(QIcon(pixmap))
+        self.setIconSize(size)
+        
+        if tooltip:
+            self.setToolTip(tooltip)
+    
+    def load_svg(self, svg, size):
+        """Carga el archivo SVG y lo renderiza en un QPixmap."""
         renderer = QSvgRenderer(svg)
-        
-        # Crear un QPixmap para renderizar el SVG
         pixmap = QPixmap(size)
-        pixmap.fill(Qt.transparent)  # Asegurar fondo transparente
+        pixmap.fill(Qt.transparent)
         
-        # Crear un QPainter para pintar en el QPixmap
         painter = QPainter(pixmap)
         renderer.render(painter)
         painter.end()
         
-        # Cambiar el color del SVG
-        self.apply_color_to_svg(pixmap, self.original_color)
-        
-        # Crear un QIcon a partir del QPixmap
-        icon = QIcon(pixmap)
-        self.setIcon(icon)
-        self.setIconSize(size)
-        
-        # Configurar el tooltip si se proporciona
-        if tooltip:
-            self.setToolTip(tooltip)
+        return pixmap
     
     def apply_color_to_svg(self, pixmap, color):
-        """
-        Cambia el color del ícono SVG en el QPixmap.
-        
-        :param pixmap: QPixmap que contiene el ícono SVG.
-        :param color: Color para aplicar al SVG.
-        """
+        """Cambia el color del ícono SVG en el QPixmap."""
         painter = QPainter(pixmap)
         painter.setCompositionMode(QPainter.CompositionMode_SourceIn)
         painter.fillRect(pixmap.rect(), color)
         painter.end()
-    
+
     def eventFilter(self, obj, event):
+        """Filtro de eventos para manejar hover y leave."""
         if event.type() == QEvent.Enter:
             self.set_hover_stylesheet()
         elif event.type() == QEvent.Leave:
@@ -81,6 +72,7 @@ class RadioButtonIcon(QRadioButton):
         return super().eventFilter(obj, event)
         
     def set_hover_stylesheet(self):
+        """Aplica el estilo para el estado hover."""
         self.setStyleSheet(
             f"""
             QRadioButton {{
@@ -101,16 +93,22 @@ class RadioButtonIcon(QRadioButton):
         )
 
     def set_default_stylesheet(self):
+        """Aplica el estilo por defecto."""
         self.setStyleSheet(self.default_stylesheet() + self.tooltip_stylesheet())
     
     def tooltip_stylesheet(self):
-        """
-        Retorna el CSS para el tooltip.
-        """
+        """Retorna el CSS para el tooltip."""
         return "QRadioButton::tooltip { color: black; }"
 
     def default_stylesheet(self):
+        """Retorna el CSS por defecto para el QRadioButton."""
+        return """
+        QRadioButton { 
+            border: none; 
+            border-radius: 10px; 
+            background: transparent; 
+            color: white; 
+            font-size: 24px; 
+            font-weight: normal; 
+        }
         """
-        Retorna el CSS por defecto para el QRadioButton.
-        """
-        return "QRadioButton { border: none; border-radius: 10px; background: transparent; color: white; font-size: 24px; font-weight: normal; }"

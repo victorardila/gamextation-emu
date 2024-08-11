@@ -70,6 +70,60 @@ class OctagonButton(QPushButton):
         painter.setPen(QColor(0, 0, 0))  # Texto en color negro
         painter.drawText(rect, Qt.AlignCenter, self.text())
         
+class RectangularButton(QPushButton):
+    hovered_signal = pyqtSignal(str)  # Señal que emitirá el texto del botón cuando se hace hover
+
+    def __init__(self, label, parent=None):
+        super().__init__(label, parent)
+        self.setFixedSize(100, 60)
+        self.hovered = False
+
+    def enterEvent(self, event):
+        """Cambia el estado a hover cuando el mouse entra."""
+        self.hovered = True
+        self.hovered_signal.emit(self.text())  # Emitir señal con el texto del botón
+        self.update()
+
+    def leaveEvent(self, event):
+        """Cambia el estado a no hover cuando el mouse sale."""
+        self.hovered = False
+        self.update()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing)
+
+        # Definir el área de dibujo
+        rect = QRectF(0, 0, self.width(), self.height())
+
+        # Crear el camino en forma de rectángulo
+        path = QPainterPath()
+        path.addRect(rect)
+
+        path.closeSubpath()  # Cierra la figura
+
+        # Definir el color de fondo basado en el estado del botón
+        if self.isDown():
+            background_color = QColor(200, 200, 200, 100)  # Color cuando el botón está presionado
+        elif self.hovered:
+            background_color = QColor(255, 255, 255, 150)  # Color cuando el botón está en hover
+        else:
+            background_color = QColor(255, 255, 255, 180)  # Color normal
+
+        # Dibujar el botón con el color de fondo y un borde
+        painter.fillPath(path, QBrush(background_color))
+        painter.setPen(QColor(255, 255, 255))
+        painter.drawPath(path)
+
+        # Configurar el texto en negrita
+        font = self.font()
+        font.setBold(True)  # Establecer la fuente en negrita (bold)
+        painter.setFont(font)
+
+        # Dibujar el texto centrado
+        painter.setPen(QColor(0, 0, 0))  # Texto en color negro
+        painter.drawText(rect, Qt.AlignCenter, self.text())
+        
 class KeyboardInteractive(QWidget):
     hovered_signal = pyqtSignal(str)  # Señal que emitirá el texto del botón cuando se hace hover
     
@@ -114,7 +168,6 @@ class KeyboardInteractive(QWidget):
     
     def create_buttons(self, layout, keys):
         """Crea y añade los botones al layout según la disposición de teclas."""
-        custom_styles = self.get_custom_styles()  # Obtener los estilos personalizados
         for row, key_row in enumerate(keys):
             col_offset = 0
             for key in key_row:
@@ -125,56 +178,16 @@ class KeyboardInteractive(QWidget):
                 
                 # Configurar el tamaño de la tecla "Space" para que sea más ancha
                 if key == '────────────':
-                    button = self.create_button(key, width=310, style=custom_styles.get(key))
+                    button = self.create_button(key, width=310)
                     layout.addWidget(button, row, col_offset, 1, 5)  # Ocupa 4 columnas
                     col_offset += 4  # Avanzar el offset de columna
                 else:
-                    button = self.create_button(key, style=custom_styles.get(key))
+                    button = self.create_button(key)
                     layout.addWidget(button, row, col_offset)
                     col_offset += 1  # Avanzar a la siguiente columna
 
     def create_button(self, key, width=60, height=60, style=None):
         """Crea y devuelve un botón con el estilo configurado."""
-        button = OctagonButton(key) if key != '────────────' else QPushButton(key)
+        button = OctagonButton(key) if key != '────────────' else RectangularButton(key)
         button.setFixedSize(width, height)
-        
-        if style:
-            button.setStyleSheet(style)
-        
         return button
-    
-    def get_custom_styles(self):
-        """Devuelve un diccionario con estilos personalizados para teclas específicas."""
-        return {
-            'Space': """
-                QPushButton {
-                    background-color: rgba(255, 255, 255, 180);
-                    border: 1px solid white;
-                    border-radius: 5px;
-                    font-size: 14px;
-                    font-weight: bold;
-                }
-                QPushButton:pressed {
-                    background-color: rgba(200, 200, 200, 100);
-                }
-                QPushButton:hover {
-                    background-color: rgba(255, 255, 255, 150); /* Color cuando el botón está en hover */
-                }
-            """,
-            '────────────': """
-                QPushButton {
-                    background-color: rgba(255, 255, 255, 180);
-                    border: 1px solid white;
-                    border-radius: 5px;
-                    font-size: 14px;
-                    font-weight: bold;
-                }
-                QPushButton:pressed {
-                    background-color: rgba(200, 200, 200, 80);
-                }
-                QPushButton:hover {
-                    background-color: rgba(255, 255, 255, 150); /* Color cuando el botón está en hover */
-                }
-            """
-            # Puedes agregar más estilos personalizados aquí para otras teclas
-        }
