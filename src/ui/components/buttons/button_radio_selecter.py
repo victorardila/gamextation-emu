@@ -43,6 +43,7 @@ class RadioButtonIcon(QRadioButton):
         
         if tooltip:
             self.setToolTip(tooltip)
+            self.tooltip_stylesheet()
     
     def load_svg(self, svg, size):
         """Carga el archivo SVG y lo renderiza en un QPixmap."""
@@ -111,4 +112,15 @@ class RadioButtonIcon(QRadioButton):
             font-size: 24px; 
             font-weight: normal; 
         }
+        """
+        
+    def tooltip_stylesheet(self):
+        return """
+            QToolTip {
+                background-color: #333;
+                color: #fff;
+                border: 0.5px solid white;
+                padding: 5px;
+                border-radius: 5px;
+            }
         """
