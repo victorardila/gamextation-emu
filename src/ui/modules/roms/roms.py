@@ -151,6 +151,7 @@ class Roms(QWidget):
         self.label_optimize.setStyleSheet("background-color: transparent; color: #00ff00; font-size: 20px; font-weight: bold;")
         self.label_optimize.setVisible(True)
         self.label_optimize.setText("Recursos optimizados")
+        self.label_optimize.setFont(self.load_custom_font("src/assets/font/ratchet-clank-psp.ttf", 24, "Arial", 18))
         QTimer.singleShot(3000, self.hide_optimizer)
 
     def hide_optimizer(self):
