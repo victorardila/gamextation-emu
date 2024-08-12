@@ -2,17 +2,20 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QGridLayout
 from PyQt5.QtGui import QPainter, QPainterPath, QBrush, QColor, QFont, QFontDatabase
 from PyQt5.QtCore import Qt, QRectF, QPointF
 from PyQt5.QtCore import pyqtSignal
+import pygame
 import math
 
 class OctagonButton(QPushButton):
     hovered_signal = pyqtSignal(str)  # Señal que emitirá el texto del botón cuando se hace hover
-
+    touch_sfx = 'src/assets/sfx/touch.wav'
+    
     def __init__(self, label, parent=None):
         super().__init__(label, parent)
         self.setFixedSize(100, 100)
         self.hovered = False
         self.custom_font = QFont()  # Inicializa la fuente personalizada aquí
         self.setCursor(Qt.PointingHandCursor)
+        self.init_sfx()
         
     def load_custom_font(self, font_path, font_size, fallback_font, fallback_size):
         """Carga una fuente personalizada o usa una fuente de reserva."""
@@ -21,6 +24,12 @@ class OctagonButton(QPushButton):
             font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
             return QFont(font_family, font_size)
         return QFont(fallback_font, fallback_size)
+    
+    def init_sfx(self):
+        # Inicializar pygame mixer
+        pygame.mixer.init()
+        self.touch_sound = pygame.mixer.Sound(self.touch_sfx)
+        self.touch_sound.set_volume(0.4)  # Ajusta el volumen (0.0 a 1.0)
 
     def enterEvent(self, event):
         """Cambia el estado a hover cuando el mouse entra."""
@@ -32,6 +41,10 @@ class OctagonButton(QPushButton):
         """Cambia el estado a no hover cuando el mouse sale."""
         self.hovered = False
         self.update()
+        
+    def play_hover_sound(self):
+        if self.touch_sound:
+            self.touch_sound.play()
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -61,6 +74,7 @@ class OctagonButton(QPushButton):
         # Definir el color de fondo basado en el estado del botón
         if self.isDown():
             background_color = QColor(200, 200, 200, 100)  # Color cuando el botón está presionado
+            self.play_hover_sound()
         elif self.hovered:
             background_color = QColor(255, 255, 255, 150)  # Color cuando el botón está en hover
         else:
@@ -82,13 +96,15 @@ class OctagonButton(QPushButton):
         
 class RectangularButton(QPushButton):
     hovered_signal = pyqtSignal(str)  # Señal que emitirá el texto del botón cuando se hace hover
-
+    touch_sfx = 'src/assets/sfx/touch.wav'
+    
     def __init__(self, label, parent=None):
         super().__init__(label, parent)
         self.setFixedSize(100, 60)
         self.hovered = False
         self.custom_font = QFont()  # Inicializa la fuente personalizada aquí
         self.setCursor(Qt.PointingHandCursor)
+        self.init_sfx()
         
     def load_custom_font(self, font_path, font_size, fallback_font, fallback_size):
         """Carga una fuente personalizada o usa una fuente de reserva."""
@@ -97,6 +113,12 @@ class RectangularButton(QPushButton):
             font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
             return QFont(font_family, font_size)
         return QFont(fallback_font, fallback_size)
+    
+    def init_sfx(self):
+        # Inicializar pygame mixer
+        pygame.mixer.init()
+        self.touch_sound = pygame.mixer.Sound(self.touch_sfx)
+        self.touch_sound.set_volume(0.4)  # Ajusta el volumen (0.0 a 1.0)
 
     def enterEvent(self, event):
         """Cambia el estado a hover cuando el mouse entra."""
@@ -108,6 +130,10 @@ class RectangularButton(QPushButton):
         """Cambia el estado a no hover cuando el mouse sale."""
         self.hovered = False
         self.update()
+    
+    def play_hover_sound(self):
+        if self.touch_sound:
+            self.touch_sound.play()
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -125,6 +151,7 @@ class RectangularButton(QPushButton):
         # Definir el color de fondo basado en el estado del botón
         if self.isDown():
             background_color = QColor(200, 200, 200, 100)  # Color cuando el botón está presionado
+            self.play_hover_sound()
         elif self.hovered:
             background_color = QColor(255, 255, 255, 150)  # Color cuando el botón está en hover
         else:
