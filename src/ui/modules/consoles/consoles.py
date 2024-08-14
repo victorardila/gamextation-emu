@@ -9,7 +9,7 @@ from src.ui.components.controls.keyboard_interactive import (
     OctagonButton,
     RectangularButton,
 )
-from src.ui.components.controls.joystck_interactive import GamepadInteractive
+from src.ui.components.controls.gamepad_interactive import GamepadInteractive
 
 
 class Consoles(QWidget):
