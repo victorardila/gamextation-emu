@@ -3,13 +3,14 @@ from PyQt5.QtGui import QPainter, QPainterPath, QBrush, QLinearGradient, QColor,
 from PyQt5.QtCore import Qt, QPointF, QRectF
 
 
-class JoystickInteractive(QWidget):
+class GamepadInteractive(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(100, 100, 600, 400)
         self.setMinimumSize(600, 400)
 
     def paintEvent(self, event):
+        # ?: Dibujar la silueta del mando de juego
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
 
@@ -38,7 +39,15 @@ class JoystickInteractive(QWidget):
         )
 
         painter.drawPath(path)
-        self.drawButtonsRight(painter, path)
+
+        # Todo: partes del joystick
+        self.draweIconJoystick(painter, path)
+        self.drawButtonsActions(painter, path)
+        self.drawButtonOptions(painter, path)
+        self.drawDPad(painter, path)
+        self.drawJoysticks(painter, path)
+        self.drawBumpers(painter, path)
+        self.drawTriggers(painter, path)
 
     def createControllerPath(self):
         path = QPainterPath()
@@ -127,7 +136,32 @@ class JoystickInteractive(QWidget):
 
         return path
 
-    def drawButtonsRight(self, painter, path):
+    def draweIconJoystick(self, painter, path):
+        # ?: Dibujar el icono del joystick en el centro superior del mando (icono importado)
+        pass
+
+    def drawDPad(self, painter, path):
+        # ?: Dibujar el D-Pad en la parte izquierda del mando (arriba, abajo, izquierda, derecha)
+        pass
+
+    def drawJoysticks(self, painter, path):
+        # ?: Dibujar los joysticks uno en la parte izquierda superior y otro en la parte derecha inferior
+        pass
+
+    def drawBumpers(self, painter, path):
+        # ?: Dibujar los bumpers en la parte superior del mando LB, RB
+        pass
+
+    def drawTriggers(self, painter, path):
+        # ?: Dibujar los triggers en la parte inferior del mando LT, RT
+        pass
+
+    def drawButtonOptions(self, painter, path):
+        # ?: Dibujar los botones de opciones en la parte centro superior del mando debajo del Icono del joystick
+        pass
+
+    def drawButtonsActions(self, painter, path):
+        # ?: Dibujar los botones de acción en la parte derecha del mando A, B, X, Y
         painter.setPen(Qt.NoPen)
         button_color = QColor(0, 0, 0, 150)  # Color de los botones por defecto
         button_radius = 30
