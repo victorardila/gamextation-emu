@@ -6,7 +6,6 @@ from PyQt5.QtCore import Qt, QPointF, QRectF
 class JoystickInteractive(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Xbox One Controller Silhouette")
         self.setGeometry(100, 100, 600, 400)
         self.setMinimumSize(600, 400)
 
