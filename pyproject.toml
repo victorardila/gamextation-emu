@@ -6,13 +6,14 @@ authors = ["Valfonsoardila10 <victoradila@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
-docker-py = "^1.10.6"
-PyQt5 = "^5.15.10"
-qtawesome = "^1.3.1"
-pygame = "^2.6.0"
-psutil = "^6.0.0"
-configparser = "^7.0.0"
+python = "^3.10" # version de python
+docker-py = "^1.10.6" # docker para python
+PyQt5 = "^5.15.10" # libreria para interfaz grafica
+qtawesome = "^1.3.1" # iconos para PyQt5
+pygame = "^2.6.0" # libreria para juegos (sonido, graficos, etc)
+psutil = "^6.0.0" # libreria para obtener informacion del sistema
+configparser = "^7.0.0" # libreria para leer archivos de configuracion
+watchdog = "^4.0.2" # libreria para monitorear cambios en archivos
 
 [build-system]
 requires = ["poetry-core"]

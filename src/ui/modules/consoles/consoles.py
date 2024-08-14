@@ -1,11 +1,11 @@
 from PyQt5.QtCore import QSize, pyqtSignal, QTimer, Qt
-from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QButtonGroup
 from PyQt5.QtGui import QFont, QFontDatabase, QColor
 from PyQt5.uic import loadUi
 
 from src.ui.components.cover.cover_console import CoverConsole
 from src.ui.components.controls.keyboard_interactive import KeyboardInteractive, OctagonButton, RectangularButton
-
+from src.ui.components.controls.joystck_interactive import JoystickInteractive
 
 class Consoles(QWidget):
     optimizer_hidden = pyqtSignal()
@@ -89,6 +89,40 @@ class Consoles(QWidget):
         self.option_controller.style(self.SVGS_PATH[0], QSize(40, 40), "Control", QColor("white"))
         self.option_keyboard.style(self.SVGS_PATH[1], QSize(40, 40), "Teclado", QColor("white"))
         self.selected_button.setStyleSheet("background-color: rgba(0, 0, 0, 0.5); border-radius: 10px;")
+        
+        # Selecciona el teclado por defecto
+        self.option_keyboard.setChecked(True)
+
+        # Agrupa los RadioButtons para que se deseleccionen mutuamente
+        self.button_group = QButtonGroup(self)
+        self.button_group.addButton(self.option_keyboard)
+        self.button_group.addButton(self.option_controller)
+
+        self.option_keyboard.toggled.connect(self.update_controller_selection)
+        self.option_controller.toggled.connect(self.update_controller_selection)
+    
+    def update_controller_selection(self):
+        """Actualiza la selección entre los botones de control y teclado."""
+        self.clear_interactive_preview_content()
+        
+        if self.option_keyboard.isChecked():
+            # Instancia un nuevo KeyboardInteractive
+            self.keyboard_interactive = KeyboardInteractive()
+            self.interactive_preview_content.layout().addWidget(self.keyboard_interactive)
+        elif self.option_controller.isChecked():
+            # Instancia un nuevo JoystickInteractive
+            self.joystick_interactive = JoystickInteractive()
+            self.interactive_preview_content.layout().addWidget(self.joystick_interactive)
+
+    def clear_interactive_preview_content(self):
+        """Limpia el contenido de interactive_preview_content antes de añadir un nuevo widget."""
+        layout = self.interactive_preview_content.layout()
+        if layout is not None:
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.deleteLater()
 
     def load_widgets(self):
         """Carga los widgets necesarios al QFrame interactive_preview_content."""
@@ -96,6 +130,7 @@ class Consoles(QWidget):
             self.interactive_preview_content.setLayout(QVBoxLayout())
         
         self.keyboard_interactive = KeyboardInteractive()
+        self.joystick_interactive = JoystickInteractive()
         self.interactive_preview_content.layout().addWidget(self.keyboard_interactive)
 
     def handle_optimizer_hidden(self):

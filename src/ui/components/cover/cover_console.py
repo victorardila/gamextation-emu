@@ -16,7 +16,7 @@ class GradientSelectorWidget(QWidget):
         # Crear el gradiente con las configuraciones dadas
         gradient_color_selection_dark = QLinearGradient(0, 0, self.width(), self.height())
         gradient_color_selection_dark.setColorAt(0, QColor(173, 216, 230, 15))  # Color azul claro con 39% opacidad
-        gradient_color_selection_dark.setColorAt(1, QColor(0, 255, 127, 90))  # Color verde con 100% opacidad    
+        gradient_color_selection_dark.setColorAt(1, QColor(0, 255, 127, 255))  # Color verde con 100% opacidad    
 
         brush = QBrush(gradient_color_selection_dark)
         painter.setBrush(brush)
