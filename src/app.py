@@ -5,16 +5,17 @@ from src.ui.windows.anim.animation import Animation
 from PyQt5.QtCore import QPropertyAnimation
 from PyQt5.QtWidgets import QMainWindow
 
+
 class Aplicacion(QMainWindow):
     def __init__(self):
         super().__init__()
         self.init_views_container()
-        
+
     # Diccionario de validaciones
     validations = {
         "docker": ContainerPlatform.checkDocker(),
     }
-    
+
     def init_views_container(self):
         """Inicializa el contenedor de vistas y gestiona la lógica de validación."""
         # Verifica las validaciones
@@ -50,11 +51,15 @@ class Aplicacion(QMainWindow):
     def show_main_container(self):
         """Muestra la ventana principal después de la animación de desvanecimiento."""
         self.views_container = MainContainer()
-        self.views_container.setWindowOpacity(0.0)  # Configurar la opacidad inicial en 0
+        self.views_container.setWindowOpacity(
+            0.0
+        )  # Configurar la opacidad inicial en 0
         self.views_container.show()
 
         # Animación de aparición de la ventana principal
-        self.views_container_animation = QPropertyAnimation(self.views_container, b"windowOpacity")
+        self.views_container_animation = QPropertyAnimation(
+            self.views_container, b"windowOpacity"
+        )
         self.views_container_animation.setDuration(10)  # Duración en milisegundos
         self.views_container_animation.setStartValue(0.0)
         self.views_container_animation.setEndValue(1.0)

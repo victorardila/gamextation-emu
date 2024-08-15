@@ -32,20 +32,25 @@ class ChangeHandler(FileSystemEventHandler):
                 proc.wait()  # Asegúrate de que el proceso se cierre
 
     def terminate_all_pyqt_processes(self):
-        """Cierra todos los procesos PyQt en ejecución."""
+        """Cierra todos los procesos PyQt en ejecución incluyendo ventanas ejecutadas con PyQt."""
         for proc in psutil.process_iter(["pid", "name"]):
             if proc.info["name"] == "python":
                 try:
                     for child in proc.children(recursive=True):
                         if "main.py" in child.cmdline():
                             child.terminate()  # Envía señal de terminación
-                            child.wait(timeout=5)  # Espera a que el proceso se cierre
+
+                            child.wait(timeout=5)
                 except (
                     psutil.NoSuchProcess,
                     psutil.AccessDenied,
                     psutil.ZombieProcess,
                 ):
                     pass
+
+    # cierro cuakquier ventana abierta ejecutada en el proyecto
+    def close_all_windows(self):
+        os.system("taskkill /f /im python.exe")
 
 
 def start_watching(script_to_run, watch_dir="."):
