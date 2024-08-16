@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import (
     QPainter,
     QPainterPath,
@@ -29,6 +29,17 @@ class GamepadInteractive(QWidget):
         self.joysticks_rects = {"left": QRectF(), "right": QRectF()}
         self.bumper_rects = {"left": QRectF(), "right": QRectF()}
         self.trigger_rects = {"left": QRectF(), "right": QRectF()}
+        # Color actual del mallado
+        self.mesh_color = QColor(200, 200, 200, 50)  # Color por defecto
+        # Estado de los botones
+        self.action_button_pressed = None
+        self.option_button_pressed = None
+        self.dpad_button_pressed = {
+            "up": False,
+            "down": False,
+            "left": False,
+            "right": False,
+        }
 
     def paintEvent(self, event):
         # ?: Dibujar la silueta del mando de juego
@@ -76,18 +87,16 @@ class GamepadInteractive(QWidget):
         self.drawTriggers(painter, path)
 
     def drawMesh(self, painter, path):
-        #  ?: Dibujar una malla de referencia en el mando de juego
-        pen = QPen(QColor(200, 200, 200, 150))  # Color claro con cierta transparencia
+        # Dibujar la malla con el color actual
+        pen = QPen(self.mesh_color)  # Usar el color actual del mallado
         pen.setWidth(1)
         painter.setPen(pen)
-        painter.setBrush(Qt.NoBrush)  # Sin relleno
+        painter.setBrush(Qt.NoBrush)
 
-        # Limitar la malla al área de la silueta
         bounding_rect = path.boundingRect()
-        step = 20  # Tamaño de los cuadros de la malla
+        step = 20
         for x in range(int(bounding_rect.left()), int(bounding_rect.right()), step):
             for y in range(int(bounding_rect.top()), int(bounding_rect.bottom()), step):
-                # Solo dibujar dentro del path de la silueta
                 if path.contains(QPointF(x + step / 2, y + step / 2)):
                     painter.drawRect(x, y, step, step)
 
@@ -171,120 +180,6 @@ class GamepadInteractive(QWidget):
     def drawIconGamepad(self, painter, path):
         # ?: Dibujar el icono del joystick en el centro superior del mando
         pass
-
-    def drawDPad(self, painter, path):
-        # ?: Dibujar el D-Pad en la parte izquierda del mando (arriba, abajo, izquierda, derecha)
-        dpad_color = QColor(30, 30, 30)  # Color negro para el D-Pad
-        cross_color = QColor(
-            50, 50, 50
-        )  # Color gris ligeramente más claro para la cruz
-
-        bounding_rect = path.boundingRect()
-        center_x = bounding_rect.left() + 300
-        center_y = bounding_rect.center().y() + 60
-
-        dpad_radius = 60  # Radio del círculo del D-Pad
-        cross_thickness = 20  # Grosor de la cruz
-        cross_radius = (
-            dpad_radius * 0.8
-        )  # Radio del círculo en el que se dibuja la cruz
-
-        painter.setBrush(QBrush(dpad_color))
-        painter.setPen(Qt.NoPen)
-        painter.drawEllipse(
-            int(center_x - dpad_radius),
-            int(center_y - dpad_radius),
-            int(2 * dpad_radius),
-            int(2 * dpad_radius),
-        )
-
-        gradient = QRadialGradient(center_x, center_y, dpad_radius)
-        gradient.setColorAt(0.0, dpad_color.darker(120))  # Centro más claro
-        gradient.setColorAt(1.0, dpad_color)  # Borde más oscuro
-        painter.setBrush(QBrush(gradient))
-        painter.drawEllipse(
-            int(center_x - dpad_radius),
-            int(center_y - dpad_radius),
-            int(2 * dpad_radius),
-            int(2 * dpad_radius),
-        )
-
-        painter.setBrush(QBrush(cross_color))
-        painter.setPen(Qt.NoPen)
-
-        painter.drawRect(
-            int(center_x - cross_thickness / 2),
-            int(center_y - cross_radius),
-            int(cross_thickness),
-            int(2 * cross_radius),
-        )
-        painter.drawRect(
-            int(center_x - cross_radius),
-            int(center_y - cross_thickness / 2),
-            int(2 * cross_radius),
-            int(cross_thickness),
-        )
-
-        icon_up = qta.icon("fa.caret-up", color="gray")
-        icon_down = qta.icon("fa.caret-down", color="gray")
-        icon_left = qta.icon("fa.caret-left", color="gray")
-        icon_right = qta.icon("fa.caret-right", color="gray")
-
-        icon_size = QSize(24, 24)  # Tamaño de los íconos
-
-        # Crear un degradado radial para los íconos
-        gradient_icon = QRadialGradient(0, 0, icon_size.width() / 2)
-        gradient_icon.setColorAt(0.0, QColor(200, 200, 200))  # Centro más claro
-        gradient_icon.setColorAt(1.0, QColor(120, 120, 120))  # Borde más oscuro
-
-        # Crear un QPixmap con el degradado aplicado
-        def create_highlighted_pixmap(icon):
-            pixmap = icon.pixmap(icon_size)
-            painter_icon = QPainter(pixmap)
-            painter_icon.setBrush(QBrush(gradient_icon))
-            painter_icon.setPen(Qt.NoPen)
-            painter_icon.setCompositionMode(QPainter.CompositionMode_SourceIn)
-            painter_icon.drawRect(pixmap.rect())
-            painter_icon.end()
-            return pixmap
-
-        pixmap_up = create_highlighted_pixmap(icon_up)
-        pixmap_down = create_highlighted_pixmap(icon_down)
-        pixmap_left = create_highlighted_pixmap(icon_left)
-        pixmap_right = create_highlighted_pixmap(icon_right)
-
-        # Posicion de la flecha hacia arriba
-        painter.drawPixmap(
-            int(center_x - icon_size.width() / 2),
-            int(center_y - cross_radius - icon_size.height() / 3),
-            pixmap_up,
-        )
-        # Posicion de la flecha hacia abajo
-        painter.drawPixmap(
-            int(center_x - icon_size.width() / 2),
-            int(center_y + cross_radius - icon_size.height() / 1.5),
-            pixmap_down,
-        )
-        # Posicion de la flecha hacia la izquierda
-        painter.drawPixmap(
-            int(center_x - cross_radius - icon_size.width() / 3),
-            int(center_y - icon_size.height() / 2),
-            pixmap_left,
-        )
-        # Posicion de la flecha hacia la derecha
-        painter.drawPixmap(
-            int(center_x + cross_radius - icon_size.width() / 1.5),
-            int(center_y - icon_size.height() / 2),
-            pixmap_right,
-        )
-
-        # Definir el área del D-Pad
-        self.dpad_rect = QRectF(
-            center_x - dpad_radius,
-            center_y - dpad_radius,
-            2 * dpad_radius,
-            2 * dpad_radius,
-        )
 
     def drawJoysticks(self, painter, path):
         # ?: Dibujar los joysticks uno en la parte izquierda superior y otro en la parte derecha inferior
@@ -380,6 +275,182 @@ class GamepadInteractive(QWidget):
             joystick_positions["right"].y() - joystick_radius,
             2 * joystick_radius,
             2 * joystick_radius,
+        )
+
+    def drawDPad(self, painter, path):
+        dpad_color = QColor(30, 30, 30)
+        cross_color = QColor(50, 50, 50)
+        highlight_color = QColor(255, 255, 0)  # Amarillo para resaltado
+        pressed_color = QColor(
+            100, 100, 100
+        )  # Gris más oscuro para el estado presionado
+
+        bounding_rect = path.boundingRect()
+        center_x = bounding_rect.left() + 300
+        center_y = bounding_rect.center().y() + 60
+
+        dpad_radius = 60
+        cross_thickness = 20
+        cross_radius = dpad_radius * 0.8
+
+        # Dibuja el fondo del D-Pad
+        painter.setBrush(QBrush(dpad_color))
+        painter.setPen(Qt.NoPen)
+        painter.drawEllipse(
+            int(center_x - dpad_radius),
+            int(center_y - dpad_radius),
+            int(2 * dpad_radius),
+            int(2 * dpad_radius),
+        )
+
+        gradient = QRadialGradient(center_x, center_y, dpad_radius)
+        gradient.setColorAt(0.0, dpad_color.darker(120))
+        gradient.setColorAt(1.0, dpad_color)
+        painter.setBrush(QBrush(gradient))
+        painter.drawEllipse(
+            int(center_x - dpad_radius),
+            int(center_y - dpad_radius),
+            int(2 * dpad_radius),
+            int(2 * dpad_radius),
+        )
+
+        # Ajusta el grosor y color de la cruz según el estado de presión
+        def draw_cross(painter, pressed_side):
+            painter.setBrush(QBrush(cross_color))
+            painter.setPen(Qt.NoPen)
+
+            # Ajusta el grosor y la altura según el lado presionado
+            if pressed_side == "up":
+                painter.drawRect(
+                    int(center_x - cross_thickness / 2),
+                    int(center_y - cross_radius + 10),  # Menos alto
+                    int(cross_thickness),
+                    int(2 * (cross_radius - 10)),  # Menos ancho
+                )
+                painter.drawRect(
+                    int(center_x - cross_radius),
+                    int(center_y - cross_thickness / 2),
+                    int(2 * cross_radius),
+                    int(cross_thickness),
+                )
+            elif pressed_side == "down":
+                painter.drawRect(
+                    int(center_x - cross_thickness / 2),
+                    int(center_y + 10),  # Menos alto
+                    int(cross_thickness),
+                    int(2 * (cross_radius - 10)),  # Menos ancho
+                )
+                painter.drawRect(
+                    int(center_x - cross_radius),
+                    int(center_y - cross_thickness / 2),
+                    int(2 * cross_radius),
+                    int(cross_thickness),
+                )
+            elif pressed_side == "left":
+                painter.drawRect(
+                    int(center_x - cross_radius + 10),  # Menos ancho
+                    int(center_y - cross_thickness / 2),
+                    int(2 * (cross_radius - 10)),  # Menos alto
+                    int(cross_thickness),
+                )
+                painter.drawRect(
+                    int(center_x - cross_thickness / 2),
+                    int(center_y - cross_radius),
+                    int(cross_thickness),
+                    int(2 * cross_radius),
+                )
+            elif pressed_side == "right":
+                painter.drawRect(
+                    int(center_x + 10),  # Menos ancho
+                    int(center_y - cross_thickness / 2),
+                    int(2 * (cross_radius - 10)),  # Menos alto
+                    int(cross_thickness),
+                )
+                painter.drawRect(
+                    int(center_x - cross_thickness / 2),
+                    int(center_y - cross_radius),
+                    int(cross_thickness),
+                    int(2 * cross_radius),
+                )
+            else:
+                painter.drawRect(
+                    int(center_x - cross_thickness / 2),
+                    int(center_y - cross_radius),
+                    int(cross_thickness),
+                    int(2 * cross_radius),
+                )
+                painter.drawRect(
+                    int(center_x - cross_radius),
+                    int(center_y - cross_thickness / 2),
+                    int(2 * cross_radius),
+                    int(cross_thickness),
+                )
+
+        # Dibuja la cruz del D-Pad
+        draw_cross(painter, self.dpad_button_pressed)
+
+        icon_up = qta.icon("fa.caret-up", color="gray")
+        icon_down = qta.icon("fa.caret-down", color="gray")
+        icon_left = qta.icon("fa.caret-left", color="gray")
+        icon_right = qta.icon("fa.caret-right", color="gray")
+
+        icon_size = QSize(24, 24)
+
+        gradient_icon = QRadialGradient(0, 0, icon_size.width() / 2)
+        gradient_icon.setColorAt(0.0, QColor(200, 200, 200))
+        gradient_icon.setColorAt(1.0, QColor(120, 120, 120))
+
+        def create_highlighted_pixmap(icon, highlight):
+            pixmap = icon.pixmap(icon_size)
+            painter_icon = QPainter(pixmap)
+            if highlight:
+                painter_icon.setBrush(QBrush(highlight_color))
+            else:
+                painter_icon.setBrush(QBrush(gradient_icon))
+            painter_icon.setPen(Qt.NoPen)
+            painter_icon.setCompositionMode(QPainter.CompositionMode_SourceIn)
+            painter_icon.drawRect(pixmap.rect())
+            painter_icon.end()
+            return pixmap
+
+        pixmap_up = create_highlighted_pixmap(icon_up, self.dpad_button_pressed["up"])
+        pixmap_down = create_highlighted_pixmap(
+            icon_down, self.dpad_button_pressed["down"]
+        )
+        pixmap_left = create_highlighted_pixmap(
+            icon_left, self.dpad_button_pressed["left"]
+        )
+        pixmap_right = create_highlighted_pixmap(
+            icon_right, self.dpad_button_pressed["right"]
+        )
+
+        # Posiciones de las flechas
+        painter.drawPixmap(
+            int(center_x - icon_size.width() / 2),
+            int(center_y - cross_radius - icon_size.height() / 3),
+            pixmap_up,
+        )
+        painter.drawPixmap(
+            int(center_x - icon_size.width() / 2),
+            int(center_y + cross_radius - icon_size.height() / 1.5),
+            pixmap_down,
+        )
+        painter.drawPixmap(
+            int(center_x - cross_radius - icon_size.width() / 3),
+            int(center_y - icon_size.height() / 2),
+            pixmap_left,
+        )
+        painter.drawPixmap(
+            int(center_x + cross_radius - icon_size.width() / 1.5),
+            int(center_y - icon_size.height() / 2),
+            pixmap_right,
+        )
+
+        self.dpad_rect = QRectF(
+            center_x - dpad_radius,
+            center_y - dpad_radius,
+            2 * dpad_radius,
+            2 * dpad_radius,
         )
 
     def drawBumpers(self, painter, path):
@@ -526,101 +597,88 @@ class GamepadInteractive(QWidget):
         self.trigger_rects["right"] = right_trigger_rect
 
     def drawButtonOptions(self, painter, path):
-        # ?: Dibujar los botones de opciones en la parte centro superior del mando debajo del Icono del joystick (vista, perfil, menu) sus formas son circulares
-        button_outer_color = QColor(30, 30, 30, 200)  # Color base de los botones
-        button_highlight_color = QColor(50, 50, 50, 150)  # Color para el alto relieve
-        button_shadow_color = QColor(10, 10, 10, 150)  # Color para la sombra
+        button_outer_color = QColor(30, 30, 30, 200)
+        button_highlight_color = QColor(50, 50, 150, 150)
+        button_shadow_color = QColor(10, 10, 10, 150)
 
-        # Obtener el rectángulo delimitador del mando
         bounding_rect = path.boundingRect()
         center_x = bounding_rect.center().x()
-        top_y = bounding_rect.top() + 150  # Ajustar según la altura deseada
+        top_y = bounding_rect.top() + 150
 
-        # Posiciones ajustadas de los botones
         button_positions = {
-            "fa.table": QPointF(center_x - 65, top_y),
-            "fa.user": QPointF(center_x - 10, top_y + 55),
-            "fa.bars": QPointF(center_x + 45, top_y),
+            "table": QPointF(center_x - 65, top_y),
+            "user": QPointF(center_x - 10, top_y + 55),
+            "bars": QPointF(center_x + 45, top_y),
         }
 
         button_radius = 18
         painter.setPen(Qt.NoPen)
 
-        self.button_options = {}  # Limpiar áreas activas antes de dibujar
+        self.button_options = {}
 
-        for icon, pos in button_positions.items():
-            # Crear un degradado radial para el alto relieve
+        for icon_name, pos in button_positions.items():
             gradient = QRadialGradient(pos, button_radius)
-            gradient.setColorAt(0.0, button_highlight_color)  # Centro más claro
-            gradient.setColorAt(0.8, button_outer_color)  # Borde más oscuro
+            gradient.setColorAt(0.0, button_highlight_color)
+            gradient.setColorAt(0.8, button_outer_color)
 
-            # Aplicar el degradado al pincel para el alto relieve
             painter.setBrush(QBrush(gradient))
 
-            # Dibujar el botón
-            painter.drawEllipse(pos, button_radius, button_radius)
+            if self.option_button_pressed == icon_name:
+                pressed_pos = pos + QPointF(2, 2)
+                painter.drawEllipse(
+                    pressed_pos, button_radius * 0.95, button_radius * 0.95
+                )
+            else:
+                painter.drawEllipse(pos, button_radius, button_radius)
 
-            # Configurar el pincel para la sombra del botón
             shadow_gradient = QRadialGradient(pos, button_radius * 0.8)
-            shadow_gradient.setColorAt(0.0, QColor(0, 0, 0, 100))  # Sombra oscura
-            shadow_gradient.setColorAt(
-                1.0, QColor(0, 0, 0, 0)
-            )  # Sin sombra en el borde
+            shadow_gradient.setColorAt(0.0, QColor(0, 0, 0, 100))
+            shadow_gradient.setColorAt(1.0, QColor(0, 0, 0, 0))
 
-            # Aplicar el degradado de sombra
             painter.setBrush(QBrush(shadow_gradient))
-            painter.drawEllipse(
-                pos + QPointF(2, 2), button_radius, button_radius
-            )  # Ajustar la posición de la sombra
+            painter.drawEllipse(pos + QPointF(2, 2), button_radius, button_radius)
 
-            # Configurar el icono del botón
+            # Dibujar el icono
             icon_size = QSize(24, 24)
-            icon = qta.icon(icon, color="white")
+            icon = qta.icon(f"fa.{icon_name}", color="white")
             pixmap = icon.pixmap(icon_size)
 
-            # Dibujar el ícono en el centro del botón
             painter.drawPixmap(
                 int(pos.x() - icon_size.width() / 2),
                 int(pos.y() - icon_size.height() / 2),
                 pixmap,
             )
 
-            # Definir el área activa para el botón
-            self.button_options[icon] = QRectF(
+            # Definir el área activa
+            self.button_options[icon_name] = QRectF(
                 pos.x() - button_radius,
                 pos.y() - button_radius,
                 2 * button_radius,
                 2 * button_radius,
             )
 
-            # Restaurar el pincel al color base de los botones
             painter.setBrush(QBrush(button_outer_color))
             painter.setPen(Qt.NoPen)
 
     def drawButtonsActions(self, painter, path):
-        # ?: Dibujar los botones de acción en la parte derecha del mando A, B, X, Y
-        # Colores para los botones y textos
         button_outer_color = QColor(30, 30, 30, 200)
         button_highlight_color = QColor(50, 50, 50, 150)
         button_shadow_color = QColor(10, 10, 10, 150)
 
-        # Colores de las letras para cada botón
         button_text_colors = {
-            "A": QColor(0, 255, 0),  # Verde para A
-            "B": QColor(255, 0, 0),  # Rojo para B
-            "X": QColor(0, 0, 255),  # Azul para X
-            "Y": QColor(255, 255, 0),  # Amarillo para Y
+            "A": QColor(0, 255, 0),
+            "B": QColor(255, 0, 0),
+            "X": QColor(0, 0, 255),
+            "Y": QColor(255, 255, 0),
         }
 
         button_radius = 35
         painter.setPen(Qt.NoPen)
 
-        # Obtener el rectángulo delimitador del mando
         bounding_rect = path.boundingRect()
         center_x = bounding_rect.center().x()
         center_y = bounding_rect.center().y()
 
-        # Posiciones de los botones relativas al mando
         button_positions = {
             "A": QPointF(center_x + 210, center_y - 20),
             "B": QPointF(center_x + 270, center_y - 70),
@@ -628,34 +686,31 @@ class GamepadInteractive(QWidget):
             "Y": QPointF(center_x + 210, center_y - 120),
         }
 
-        self.button_actions = {}  # Limpiar áreas activas antes de dibujar
+        self.button_actions = {}
 
         for label, pos in button_positions.items():
-            # Crear un degradado radial para el alto relieve
             gradient = QRadialGradient(pos, button_radius)
-            gradient.setColorAt(0.0, button_highlight_color)  # Centro más claro
-            gradient.setColorAt(0.8, button_outer_color)  # Borde más oscuro
+            gradient.setColorAt(0.0, button_highlight_color)
+            gradient.setColorAt(0.8, button_outer_color)
 
-            # Aplicar el degradado al pincel para el alto relieve
             painter.setBrush(QBrush(gradient))
 
-            # Dibujar el botón
-            painter.drawEllipse(pos, button_radius, button_radius)
+            # Modificar tamaño o posición si el botón está presionado
+            if self.action_button_pressed == label:
+                pressed_pos = pos + QPointF(2, 2)
+                painter.drawEllipse(
+                    pressed_pos, button_radius * 0.95, button_radius * 0.95
+                )
+            else:
+                painter.drawEllipse(pos, button_radius, button_radius)
 
-            # Configurar el pincel para la sombra del botón
             shadow_gradient = QRadialGradient(pos, button_radius * 0.8)
-            shadow_gradient.setColorAt(0.0, QColor(0, 0, 0, 100))  # Sombra oscura
-            shadow_gradient.setColorAt(
-                1.0, QColor(0, 0, 0, 0)
-            )  # Sin sombra en el borde
+            shadow_gradient.setColorAt(0.0, QColor(0, 0, 0, 100))
+            shadow_gradient.setColorAt(1.0, QColor(0, 0, 0, 0))
 
-            # Aplicar el degradado de sombra
             painter.setBrush(QBrush(shadow_gradient))
-            painter.drawEllipse(
-                pos + QPointF(2, 2), button_radius, button_radius
-            )  # Ajustar la posición de la sombra
+            painter.drawEllipse(pos + QPointF(2, 2), button_radius, button_radius)
 
-            # Configurar el texto del botón con el color específico
             painter.setPen(button_text_colors[label])
             painter.setFont(QFont("Segoe UI", 32, QFont.Bold))
             painter.drawText(
@@ -669,7 +724,6 @@ class GamepadInteractive(QWidget):
                 label,
             )
 
-            # Definir el área activa para el botón
             self.button_actions[label] = QRectF(
                 pos.x() - button_radius,
                 pos.y() - button_radius,
@@ -677,7 +731,6 @@ class GamepadInteractive(QWidget):
                 2 * button_radius,
             )
 
-            # Restaurar el pincel al color base de los botones
             painter.setBrush(QBrush(button_outer_color))
             painter.setPen(Qt.NoPen)
 
@@ -686,18 +739,77 @@ class GamepadInteractive(QWidget):
 
         if self.dpad_rect.contains(pos):
             self.setCursor(Qt.PointingHandCursor)
+            self.mesh_color = QColor(200, 200, 200, 200)
         elif any(rect.contains(pos) for rect in self.joysticks_rects.values()):
             self.setCursor(Qt.PointingHandCursor)
+            self.mesh_color = QColor(200, 200, 200, 200)
         elif any(rect.contains(pos) for rect in self.bumper_rects.values()):
             self.setCursor(Qt.PointingHandCursor)
+            self.mesh_color = QColor(200, 200, 200, 200)
         elif any(rect.contains(pos) for rect in self.trigger_rects.values()):
             self.setCursor(Qt.PointingHandCursor)
+            self.mesh_color = QColor(200, 200, 200, 200)
         elif any(rect.contains(pos) for rect in self.button_options.values()):
             self.setCursor(Qt.PointingHandCursor)
+            self.mesh_color = QColor(200, 200, 200, 200)
         elif any(rect.contains(pos) for rect in self.button_actions.values()):
             self.setCursor(Qt.PointingHandCursor)
+            self.mesh_color = QColor(200, 200, 200, 200)
         else:
             self.setCursor(Qt.ArrowCursor)
 
     def leaveEvent(self, event):
         self.setCursor(Qt.ArrowCursor)
+        # Restaurar el color del mallado cuando el mouse salga del área del widget
+        self.mesh_color = QColor(200, 200, 200, 50)
+        self.update()  # Redibujar la interfaz para aplicar el color restaurado
+
+    def mousePressEvent(self, event):
+        pos = event.pos()
+        # Verificar botones de acción
+        for label, rect in self.button_actions.items():
+            if rect.contains(pos):
+                self.action_button_pressed = label
+                self.update()
+                break
+
+        # Verificar botones de opción
+        for icon, rect in self.button_options.items():
+            if rect.contains(pos):
+                self.option_button_pressed = icon
+                self.update()
+                break
+
+        if self.dpad_rect.contains(event.pos()):
+            center_x = self.dpad_rect.center().x()
+            center_y = self.dpad_rect.center().y()
+            if event.pos().y() < center_y - 20:
+                self.dpad_button_pressed["up"] = True
+                self.pressed_side = "up"
+            elif event.pos().y() > center_y + 20:
+                self.dpad_button_pressed["down"] = True
+                self.pressed_side = "down"
+            if event.pos().x() < center_x - 20:
+                self.dpad_button_pressed["left"] = True
+                self.pressed_side = "left"
+            elif event.pos().x() > center_x + 20:
+                self.dpad_button_pressed["right"] = True
+                self.pressed_side = "right"
+            self.update()
+
+    def mouseReleaseEvent(self, event):
+        self.action_button_pressed = None
+        self.option_button_pressed = None
+        if self.dpad_rect.contains(event.pos()):
+            center_x = self.dpad_rect.center().x()
+            center_y = self.dpad_rect.center().y()
+            if event.pos().y() < center_y - 20:
+                self.dpad_button_pressed["up"] = False
+            elif event.pos().y() > center_y + 20:
+                self.dpad_button_pressed["down"] = False
+            if event.pos().x() < center_x - 20:
+                self.dpad_button_pressed["left"] = False
+            elif event.pos().x() > center_x + 20:
+                self.dpad_button_pressed["right"] = False
+            self.pressed_side = None
+            self.update()
