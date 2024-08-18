@@ -28,9 +28,9 @@ class GamepadInteractive(QWidget):
         self.dpad_rect = QRectF()
         self.button_options = {}
         self.button_actions = {}
-        self.joysticks_rects = {"left": QRectF(), "right": QRectF()}
-        self.bumper_rects = {"left": QRectF(), "right": QRectF()}
-        self.trigger_rects = {"left": QRectF(), "right": QRectF()}
+        self.joysticks_rects = {side: QRectF() for side in ["left", "right"]}
+        self.bumper_rects = {side: QRectF() for side in ["left", "right"]}
+        self.trigger_rects = {side: QRectF() for side in ["left", "right"]}
         self.mesh_color = QColor(200, 200, 200, 50)  # Color por defecto
 
         # Inicialización de estados de botones y controles
@@ -42,6 +42,10 @@ class GamepadInteractive(QWidget):
         }
         self.bumper_pressed = {side: False for side in ["left", "right"]}
         self.trigger_pressed = {side: False for side in ["left", "right"]}
+
+        self.left_offset = QPointF()
+        self.right_offset = QPointF()
+        self.active_joystick = None  # Para rastrear cuál joystick está siendo movido
 
     def paintEvent(self, event):
         # ?: Dibujar la silueta del mando de juego
@@ -84,7 +88,7 @@ class GamepadInteractive(QWidget):
         self.drawButtonsActions(painter, path)
         self.drawButtonOptions(painter, path)
         self.drawDPad(painter, path)
-        self.drawJoysticks(painter, path)
+        self.drawJoysticks(painter, path, self.left_offset, self.right_offset)
         self.drawBumpers(painter, path)
         self.drawTriggers(painter, path)
 
@@ -183,7 +187,7 @@ class GamepadInteractive(QWidget):
         # ?: Dibujar el icono del joystick en el centro superior del mando
         pass
 
-    def drawJoysticks(self, painter, path):
+    def drawJoysticks(self, painter, path, left_offset, right_offset):
         # ?: Dibujar los joysticks uno en la parte izquierda superior y otro en la parte derecha inferior
         # Configurar los colores para los joysticks
         outer_color = QColor(50, 50, 50)  # Negro ligeramente más claro
@@ -217,13 +221,29 @@ class GamepadInteractive(QWidget):
         }
 
         # Dibujar cada joystick
-        for pos in joystick_positions.values():
+        for pos_key, pos in joystick_positions.items():
             # Dibujar el joystick exterior
             painter.drawEllipse(pos, joystick_radius, joystick_radius)
 
+            # Offset para el movimiento del joystick interior
+            offset = left_offset if pos_key == "left" else right_offset
+
+            # Limitar el movimiento del joystick interior dentro del joystick exterior
+            distance = min(
+                (offset.x() ** 2 + offset.y() ** 2) ** 0.5,
+                joystick_radius - inner_radius,
+            )
+            angle = math.atan2(offset.y(), offset.x())
+            adjusted_offset = QPointF(
+                distance * math.cos(angle), distance * math.sin(angle)
+            )
+
+            # Posición ajustada del joystick interior
+            inner_pos = pos + adjusted_offset
+
             # Configurar el pincel y el color para el joystick interior
             # Crear un degradado radial para simular el alto relieve
-            gradient = QRadialGradient(pos, inner_radius)
+            gradient = QRadialGradient(inner_pos, inner_radius)
             gradient.setColorAt(0.0, QColor(50, 50, 50))  # Centro más oscuro
             gradient.setColorAt(0.8, QColor(30, 30, 30))  # Borde más claro
 
@@ -231,7 +251,7 @@ class GamepadInteractive(QWidget):
             painter.setBrush(QBrush(gradient))
 
             # Dibujar el joystick interior con alto relieve
-            painter.drawEllipse(pos, inner_radius, inner_radius)
+            painter.drawEllipse(inner_pos, inner_radius, inner_radius)
 
             # Dibujar la "chupita" en la parte superior de ambos joysticks como arcos parciales
             painter.setBrush(Qt.NoBrush)  # Sin relleno
@@ -250,8 +270,8 @@ class GamepadInteractive(QWidget):
             for start_angle in arc_angle_start:
                 painter.drawArc(
                     QRectF(
-                        pos.x() - cup_radius,
-                        pos.y() - cup_radius,
+                        inner_pos.x() - cup_radius,
+                        inner_pos.y() - cup_radius,
                         2 * cup_radius,
                         2 * cup_radius,
                     ),
@@ -261,9 +281,7 @@ class GamepadInteractive(QWidget):
 
             # Restaurar el pincel al color anterior para el joystick exterior
             painter.setBrush(QBrush(outer_color))
-            painter.setPen(
-                Qt.NoPen
-            )  # Asegúrate de que no se dibujen bordes adicionales
+            painter.setPen(Qt.NoPen)
 
         # Definir las áreas de los joysticks
         self.joysticks_rects["left"] = QRectF(
@@ -745,103 +763,108 @@ class GamepadInteractive(QWidget):
 
     def mouseMoveEvent(self, event):
         pos = event.pos()
+        hover_areas = [
+            self.dpad_rect,
+            *self.joysticks_rects.values(),
+            *self.bumper_rects.values(),
+            *self.trigger_rects.values(),
+            *self.button_options.values(),
+            *self.button_actions.values(),
+        ]
 
-        if self.dpad_rect.contains(pos):
-            self.setCursor(Qt.PointingHandCursor)
-            self.mesh_color = QColor(200, 200, 200, 200)
-        elif any(rect.contains(pos) for rect in self.joysticks_rects.values()):
-            self.setCursor(Qt.PointingHandCursor)
-            self.mesh_color = QColor(200, 200, 200, 200)
-        elif any(rect.contains(pos) for rect in self.bumper_rects.values()):
-            self.setCursor(Qt.PointingHandCursor)
-            self.mesh_color = QColor(200, 200, 200, 200)
-        elif any(rect.contains(pos) for rect in self.trigger_rects.values()):
-            self.setCursor(Qt.PointingHandCursor)
-            self.mesh_color = QColor(200, 200, 200, 200)
-        elif any(rect.contains(pos) for rect in self.button_options.values()):
-            self.setCursor(Qt.PointingHandCursor)
-            self.mesh_color = QColor(200, 200, 200, 200)
-        elif any(rect.contains(pos) for rect in self.button_actions.values()):
+        if any(rect.contains(pos) for rect in hover_areas):
             self.setCursor(Qt.PointingHandCursor)
             self.mesh_color = QColor(200, 200, 200, 200)
         else:
             self.setCursor(Qt.ArrowCursor)
 
+        if self.active_joystick:
+            joystick_rect = self.joysticks_rects[self.active_joystick]
+            offset_attr = f"{self.active_joystick}_offset"
+            setattr(self, offset_attr, event.pos() - joystick_rect.center())
+
+        self.update()
+
     def leaveEvent(self, event):
         self.setCursor(Qt.ArrowCursor)
-        # Restaurar el color del mallado cuando el mouse salga del área del widget
         self.mesh_color = QColor(200, 200, 200, 50)
-        self.update()  # Redibujar la interfaz para aplicar el color restaurado
+        self.update()
 
     def mousePressEvent(self, event):
         pos = event.pos()
-        updated = False
 
-        # Verificar botones de acción y de opción
         for label, rect in {**self.button_actions, **self.button_options}.items():
             if rect.contains(pos):
                 if label in self.button_actions:
                     self.action_button_pressed = label
                 else:
                     self.option_button_pressed = label
-                updated = True
-                break
+                self.update()
+                return
 
         if self.dpad_rect.contains(pos):
-            center_x, center_y = (
-                self.dpad_rect.center().x(),
-                self.dpad_rect.center().y(),
+            dx, dy = (
+                pos.x() - self.dpad_rect.center().x(),
+                pos.y() - self.dpad_rect.center().y(),
             )
-            dx, dy = pos.x() - center_x, pos.y() - center_y
-            if abs(dy) > 20:  # Verificar dirección vertical primero
+            if abs(dy) > 20:
                 self.pressed_side = "up" if dy < 0 else "down"
-                self.dpad_button_pressed[self.pressed_side] = True
-            elif abs(dx) > 20:  # Verificar dirección horizontal
+            elif abs(dx) > 20:
                 self.pressed_side = "left" if dx < 0 else "right"
+            if self.pressed_side:
                 self.dpad_button_pressed[self.pressed_side] = True
-            updated = True
+                self.update()
+                return
 
-        # Verificar bumpers y triggers
         for side in ["left", "right"]:
             if self.bumper_rects[side].contains(pos):
                 self.bumper_pressed[side] = True
                 self.bumper_pressed[["left", "right"][side == "left"]] = False
-                updated = True
-                break
+                self.update()
+                return
             if self.trigger_rects[side].contains(pos):
                 self.trigger_pressed[side] = True
                 self.trigger_pressed[["left", "right"][side == "left"]] = False
-                updated = True
-                break
+                self.update()
+                return
 
-        if updated:
-            self.update()
+        if self.joysticks_rects["left"].contains(pos):
+            self.active_joystick = "left"
+        elif self.joysticks_rects["right"].contains(pos):
+            self.active_joystick = "right"
+
+        self.update()
 
     def mouseReleaseEvent(self, event):
-        # Restablecer los botones de acción y opción
         self.action_button_pressed = None
         self.option_button_pressed = None
+        event_pos = event.pos()
 
-        # Restablecer el estado del D-pad si se suelta dentro de su área
-        if self.dpad_rect.contains(event.pos()):
-            center_x, center_y = (
-                self.dpad_rect.center().x(),
-                self.dpad_rect.center().y(),
+        if self.dpad_rect.contains(event_pos):
+            dx, dy = (
+                event_pos.x() - self.dpad_rect.center().x(),
+                event_pos.y() - self.dpad_rect.center().y(),
             )
-            dx, dy = event.pos().x() - center_x, event.pos().y() - center_y
 
-            if abs(dy) > 20:  # Verificar dirección vertical
+            if abs(dy) > 20:
                 self.dpad_button_pressed["up" if dy < 0 else "down"] = False
-            if abs(dx) > 20:  # Verificar dirección horizontal
+            if abs(dx) > 20:
                 self.dpad_button_pressed["left" if dx < 0 else "right"] = False
 
             self.pressed_side = None
-            self.update()
+            self.dpad_button_pressed = {key: False for key in self.dpad_button_pressed}
 
-        # Restablecer el estado de los bumpers y triggers
         for side in ["left", "right"]:
-            self.bumper_pressed[side] = False
-            self.trigger_pressed[side] = False
+            if any(
+                rect.contains(event_pos)
+                for rect in [self.bumper_rects[side], self.trigger_rects[side]]
+            ):
+                self.bumper_pressed[side] = False
+                self.trigger_pressed[side] = False
 
-        # Actualizar la interfaz
+        # Restaurar las posiciones de los joysticks a su posición central
+        self.left_offset = QPointF(0, 0)
+        self.right_offset = QPointF(0, 0)
+        self.active_joystick = None
+
         self.update()
