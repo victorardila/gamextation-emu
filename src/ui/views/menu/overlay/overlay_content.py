@@ -9,6 +9,7 @@ from src.utils.connection_tester_worker import ConnectionTesterWorker
 from src.ui.components.toast.notification_toast import NotificationToast
 from config.storagesys.storage_system import StorageSystem
 
+
 class OverlayContent(QWidget):
     theme_changed = pyqtSignal()
     sound_switch_state = pyqtSignal()
@@ -70,7 +71,9 @@ class OverlayContent(QWidget):
             "src/assets/font/ratchet-clank-psp.ttf", 24, "Arial", 18
         )
 
-        self.button_icon_user.style("fa.user", QSize(32, 32), "Usuario", "white")
+        self.button_icon_user.style(
+            "src/assets/gif/user.gif", QSize(38, 38), "Usuario", "white"
+        )
         self.button_icon_mode.style("fa5s.sun", QSize(32, 32), "Modo claro", "white")
         self._update_sound_icon()
         self.button_connection.style("fa5s.wifi", QSize(32, 32), "Conexión", "white")

@@ -1,20 +1,50 @@
 from PyQt5.QtWidgets import QPushButton, QWidget
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QMovie
 from qtawesome import icon
+import os
+
 
 class ButtonIcon(QPushButton):
     def __init__(self, parent=QWidget | None):
         super().__init__(parent)
         self.installEventFilter(self)
         self.setCursor(Qt.PointingHandCursor)
-        
-    def style(self, icon_name, size, tooltip, color='white'):
-        self.setIcon(QIcon(icon(icon_name, color=color)))
+        self.movie = None  # Mantener una referencia a QMovie
+
+    def style(self, icon_name, size, tooltip, color="white", gif_speed=800):
+        if self._is_image_path(icon_name):
+            if icon_name.lower().endswith(".gif"):
+                self._set_gif(icon_name, size, gif_speed)
+            else:
+                self._set_static_image(icon_name, size)
+        else:
+            self.setIcon(QIcon(icon(icon_name, color=color)))
+
         self.setIconSize(size)
         self.setToolTip(tooltip)
         self.setText("")
         self.setStyleSheet(self.default_stylesheet())
+
+    def _set_static_image(self, path, size):
+        pixmap = QPixmap(path).scaled(size)
+        self.setIcon(QIcon(pixmap))
+
+    def _set_gif(self, path, size, speed):
+        self.movie = QMovie(path)
+        self.movie.setScaledSize(size)
+        self.movie.setSpeed(speed)  # Ajustar la velocidad del GIF
+        self.movie.frameChanged.connect(self._update_icon_from_movie)
+        self.movie.start()
+
+    def _update_icon_from_movie(self):
+        self.setIcon(QIcon(self.movie.currentPixmap()))
+
+    def _is_image_path(self, path):
+        return os.path.isfile(path) and path.lower().endswith(
+            (".png", ".jpg", ".jpeg", ".gif")
+        )
 
     def default_stylesheet(self):
         return """
@@ -31,7 +61,7 @@ class ButtonIcon(QPushButton):
                 border-radius: 5px;
             }
         """
-    
+
     def hover_enter_stylesheet(self):
         return """
             QPushButton {
@@ -63,7 +93,7 @@ class ButtonIcon(QPushButton):
                 border-radius: 5px;
             }
         """
-    
+
     def eventFilter(self, obj, event):
         if event.type() == event.HoverEnter:
             self.setStyleSheet(self.hover_enter_stylesheet())
