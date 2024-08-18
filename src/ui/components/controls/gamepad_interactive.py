@@ -19,27 +19,29 @@ import math
 class GamepadInteractive(QWidget):
     def __init__(self):
         super().__init__()
+        # Configuración inicial de la ventana
         self.setGeometry(100, 100, 600, 400)
         self.setMinimumSize(600, 400)
         self.setMouseTracking(True)
+
+        # Inicialización de rectángulos y colores
         self.dpad_rect = QRectF()
-        # defino el area del mouse event
         self.button_options = {}
         self.button_actions = {}
         self.joysticks_rects = {"left": QRectF(), "right": QRectF()}
         self.bumper_rects = {"left": QRectF(), "right": QRectF()}
         self.trigger_rects = {"left": QRectF(), "right": QRectF()}
-        # Color actual del mallado
         self.mesh_color = QColor(200, 200, 200, 50)  # Color por defecto
-        # Estado de los botones
+
+        # Inicialización de estados de botones y controles
         self.action_button_pressed = None
         self.option_button_pressed = None
+        self.pressed_side = None
         self.dpad_button_pressed = {
-            "up": False,
-            "down": False,
-            "left": False,
-            "right": False,
+            direction: False for direction in ["up", "down", "left", "right"]
         }
+        self.bumper_pressed = {side: False for side in ["left", "right"]}
+        self.trigger_pressed = {side: False for side in ["left", "right"]}
 
     def paintEvent(self, event):
         # ?: Dibujar la silueta del mando de juego
@@ -284,6 +286,7 @@ class GamepadInteractive(QWidget):
         pressed_color = QColor(
             100, 100, 100
         )  # Gris más oscuro para el estado presionado
+        shadow_color = QColor(20, 20, 20)  # Color para la sombra
 
         bounding_rect = path.boundingRect()
         center_x = bounding_rect.left() + 300
@@ -314,80 +317,93 @@ class GamepadInteractive(QWidget):
             int(2 * dpad_radius),
         )
 
-        # Ajusta el grosor y color de la cruz según el estado de presión
-        def draw_cross(painter, pressed_side):
+        # Dibuja la cruz del D-Pad
+        def draw_cross(painter, side_pressed):
             painter.setBrush(QBrush(cross_color))
             painter.setPen(Qt.NoPen)
 
-            # Ajusta el grosor y la altura según el lado presionado
-            if pressed_side == "up":
-                painter.drawRect(
-                    int(center_x - cross_thickness / 2),
-                    int(center_y - cross_radius + 10),  # Menos alto
-                    int(cross_thickness),
-                    int(2 * (cross_radius - 10)),  # Menos ancho
-                )
-                painter.drawRect(
-                    int(center_x - cross_radius),
-                    int(center_y - cross_thickness / 2),
-                    int(2 * cross_radius),
-                    int(cross_thickness),
-                )
-            elif pressed_side == "down":
-                painter.drawRect(
-                    int(center_x - cross_thickness / 2),
-                    int(center_y + 10),  # Menos alto
-                    int(cross_thickness),
-                    int(2 * (cross_radius - 10)),  # Menos ancho
-                )
-                painter.drawRect(
-                    int(center_x - cross_radius),
-                    int(center_y - cross_thickness / 2),
-                    int(2 * cross_radius),
-                    int(cross_thickness),
-                )
-            elif pressed_side == "left":
-                painter.drawRect(
-                    int(center_x - cross_radius + 10),  # Menos ancho
-                    int(center_y - cross_thickness / 2),
-                    int(2 * (cross_radius - 10)),  # Menos alto
-                    int(cross_thickness),
-                )
-                painter.drawRect(
-                    int(center_x - cross_thickness / 2),
-                    int(center_y - cross_radius),
-                    int(cross_thickness),
-                    int(2 * cross_radius),
-                )
-            elif pressed_side == "right":
-                painter.drawRect(
-                    int(center_x + 10),  # Menos ancho
-                    int(center_y - cross_thickness / 2),
-                    int(2 * (cross_radius - 10)),  # Menos alto
-                    int(cross_thickness),
-                )
-                painter.drawRect(
-                    int(center_x - cross_thickness / 2),
-                    int(center_y - cross_radius),
-                    int(cross_thickness),
-                    int(2 * cross_radius),
-                )
-            else:
-                painter.drawRect(
-                    int(center_x - cross_thickness / 2),
-                    int(center_y - cross_radius),
-                    int(cross_thickness),
-                    int(2 * cross_radius),
-                )
-                painter.drawRect(
-                    int(center_x - cross_radius),
-                    int(center_y - cross_thickness / 2),
-                    int(2 * cross_radius),
-                    int(cross_thickness),
-                )
+            # Dibuja la sombra en función del lado presionado
+            if side_pressed in ["up", "down"]:
+                painter.setBrush(QBrush(shadow_color))
+                if side_pressed == "up":
+                    painter.drawRect(
+                        int(center_x - cross_thickness / 2),
+                        int(center_y - cross_radius),
+                        int(cross_thickness),
+                        int(cross_radius),
+                    )
+                elif side_pressed == "down":
+                    painter.drawRect(
+                        int(center_x - cross_thickness / 2),
+                        int(center_y),
+                        int(cross_thickness),
+                        int(cross_radius),
+                    )
+            elif side_pressed in ["left", "right"]:
+                painter.setBrush(QBrush(shadow_color))
+                if side_pressed == "left":
+                    painter.drawRect(
+                        int(center_x - cross_radius),
+                        int(center_y - cross_thickness / 2),
+                        int(cross_radius),
+                        int(cross_thickness),
+                    )
+                elif side_pressed == "right":
+                    painter.drawRect(
+                        int(center_x),
+                        int(center_y - cross_thickness / 2),
+                        int(cross_radius),
+                        int(cross_thickness),
+                    )
 
-        # Dibuja la cruz del D-Pad
-        draw_cross(painter, self.dpad_button_pressed)
+            # Dibuja la cruz principal
+            painter.setBrush(QBrush(cross_color))
+            painter.drawRect(
+                int(center_x - cross_thickness / 2),
+                int(center_y - cross_radius),
+                int(cross_thickness),
+                int(2 * cross_radius),
+            )
+            painter.drawRect(
+                int(center_x - cross_radius),
+                int(center_y - cross_thickness / 2),
+                int(2 * cross_radius),
+                int(cross_thickness),
+            )
+
+            # Resalta el lado presionado
+            if side_pressed:
+                painter.setBrush(QBrush(pressed_color))
+                if side_pressed == "up":
+                    painter.drawRect(
+                        int(center_x - cross_thickness / 2),
+                        int(center_y - cross_radius),
+                        int(cross_thickness),
+                        int(cross_radius),
+                    )
+                elif side_pressed == "down":
+                    painter.drawRect(
+                        int(center_x - cross_thickness / 2),
+                        int(center_y),
+                        int(cross_thickness),
+                        int(cross_radius),
+                    )
+                elif side_pressed == "left":
+                    painter.drawRect(
+                        int(center_x - cross_radius),
+                        int(center_y - cross_thickness / 2),
+                        int(cross_radius),
+                        int(cross_thickness),
+                    )
+                elif side_pressed == "right":
+                    painter.drawRect(
+                        int(center_x),
+                        int(center_y - cross_thickness / 2),
+                        int(cross_radius),
+                        int(cross_thickness),
+                    )
+
+        draw_cross(painter, self.pressed_side)
 
         icon_up = qta.icon("fa.caret-up", color="gray")
         icon_down = qta.icon("fa.caret-down", color="gray")
@@ -396,17 +412,11 @@ class GamepadInteractive(QWidget):
 
         icon_size = QSize(24, 24)
 
-        gradient_icon = QRadialGradient(0, 0, icon_size.width() / 2)
-        gradient_icon.setColorAt(0.0, QColor(200, 200, 200))
-        gradient_icon.setColorAt(1.0, QColor(120, 120, 120))
-
         def create_highlighted_pixmap(icon, highlight):
             pixmap = icon.pixmap(icon_size)
             painter_icon = QPainter(pixmap)
             if highlight:
                 painter_icon.setBrush(QBrush(highlight_color))
-            else:
-                painter_icon.setBrush(QBrush(gradient_icon))
             painter_icon.setPen(Qt.NoPen)
             painter_icon.setCompositionMode(QPainter.CompositionMode_SourceIn)
             painter_icon.drawRect(pixmap.rect())
@@ -455,7 +465,8 @@ class GamepadInteractive(QWidget):
 
     def drawBumpers(self, painter, path):
         # ?: Dibujar los bumpers (L1 y R1) en la parte superior del mando
-        bumper_color = QColor(50, 50, 50)  # Color para los bumpers
+        normal_color = QColor(50, 50, 50)  # Color para los bumpers normales
+        pressed_color = QColor(100, 100, 100)  # Color para los bumpers presionados
         border_color = QColor(30, 30, 30)  # Color para el borde de los bumpers
         border_width = 2  # Grosor del borde
 
@@ -472,32 +483,31 @@ class GamepadInteractive(QWidget):
         left_bumper_rect = QRectF(center_x - 160, top_y, bumper_width, bumper_height)
         right_bumper_rect = QRectF(center_x + 80, top_y, bumper_width, bumper_height)
 
-        # Configurar el lápiz para el borde de los bumpers
-        painter.setPen(
-            QPen(border_color, border_width)
-        )  # Establecer color y grosor del borde
-
-        # Dibujar los bumpers
-        painter.setBrush(QBrush(bumper_color))
+        # Dibujar el bumper izquierdo con su estado correspondiente
+        painter.setPen(QPen(border_color, border_width))
+        painter.setBrush(
+            QBrush(pressed_color if self.bumper_pressed["left"] else normal_color)
+        )
         painter.drawRoundedRect(left_bumper_rect, 10, 10)
+
+        # Dibujar el bumper derecho con su estado correspondiente
+        painter.setBrush(
+            QBrush(pressed_color if self.bumper_pressed["right"] else normal_color)
+        )
         painter.drawRoundedRect(right_bumper_rect, 10, 10)
 
         # Configurar el estilo del texto para los labels
-        font = QFont("Arial", 12, QFont.Bold)  # Fuente del label
+        font = QFont("Arial", 12, QFont.Bold)
         painter.setFont(font)
-        painter.setPen(QColor(255, 255, 255))  # Color del texto
+        painter.setPen(QColor(255, 255, 255))
 
         # Calcular el texto a dibujar en los bumpers
         left_bumper_text = "L1"
         right_bumper_text = "R1"
 
         # Calcular el rectángulo del texto para centrarlo en el bumper
-        left_bumper_text_rect = left_bumper_rect.adjusted(
-            0, 0, 0, -5
-        )  # Ajustar el rectángulo para el texto
-        right_bumper_text_rect = right_bumper_rect.adjusted(
-            0, 0, 0, -5
-        )  # Ajustar el rectángulo para el texto
+        left_bumper_text_rect = left_bumper_rect.adjusted(0, 0, 0, -5)
+        right_bumper_text_rect = right_bumper_rect.adjusted(0, 0, 0, -5)
 
         # Dibujar los labels en los bumpers
         painter.drawText(left_bumper_text_rect, Qt.AlignCenter, left_bumper_text)
@@ -508,15 +518,16 @@ class GamepadInteractive(QWidget):
         self.bumper_rects["right"] = right_bumper_rect
 
     def drawTriggers(self, painter, path):
-        # ?: Dibujar los triggers (L2 y R2) en la parte superior trasera del mando
-        trigger_color = QColor(70, 70, 70)  # Color para los triggers
-        border_color = QColor(30, 30, 30)  # Color para el borde de los triggers
-        border_width = 1  # Grosor del borde
+        # Colores de los triggers
+        normal_color = QColor(70, 70, 70)
+        pressed_color = QColor(100, 100, 100)  # Color más claro para indicar presión
+        border_color = QColor(30, 30, 30)
+        border_width = 1
 
         # Obtener el rectángulo delimitador del mando
         bounding_rect = path.boundingRect()
         center_x = bounding_rect.center().x()
-        top_y = bounding_rect.top() - 15  # Ajuste para la posición vertical
+        top_y = bounding_rect.top() - 15
 
         # Definir tamaños y posiciones de los triggers
         trigger_width = 60
@@ -529,25 +540,19 @@ class GamepadInteractive(QWidget):
         )
 
         # Definir la inclinación del triángulo
-        angle = 30  # Ángulo de inclinación en grados
+        angle = 30
 
         def create_triangle(rect, angle):
-            """Crea un triángulo con la inclinación especificada."""
-            # Convertir el ángulo a radianes
             radians = math.radians(angle)
-            # Calcular los puntos del triángulo
             points = [
-                QPointF(
-                    rect.center().x(), rect.top()
-                ),  # Punto superior (en el centro del rectángulo)
-                QPointF(rect.left(), rect.bottom()),  # Punto inferior izquierdo
-                QPointF(rect.right(), rect.bottom()),  # Punto inferior derecho
+                QPointF(rect.center().x(), rect.top()),
+                QPointF(rect.left(), rect.bottom()),
+                QPointF(rect.right(), rect.bottom()),
             ]
-            # Rotar el triángulo alrededor de su centro
             matrix = QTransform()
-            matrix.translate(rect.center().x(), rect.center().y())  # Mover al centro
-            matrix.rotate(angle)  # Rotar
-            matrix.translate(-rect.center().x(), -rect.center().y())  # Mover de vuelta
+            matrix.translate(rect.center().x(), rect.center().y())
+            matrix.rotate(angle)
+            matrix.translate(-rect.center().x(), -rect.center().y())
 
             rotated_points = [matrix.map(p) for p in points]
             return QPolygonF(rotated_points)
@@ -557,27 +562,30 @@ class GamepadInteractive(QWidget):
         right_trigger_triangle = create_triangle(right_trigger_rect, angle)
 
         # Configurar el lápiz para el borde de los triggers
-        painter.setPen(
-            QPen(border_color, border_width)
-        )  # Establecer color y grosor del borde
+        painter.setPen(QPen(border_color, border_width))
 
-        # Dibujar los triggers
-        painter.setBrush(QBrush(trigger_color))
+        # Dibujar el trigger izquierdo con su estado correspondiente
+        painter.setBrush(
+            QBrush(pressed_color if self.trigger_pressed["left"] else normal_color)
+        )
         painter.drawPolygon(left_trigger_triangle)
+
+        # Dibujar el trigger derecho con su estado correspondiente
+        painter.setBrush(
+            QBrush(pressed_color if self.trigger_pressed["right"] else normal_color)
+        )
         painter.drawPolygon(right_trigger_triangle)
 
         # Configurar el estilo del texto para los labels
-        font = QFont("Arial", 12, QFont.Bold)  # Fuente del label
+        font = QFont("Arial", 12, QFont.Bold)
         painter.setFont(font)
-        painter.setPen(QColor(255, 255, 255))  # Color del texto
+        painter.setPen(QColor(255, 255, 255))
 
         # Calcular el texto a dibujar en los triggers
         left_trigger_text = "L2"
         right_trigger_text = "R2"
 
-        # Calcular el rectángulo del texto para centrarlo en el trigger
         def center_text_in_triangle(triangle, text):
-            """Centrar el texto dentro del triángulo."""
             rect = triangle.boundingRect()
             text_rect = QRectF(rect.center() - QPointF(20, 10), QSizeF(40, 20))
             return text_rect
@@ -592,7 +600,8 @@ class GamepadInteractive(QWidget):
         # Dibujar los labels en los triggers
         painter.drawText(left_trigger_text_rect, Qt.AlignCenter, left_trigger_text)
         painter.drawText(right_trigger_text_rect, Qt.AlignCenter, right_trigger_text)
-        # Definir las áreas de los triggers (puedes ajustarlo según la forma)
+
+        # Definir las áreas de los triggers
         self.trigger_rects["left"] = left_trigger_rect
         self.trigger_rects["right"] = right_trigger_rect
 
@@ -766,50 +775,73 @@ class GamepadInteractive(QWidget):
 
     def mousePressEvent(self, event):
         pos = event.pos()
-        # Verificar botones de acción
-        for label, rect in self.button_actions.items():
+        updated = False
+
+        # Verificar botones de acción y de opción
+        for label, rect in {**self.button_actions, **self.button_options}.items():
             if rect.contains(pos):
-                self.action_button_pressed = label
-                self.update()
+                if label in self.button_actions:
+                    self.action_button_pressed = label
+                else:
+                    self.option_button_pressed = label
+                updated = True
                 break
 
-        # Verificar botones de opción
-        for icon, rect in self.button_options.items():
-            if rect.contains(pos):
-                self.option_button_pressed = icon
-                self.update()
+        if self.dpad_rect.contains(pos):
+            center_x, center_y = (
+                self.dpad_rect.center().x(),
+                self.dpad_rect.center().y(),
+            )
+            dx, dy = pos.x() - center_x, pos.y() - center_y
+            if abs(dy) > 20:  # Verificar dirección vertical primero
+                self.pressed_side = "up" if dy < 0 else "down"
+                self.dpad_button_pressed[self.pressed_side] = True
+            elif abs(dx) > 20:  # Verificar dirección horizontal
+                self.pressed_side = "left" if dx < 0 else "right"
+                self.dpad_button_pressed[self.pressed_side] = True
+            updated = True
+
+        # Verificar bumpers y triggers
+        for side in ["left", "right"]:
+            if self.bumper_rects[side].contains(pos):
+                self.bumper_pressed[side] = True
+                self.bumper_pressed[["left", "right"][side == "left"]] = False
+                updated = True
+                break
+            if self.trigger_rects[side].contains(pos):
+                self.trigger_pressed[side] = True
+                self.trigger_pressed[["left", "right"][side == "left"]] = False
+                updated = True
                 break
 
-        if self.dpad_rect.contains(event.pos()):
-            center_x = self.dpad_rect.center().x()
-            center_y = self.dpad_rect.center().y()
-            if event.pos().y() < center_y - 20:
-                self.dpad_button_pressed["up"] = True
-                self.pressed_side = "up"
-            elif event.pos().y() > center_y + 20:
-                self.dpad_button_pressed["down"] = True
-                self.pressed_side = "down"
-            if event.pos().x() < center_x - 20:
-                self.dpad_button_pressed["left"] = True
-                self.pressed_side = "left"
-            elif event.pos().x() > center_x + 20:
-                self.dpad_button_pressed["right"] = True
-                self.pressed_side = "right"
+        if updated:
             self.update()
 
     def mouseReleaseEvent(self, event):
+        # Restablecer los botones de acción y opción
         self.action_button_pressed = None
         self.option_button_pressed = None
+
+        # Restablecer el estado del D-pad si se suelta dentro de su área
         if self.dpad_rect.contains(event.pos()):
-            center_x = self.dpad_rect.center().x()
-            center_y = self.dpad_rect.center().y()
-            if event.pos().y() < center_y - 20:
-                self.dpad_button_pressed["up"] = False
-            elif event.pos().y() > center_y + 20:
-                self.dpad_button_pressed["down"] = False
-            if event.pos().x() < center_x - 20:
-                self.dpad_button_pressed["left"] = False
-            elif event.pos().x() > center_x + 20:
-                self.dpad_button_pressed["right"] = False
+            center_x, center_y = (
+                self.dpad_rect.center().x(),
+                self.dpad_rect.center().y(),
+            )
+            dx, dy = event.pos().x() - center_x, event.pos().y() - center_y
+
+            if abs(dy) > 20:  # Verificar dirección vertical
+                self.dpad_button_pressed["up" if dy < 0 else "down"] = False
+            if abs(dx) > 20:  # Verificar dirección horizontal
+                self.dpad_button_pressed["left" if dx < 0 else "right"] = False
+
             self.pressed_side = None
             self.update()
+
+        # Restablecer el estado de los bumpers y triggers
+        for side in ["left", "right"]:
+            self.bumper_pressed[side] = False
+            self.trigger_pressed[side] = False
+
+        # Actualizar la interfaz
+        self.update()
