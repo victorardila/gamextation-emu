@@ -2,12 +2,14 @@ from config.storagesys.storage_system import StorageSystem
 from PyQt5.QtWidgets import QMainWindow, QStackedWidget
 from src.ui.views.menu.main_menu import MainMenu
 from src.ui.views.submenu.submenu import SubMenu
+from src.ui.views.game.game_loaded import GameLoaded
 from PyQt5.QtGui import QIcon
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import QTimer
 import random
 import pygame
 import os
+
 
 class MainContainer(QMainWindow):
     SOUND = None
@@ -45,16 +47,19 @@ class MainContainer(QMainWindow):
         )
         self.mainMenu = MainMenu()
         self.submenu = SubMenu()
+        self.gameLoaded = GameLoaded()
         self.layout_views.addWidget(self.mainMenu)
         self.layout_views.addWidget(self.submenu)
+        self.layout_views.addWidget(self.gameLoaded)
         self.layout_views.setCurrentWidget(self.mainMenu)
 
     def connect_signals(self):
-        self.mainMenu.menu_button_clicked.connect(self.switch_to_submenu)
+        self.mainMenu.menu_button_clicked.connect(self.switch_view)
         self.mainMenu.menu_exit_clicked.connect(self.close_application)
         self.mainMenu.sound_switch_state.connect(self.switch_sound_state)
         self.submenu.menu_return_clicked.connect(self.switch_to_mainmenu)
         self.submenu.menu_exit_clicked.connect(self.close_application)
+        self.submenu.game_data_received.connect(self.switch_view)
 
     def init_song(self):
         if self.SOUND == "on":
@@ -94,21 +99,23 @@ class MainContainer(QMainWindow):
             if file.endswith(".mp3")
         ]
 
-    def switch_to_submenu(self, message):
+    def switch_view(self, message):
         if "Submenu" in message:
             self.layout_views.setCurrentWidget(self.submenu)
             self.submenu.load_module(message)
+        elif "Game" in message:
+            self.layout_views.setCurrentWidget(self.gameLoaded)
         else:
             self.layout_views.setCurrentWidget(self.mainMenu)
 
     def switch_sound_state(self):
         if self.SOUND == "on":
             self.SOUND = "off"
-            self.storage.update_config('General', 'sound', 'off')
+            self.storage.update_config("General", "sound", "off")
             pygame.mixer.music.stop()
         else:
             self.SOUND = "on"
-            self.storage.update_config('General', 'sound', 'on')
+            self.storage.update_config("General", "sound", "on")
             self.init_song()
 
     def switch_to_mainmenu(self):
@@ -116,7 +123,7 @@ class MainContainer(QMainWindow):
 
     def close_application(self):
         self.close()
-        
+
     def resizeEvent(self, event):
         super().resizeEvent(event)
         self.resize_timer.start(200)  # Reinicia el temporizador a 200 ms
@@ -124,6 +131,5 @@ class MainContainer(QMainWindow):
     def print_window_size(self):
         width = self.width()
         height = self.height()
-        self.storage.update_config('General', 'screenwidth', str(width))
-        self.storage.update_config('General', 'screenheight', str(height))
-        
+        self.storage.update_config("General", "screenwidth", str(width))
+        self.storage.update_config("General", "screenheight", str(height))

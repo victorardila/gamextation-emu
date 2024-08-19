@@ -5,9 +5,12 @@ from config.storagesys.storage_system import StorageSystem
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.uic import loadUi
 
+
 class SubMenu(QWidget):
     menu_return_clicked = pyqtSignal()
     menu_exit_clicked = pyqtSignal()
+    # Definir una señal que recibirá el game_data
+    game_data_received = pyqtSignal(dict)
 
     def __init__(self):
         super().__init__()
@@ -23,11 +26,11 @@ class SubMenu(QWidget):
 
     def read_config_file(self):
         """Lee el archivo de configuración y actualiza los atributos de color de fondo y tema."""
-        config_file = 'config.ini'
+        config_file = "config.ini"
         storage = StorageSystem(config_file)
-        settings = storage.read_config().get('General', {})
-        self.BG_COLOR = settings.get('bg_color', self.BG_COLOR)
-        self.current_theme = settings.get('theme', self.current_theme)
+        settings = storage.read_config().get("General", {})
+        self.BG_COLOR = settings.get("bg_color", self.BG_COLOR)
+        self.current_theme = settings.get("theme", self.current_theme)
 
     def init_submenu(self):
         """Inicializa el menú secundario y aplica los estilos."""
@@ -48,7 +51,7 @@ class SubMenu(QWidget):
         """Actualiza el color de fondo y el ícono de la animación cuando se muestra la ventana."""
         self.read_config_file()
         self.setStyleSheet(f"background-color: {self.BG_COLOR}")
-        if hasattr(self, 'animation') and self.animation:
+        if hasattr(self, "animation") and self.animation:
             self.animation.update_icon_color(self.current_theme)
         super().showEvent(event)  # Llama al método base para manejar otros eventos
 
@@ -61,6 +64,7 @@ class SubMenu(QWidget):
     def init_overlay_widget(self):
         """Inicializa el widget de superposición y lo agrega al layout."""
         self.overlay = OverlayContent()
+        self.overlay.game_data_received.connect(self.game_data_received.emit)
         self.layout_widgets.addWidget(self.overlay)
         self.overlay.show()
 
@@ -70,12 +74,12 @@ class SubMenu(QWidget):
 
     def change_theme_mode(self):
         """Cambia el modo del tema y actualiza la configuración y el color de fondo."""
-        storage = StorageSystem('config.ini')
+        storage = StorageSystem("config.ini")
         settings = storage.read_config()
-        new_theme = 'dark' if settings['General']['theme'] == 'light' else 'light'
-        storage.update_config('General', 'theme', new_theme)
+        new_theme = "dark" if settings["General"]["theme"] == "light" else "light"
+        storage.update_config("General", "theme", new_theme)
         self.read_config_file()
-        if hasattr(self, 'animation') and self.animation:
+        if hasattr(self, "animation") and self.animation:
             self.animation.update_icon_color(new_theme)
         self.setStyleSheet(f"background-color: {self.BG_COLOR}")
 
