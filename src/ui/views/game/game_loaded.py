@@ -1,11 +1,28 @@
-from PyQt5.QtWidgets import QWidget, QSizePolicy, QVBoxLayout, QLabel, QFrame
+from PyQt5.QtWidgets import (
+    QWidget,
+    QSizePolicy,
+    QVBoxLayout,
+    QLabel,
+    QFrame,
+    QHBoxLayout,
+)
 from PyQt5.uic import loadUi
 from datetime import datetime
-from PyQt5.QtCore import Qt, QTimer, QPropertyAnimation
-from PyQt5.QtGui import QFont, QFontDatabase
+from PyQt5.QtCore import Qt, QTimer, QPropertyAnimation, QSize
+from PyQt5.QtGui import (
+    QFont,
+    QFontDatabase,
+    QColor,
+    QFontDatabase,
+    QFont,
+    QPixmap,
+    QPainter,
+)
 
 
 class GameLoaded(QWidget):
+    SVG_CREDITS = "src/assets/svg/icon.svg"
+
     def __init__(self):
         super().__init__()
         self.setup_ui()
@@ -33,6 +50,18 @@ class GameLoaded(QWidget):
         # Luego añadir sidebar encima
         self.add_widget_sidebar()
 
+    def _colorize_svg(self, svg_path, color, size):
+        pixmap = QPixmap(svg_path).scaled(
+            size, Qt.KeepAspectRatio, Qt.SmoothTransformation
+        )
+
+        painter = QPainter(pixmap)
+        painter.setCompositionMode(QPainter.CompositionMode_SourceIn)
+        painter.fillRect(pixmap.rect(), color)
+        painter.end()
+
+        return pixmap
+
     def design_sidebar(self):
         # Crear un layout vertical para el sidebar
         self.sidebar_layout = QVBoxLayout(self.sidebar)
@@ -59,20 +88,35 @@ class GameLoaded(QWidget):
         self.sidebar_logo_layout = QVBoxLayout(self.sidebar_logo)
         self.sidebar_logo_layout.addWidget(self.logo_menu_content)
 
+        # Crear un QHBoxLayout para centrar el label_logo
+        self.logo_container_layout = QHBoxLayout()
+        self.logo_container_layout.setContentsMargins(0, 0, 0, 0)
+        self.logo_container_layout.setAlignment(Qt.AlignCenter)
+        self.logo_menu_content_layout.addLayout(self.logo_container_layout)
+
         self.label_logo = QLabel(self.sidebar_logo)
-        self.label_logo.setPixmap("src/assets/images/logo.png")
+        self.label_logo.setPixmap(
+            self._colorize_svg(
+                self.SVG_CREDITS, QColor("white"), QSize(50, 50)
+            )  # Ajustar el tamaño del logo a 50x50
+        )
+        self.label_logo.setFixedSize(50, 50)  # Ajustar el tamaño del QLabel
+
+        self.logo_container_layout.addWidget(
+            self.label_logo
+        )  # Añadir el label_logo al QHBoxLayout para centrarlo
 
         self.label_title = QLabel("Menu de opciones", self.logo_menu_content)
         self.label_title.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.label_title.setAlignment(Qt.AlignCenter)
         self.label_title.setStyleSheet("color: white; font-size: 28px;")
         self.label_title.setFont(QFont(self.custom_font))
-        self.sidebar_logo.addWidget(self.label_title)
+        self.logo_menu_content_layout.addWidget(self.label_title)
 
         self.label_hour = QLabel("00:00:00 AM", self.logo_menu_content)
         self.label_hour.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.label_hour.setAlignment(Qt.AlignCenter)
-        self.label_hour.setStyleSheet("color: white; font-size: 25px;")
+        self.label_hour.setStyleSheet("color: white; font-size: 26px;")
         self.label_hour.setFont(QFont(self.custom_font))
         self.logo_menu_content_layout.addWidget(self.label_hour)
 
