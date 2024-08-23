@@ -60,6 +60,7 @@ class MainContainer(QMainWindow):
         self.submenu.menu_return_clicked.connect(self.switch_to_mainmenu)
         self.submenu.menu_exit_clicked.connect(self.close_application)
         self.submenu.game_data_received.connect(self.switch_view)
+        self.gameLoaded.return_to_menu.connect(self.switch_view)
 
     def init_song(self):
         if self.SOUND == "on":

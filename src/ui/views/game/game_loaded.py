@@ -5,10 +5,11 @@ from PyQt5.QtWidgets import (
     QLabel,
     QFrame,
     QHBoxLayout,
+    QPushButton,
 )
 from PyQt5.uic import loadUi
 from datetime import datetime
-from PyQt5.QtCore import Qt, QTimer, QPropertyAnimation, QSize
+from PyQt5.QtCore import Qt, QTimer, QPropertyAnimation, QSize, pyqtSignal
 from PyQt5.QtGui import (
     QFont,
     QFontDatabase,
@@ -18,9 +19,16 @@ from PyQt5.QtGui import (
     QPixmap,
     QPainter,
 )
+import qtawesome as qta
 
 
 class GameLoaded(QWidget):
+    return_to_menu = pyqtSignal(str)
+    optimize = pyqtSignal()
+    save_game = pyqtSignal()
+    restart_game = pyqtSignal()
+    graphics_settings = pyqtSignal()
+    controls_settings = pyqtSignal()
     SVG_CREDITS = "src/assets/svg/icon.svg"
 
     def __init__(self):
@@ -49,18 +57,6 @@ class GameLoaded(QWidget):
 
         # Luego añadir sidebar encima
         self.add_widget_sidebar()
-
-    def _colorize_svg(self, svg_path, color, size):
-        pixmap = QPixmap(svg_path).scaled(
-            size, Qt.KeepAspectRatio, Qt.SmoothTransformation
-        )
-
-        painter = QPainter(pixmap)
-        painter.setCompositionMode(QPainter.CompositionMode_SourceIn)
-        painter.fillRect(pixmap.rect(), color)
-        painter.end()
-
-        return pixmap
 
     def design_sidebar(self):
         # Crear un layout vertical para el sidebar
@@ -131,6 +127,91 @@ class GameLoaded(QWidget):
         self.sidebar_content.setStyleSheet("background-color: transparent;")
         self.sidebar_layout.addWidget(self.sidebar_content)
 
+        # Agregar contenido al sidebar_content
+        self.sidebar_content_layout = QVBoxLayout(self.sidebar_content)
+        self.sidebar_content_layout.setContentsMargins(10, 10, 10, 10)
+        self.sidebar_content_layout.setSpacing(20)
+
+        # add_button(text, icon, callback) ->
+        self.add_button("Volver", "fa.arrow-left", self.return_to_menu)
+        self.add_button("Optimizar", "fa.cogs", self.optimize)
+        self.add_button("Guardar partida", "fa.save", self.save_game)
+        self.add_button("Reiniciar partida", "fa.refresh", self.restart_game)
+        self.add_button("Configuraciones gráficas", "fa.tv", self.graphics_settings)
+        self.add_button("Controles", "fa.gamepad", self.controls_settings)
+
+    def add_button(self, text, icon, signal):
+        # Crear un botón sin texto predeterminado
+        button = QPushButton(self.sidebar_content)
+        button.setStyleSheet(
+            """
+            QPushButton {
+                background: rgba(0, 0, 0, 0.02);
+                border: none;
+                padding: 10px;
+                border-radius: 10px;
+            }
+            QPushButton:hover {
+                background-color: rgba(0, 255, 127, 0.5);
+            }
+            QToolTip {
+                background-color: #333;
+                color: #fff;
+                border: 0.5px solid white;
+                padding: 5px;
+                border-radius: 5px;
+            }
+            """
+        )
+        button.setFont(QFont(self.custom_font))
+        button.setToolTip(text)
+
+        # Crear un layout horizontal para el contenido del botón
+        layout = QHBoxLayout()
+        layout.setContentsMargins(10, 0, 10, 0)
+        layout.setSpacing(10)
+        layout.setAlignment(Qt.AlignCenter)
+
+        # Crear el icono
+        icon_label = QLabel()
+        icon_label.setPixmap(qta.icon(icon, color="white").pixmap(QSize(24, 24)))
+        icon_label.setFixedSize(QSize(24, 24))
+
+        # Crear el texto
+        text_label = QLabel(text)
+        text_label.setStyleSheet("color: white; font-size: 18px;")
+        text_label.setFont(QFont(self.custom_font))
+
+        # Añadir el icono y el texto al layout
+        layout.addWidget(icon_label)
+        layout.addWidget(text_label)
+
+        # Establecer el layout al botón y ajustar el tamaño
+        button.setLayout(layout)
+        button.setFixedHeight(40)
+
+        # Conectar la señal clicked del botón a la función de callback
+        (
+            button.clicked.connect(lambda: signal.emit("Submenu"))
+            if text == "Volver"
+            else button.clicked.connect(lambda: signal.emit())
+        )
+
+        # Añadir el botón al layout del sidebar
+        self.sidebar_content_layout.addWidget(button)
+
+    def _colorize_svg(self, svg_path, color, size):
+        pixmap = QPixmap(svg_path).scaled(
+            size, Qt.KeepAspectRatio, Qt.SmoothTransformation
+        )
+
+        painter = QPainter(pixmap)
+        painter.setCompositionMode(QPainter.CompositionMode_SourceIn)
+        painter.fillRect(pixmap.rect(), color)
+        painter.end()
+
+        return pixmap
+
     def _update_time(self):
         current_time = datetime.now().strftime("%I:%M:%S %p")
         self.label_hour.setText(current_time)
@@ -147,7 +228,7 @@ class GameLoaded(QWidget):
         self.sidebar = QWidget(self)
         self.sidebar.setFixedWidth(0)  # Inicialmente el sidebar está cerrado
         self.sidebar.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
-        self.sidebar.setStyleSheet("background-color: rgba(30, 30, 30, 0.5);")
+        self.sidebar.setStyleSheet("background-color: rgba(0, 0, 0, 0.2);")
 
         # Colocar el sidebar en la posición correcta y asegurarlo en la capa superior
         self.sidebar.setGeometry(0, 0, 0, self.height())
