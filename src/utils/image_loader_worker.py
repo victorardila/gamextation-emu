@@ -1,6 +1,7 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 from src.services.game_requests_services import GameRequestsServices
 
+
 class ImageLoaderWorker(QThread):
     # Creo una señal que emite la URL y la imagen que es de tipo BytesIO
     image_loaded = pyqtSignal(str, object)

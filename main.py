@@ -6,6 +6,7 @@ import shutil
 import sys
 import os
 import threading
+import psutil
 
 
 def remove_pycache_dirs():
@@ -29,16 +30,22 @@ def main():
     """Función principal para ejecutar la aplicación."""
     create_config_file()
 
-    # Iniciar el watcher en un hilo separado
-    watcher_thread = threading.Thread(target=start_watching, args=("main.py",))
-    watcher_thread.daemon = True  # Hilo en segundo plano
-    watcher_thread.start()
-
     # Iniciar la aplicación PyQt
     app = QApplication(sys.argv)
     # Elimina directorios __pycache__ generados por Python
     remove_pycache_dirs()
+
+    # Crear instancia de Aplicacion y acceder a MainContainer
     application = Aplicacion()
+
+    # Obtener el PID de la aplicación actual
+    current_process = psutil.Process(os.getpid())
+
+    # Iniciar el watcher en un hilo separado, pasando la ventana a cerrar
+    watcher_thread = threading.Thread(target=start_watching, args=(".", application))
+    watcher_thread.daemon = True  # Hilo en segundo plano
+    watcher_thread.start()
+
     sys.exit(app.exec_())
 
 

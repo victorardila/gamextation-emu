@@ -67,3 +67,7 @@ class Aplicacion(QMainWindow):
 
         # Cierra la ventana de introducción
         self.intro.close()
+
+    def get_main_container(self):
+        """Devuelve la instancia de MainContainer."""
+        return self.views_container
