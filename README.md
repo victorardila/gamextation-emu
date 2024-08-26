@@ -22,6 +22,8 @@
 
 ## Pasos de instalacion de proyecto
 
+## `Nota Python Version:` https://www.python.org/downloads/release/python-31012/
+
 ## 1. Crear y Activar el entorno virtual
 
 El entorno virtual se puede crear con venv
