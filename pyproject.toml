@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "GameXtation"
+name = "gamextation-emu"
 version = "0.1.0"
 description = ""
 authors = ["Valfonsoardila10 <victoradila@gmail.com>"]
@@ -15,6 +15,7 @@ psutil = "^6.0.0" # libreria para obtener informacion del sistema
 configparser = "^7.0.0" # libreria para leer archivos de configuracion
 watchdog = "^4.0.2" # libreria para monitorear cambios en archivos
 pillow = "^10.4.0" # libreria para manejar imagenes
+pyqt5-sip = "^12.15.0"
 
 [build-system]
 requires = ["poetry-core"]
